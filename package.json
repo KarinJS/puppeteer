@@ -25,8 +25,12 @@
     "LICENSE",
     "package.json"
   ],
+  "bin": {
+    "init": "init.js"
+  },
   "scripts": {
     "build": "tsc --project tsconfig.json && tsc-alias -p tsconfig.json",
+    "postinstall": "node init.js",
     "pub": "npm publish --access public",
     "sort": "npx sort-package-json"
   },
