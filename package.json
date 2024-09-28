@@ -1,6 +1,6 @@
 {
   "name": "@karinjs/puppeteer",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "puppeteer for karin plugin",
   "keywords": [
     "puppeteer",
