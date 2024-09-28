@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.1](https://github.com/KarinJS/puppeteer/compare/v1.0.0...v1.0.1) (2024-09-28)
+
+
+### Bug Fixes
+
+* build error ([1149632](https://github.com/KarinJS/puppeteer/commit/114963265916c43b7ca5d49a4aee53004983ae0d))
+
 ## 1.0.0 (2024-09-28)
 
 
