@@ -1,0 +1,26 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "baseUrl": "./",
+    "outDir": "./lib",
+    "moduleResolution": "node",
+    "module": "ES2022",
+    "paths": {
+      "@/*": [
+        "src/*"
+      ],
+    },
+    "declaration": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "skipLibCheck": true
+  },
+  "include": [
+    "src",
+  ],
+  "tsc-alias": {
+    "resolveFullExtension": ".js",
+    "resolveFullPaths": true
+  }
+}

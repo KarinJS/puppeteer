@@ -1,0 +1,51 @@
+{
+  "name": "@karinjs/puppeteer",
+  "version": "0.0.1",
+  "description": "puppeteer for karin plugin",
+  "keywords": [
+    "puppeteer",
+    "screenshot",
+    "karin"
+  ],
+  "homepage": "https://github.com/KarinJS/puppeteer",
+  "bugs": {
+    "url": "https://github.com/KarinJS/puppeteer/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KarinJS/puppeteer.git"
+  },
+  "license": "MIT",
+  "author": "shijin",
+  "type": "module",
+  "main": "./lib/index.js",
+  "types": "./lib/index.d.ts",
+  "files": [
+    "lib",
+    "LICENSE",
+    "package.json"
+  ],
+  "scripts": {
+    "build": "tsc --project tsconfig.json && tsc-alias -p tsconfig.json",
+    "pub": "npm publish --access public",
+    "sort": "npx sort-package-json"
+  },
+  "dependencies": {
+    "@karinjs/puppeteer-core": "^1.0.6",
+    "express": "^4.19.2",
+    "log4js": "^6.9.1",
+    "mime-types": "^2.1.35",
+    "ws": "^8.18.0"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.21",
+    "@types/mime-types": "^2.1.4",
+    "@types/node": "^22.5.4",
+    "@types/ws": "^8.5.12",
+    "eslint": "^9.10.0",
+    "neostandard": "^0.11.5",
+    "sort-package-json": "^2.10.0",
+    "tsc-alias": "^1.8.10",
+    "typescript": "^5.6.0"
+  }
+}
