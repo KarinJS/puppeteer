@@ -29,5 +29,10 @@ if (filePath.includes('node_modules')) {
   pkg.types = main.replace(/js$/, 'd.ts')
   if (!pkg.scripts) pkg.scripts = {}
   pkg.scripts.start = 'node ' + main
-  fs.writeFileSync(file, JSON.stringify(pkg, null, 2))
+  /** 延迟1秒写入 */
+  setTimeout(() => {
+    fs.writeFileSync(file, JSON.stringify(pkg, null, 2))
+  }, 1000)
+  fs.writeFileSync(path.join(projectRoot, 'index.js'), `import('@karinjs/puppeteer')`)
+  console.log('初始化完成，请使用【node .】启动~')
 }
