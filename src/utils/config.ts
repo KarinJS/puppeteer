@@ -42,7 +42,7 @@ if (!fs.existsSync(file)) {
   }, null, 2))
 }
 
-export const pkg = JSON.parse(fs.readFileSync(path.join(process.cwd(), 'package.json'), 'utf-8'))
+export const pkg = JSON.parse(fs.readFileSync(path.join(import.meta.dirname, '../../package.json'), 'utf-8'))
 
 export const config = JSON.parse(fs.readFileSync(file, 'utf-8')) as {
   /** 日志级别 */
