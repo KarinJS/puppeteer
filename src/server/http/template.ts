@@ -13,7 +13,7 @@ export const dealTpl = (file: string, data: Record<string, any>) => {
   const tplFile = file.replace(sep, '')
   /** 取文件名称 不包含后缀 */
   const name = path.basename(tplFile, path.extname(tplFile))
-  const filePath = `${htmlPath}/${name}:${Date.now()}.html`
+  const filePath = `${htmlPath}/${name}-${Date.now()}.html`
 
   /** 读取html模板 */
   if (!list[tplFile]) {
