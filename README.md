@@ -103,6 +103,8 @@ curl http://127.0.0.1:7005/puppeteer?auth=123456&file=http://www.baidu.com
 
 ### 2.5 模板渲染(POST)
 
+请求地址: `http://127.0.0.1:7005/render`
+
 > 这里只是在2.4的基础上增加了模板渲染的功能，所有参数不变，新增了`data`参数，传递给`art-template`模板的数据
 
 ```html
