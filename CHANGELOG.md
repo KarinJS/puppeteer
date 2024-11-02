@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.1.1](https://github.com/KarinJS/puppeteer/compare/v1.1.0...v1.1.1) (2024-11-02)
+
+
+### Bug Fixes
+
+* fix init ([7b036c3](https://github.com/KarinJS/puppeteer/commit/7b036c3b74e84b11b13fbd0681c3ccc74f85b8c1))
+* 多余的文档 ([b3c2dd8](https://github.com/KarinJS/puppeteer/commit/b3c2dd848be2ac77b7c06e2111f51a582552531a))
+
 ## [1.1.0](https://github.com/KarinJS/puppeteer/compare/v1.0.3...v1.1.0) (2024-11-02)
 
 
