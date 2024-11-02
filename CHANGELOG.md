@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.0](https://github.com/KarinJS/puppeteer/compare/v1.0.3...v1.1.0) (2024-11-02)
+
+
+### Features
+
+* http template ([bded4b6](https://github.com/KarinJS/puppeteer/commit/bded4b605f7b496617c9e17b95fbca8226c1e0e6))
+
 ## [1.0.3](https://github.com/KarinJS/puppeteer/compare/v1.0.2...v1.0.3) (2024-09-28)
 
 
