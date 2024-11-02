@@ -25,7 +25,20 @@ if (!fs.existsSync(file)) {
           token: '123456'
         }
       ]
-    }
+    },
+    /** 浏览器启动数量 */
+    browserCount: 1,
+    /** 启动时 传递给浏览器的参数 */
+    args: [
+      '--enable-gpu',
+      '--no-sandbox',
+      '--disable-setuid-sandbox',
+      '--no-zygote',
+      '--disable-extensions',
+      '--disable-dev-shm-usage',
+      '--window-size=1920,1080',
+      '--force-device-scale-factor=2',
+    ]
   }, null, 2))
 }
 
@@ -59,4 +72,8 @@ export const config = JSON.parse(fs.readFileSync(file, 'utf-8')) as {
       token: string
     }[]
   }
+  /** 浏览器启动数量 */
+  browserCount: number
+  /** 启动时 传递给浏览器的参数 */
+  args: string[]
 }

@@ -40,7 +40,8 @@
     "express": "^4.19.2",
     "log4js": "^6.9.1",
     "mime-types": "^2.1.35",
-    "ws": "^8.18.0"
+    "ws": "^8.18.0",
+    "art-template": "4.13.2"
   },
   "devDependencies": {
     "@types/express": "^4.17.21",

@@ -15,7 +15,7 @@ export const Client = (url: string, token: string) => {
   let reconnect = false
   const client = new WebSocket(url, {
     headers: {
-      authorization: crypto.createHash('sha256').update(`Bearer ${token}`).digest('hex')
+      authorization: crypto.createHash('md5').update(`Bearer ${token}`).digest('hex')
     }
   })
 

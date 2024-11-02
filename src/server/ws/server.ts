@@ -80,10 +80,10 @@ export const Server = () => {
     }
 
     /** 鉴权 */
-    const bearer = crypto.createHash('sha256').update(`Bearer ${config.ws.token}`).digest('hex')
-    const { authorization } = request.headers
+    const bearer = crypto.createHash('md5').update(`Bearer ${config.ws.token}`).digest('hex')
+    const authorization = crypto.createHash('md5').update(`Bearer ${request.headers.authorization}`).digest('hex')
     if (authorization !== bearer) {
-      logger.error(`[WebSocket][server][鉴权失败]: ${request.socket.remoteAddress}`)
+      logger.error(`[WebSocket][server][鉴权失败]: ${request.socket.remoteAddress} ${request.headers.authorization}`)
       send('auth', { error: '鉴权失败' }, false)
       return server.close()
     }

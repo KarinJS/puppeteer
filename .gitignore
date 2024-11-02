@@ -14,3 +14,5 @@ lerna-debug.log*
 .pnpm-debug.log*
 test.js
 *.png
+data
+*.html
