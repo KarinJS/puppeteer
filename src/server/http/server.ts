@@ -1,17 +1,12 @@
-import crypto from 'crypto'
 import { app } from '../express'
-import { common, config, logger } from '@/utils'
+import { common, logger, auth } from '@/utils'
 import { puppeteer } from '@/puppeteer'
-
-const bearer = crypto.createHash('md5').update(`Bearer ${config.http.token}`).digest('hex')
 
 app.get('/puppeteer/', async (req, res) => {
   logger.info(`[HTTP][get][收到请求]: ${req.ip} ${JSON.stringify(req.query)}`)
   /** 鉴权 get请求秘钥在参数中 */
-  const auth = crypto.createHash('md5').update(`Bearer ${req.query.token}`).digest('hex')
-  if (auth !== bearer) {
+  if (!auth('get', req.ip, req.query.token as string)) {
     logger.error(`[HTTP][get][鉴权失败]: ${req.ip} ${req.query.token}`)
-    return res.status(401).send({ status: 401, message: '鉴权失败' })
   }
 
   const file = String(req.query.file)
@@ -49,9 +44,7 @@ app.post('/puppeteer', async (req, res) => {
   // }
 
   /** 鉴权 */
-  const authorization = req.headers.authorization
-  if (authorization !== bearer) {
-    logger.error(`[HTTP][post][鉴权失败]: ${req.ip} ${req.headers.authorization}`)
+  if (!auth('post', req.ip, req.headers.authorization)) {
     return res.status(401).send({ status: 401, message: '鉴权失败' })
   }
 

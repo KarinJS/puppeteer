@@ -1,11 +1,8 @@
 import fs from 'node:fs'
-import crypto from 'node:crypto'
 import { app } from '../express'
-import { common, config, logger } from '@/utils'
+import { auth, common, logger } from '@/utils'
 import { puppeteer } from '@/puppeteer'
 import { dealTpl } from './template'
-
-const bearer = crypto.createHash('md5').update(`Bearer ${config.http.token}`).digest('hex')
 
 app.post('/render', async (req, res) => {
   logger.info(`[HTTP][post][收到请求]: ${req.ip} ${JSON.stringify(req.body)}`)
@@ -17,9 +14,7 @@ app.post('/render', async (req, res) => {
   // }
 
   /** 鉴权 */
-  const authorization = crypto.createHash('md5').update(`Bearer ${req.headers.authorization}`).digest('hex')
-  if (authorization !== bearer) {
-    logger.error(`[HTTP][post][鉴权失败]: ${req.ip} ${req.headers.authorization}`)
+  if (!auth('post', req.ip, req.headers.authorization)) {
     return res.status(401).send({ status: 401, message: '鉴权失败' })
   }
 

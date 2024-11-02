@@ -3,7 +3,7 @@ import type WebSocket from 'ws'
 import { server } from '../express'
 import { WebSocketServer } from 'ws'
 import { puppeteer } from '@/puppeteer'
-import { common, config, logger } from '@/utils'
+import { auth, common, config, logger } from '@/utils'
 import { Action } from '@/types/client'
 import { lookup } from 'mime-types'
 import Puppeteer from '@karinjs/puppeteer-core'
@@ -80,10 +80,7 @@ export const Server = () => {
     }
 
     /** 鉴权 */
-    const bearer = crypto.createHash('md5').update(`Bearer ${config.ws.token}`).digest('hex')
-    const authorization = crypto.createHash('md5').update(`Bearer ${request.headers.authorization}`).digest('hex')
-    if (authorization !== bearer) {
-      logger.error(`[WebSocket][server][鉴权失败]: ${request.socket.remoteAddress} ${request.headers.authorization}`)
+    if (!auth('ws', request.socket.remoteAddress, request.headers.authorization)) {
       send('auth', { error: '鉴权失败' }, false)
       return server.close()
     }
