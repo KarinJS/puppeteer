@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.3](https://github.com/KarinJS/puppeteer/compare/v1.1.2...v1.1.3) (2024-11-02)
+
+
+### Bug Fixes
+
+* authorization error ([f652365](https://github.com/KarinJS/puppeteer/commit/f652365395f180e2682991c01efebaf9123005d3))
+
 ## [1.1.2](https://github.com/KarinJS/puppeteer/compare/v1.1.1...v1.1.2) (2024-11-02)
 
 
