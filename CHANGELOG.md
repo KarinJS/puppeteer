@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.4](https://github.com/KarinJS/puppeteer/compare/v1.1.3...v1.1.4) (2024-11-04)
+
+
+### Bug Fixes
+
+* 跟随上游 ([381771d](https://github.com/KarinJS/puppeteer/commit/381771d7e4ec596419e46c1d463ee1f85174a0d9))
+
 ## [1.1.3](https://github.com/KarinJS/puppeteer/compare/v1.1.2...v1.1.3) (2024-11-02)
 
 
