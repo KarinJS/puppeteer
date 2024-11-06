@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.1](https://github.com/KarinJS/puppeteer/compare/v1.2.0...v1.2.1) (2024-11-06)
+
+
+### Bug Fixes
+
+* 推进版本 ([18b0eb6](https://github.com/KarinJS/puppeteer/commit/18b0eb629da532b40ad395b9f975cb54904bb936))
+
 ## [1.2.0](https://github.com/KarinJS/puppeteer/compare/v1.1.4...v1.2.0) (2024-11-04)
 
 
