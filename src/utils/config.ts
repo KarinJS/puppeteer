@@ -1,5 +1,6 @@
 import fs from 'fs'
 import path from 'path'
+import { fileURLToPath } from 'url'
 
 export const file = path.join(process.cwd(), 'config.json')
 export const logsDir = path.join(process.cwd(), 'logs/logger')
@@ -36,13 +37,11 @@ if (!fs.existsSync(file)) {
       '--no-zygote',
       '--disable-extensions',
       '--disable-dev-shm-usage',
-      '--window-size=1920,1080',
-      '--force-device-scale-factor=2',
     ]
   }, null, 2))
 }
 
-export const pkg = JSON.parse(fs.readFileSync(path.join(import.meta.dirname, '../../package.json'), 'utf-8'))
+export const pkg = JSON.parse(fs.readFileSync(path.join(path.dirname(fileURLToPath(import.meta.url)), '../../package.json'), 'utf-8'))
 
 export const config = JSON.parse(fs.readFileSync(file, 'utf-8')) as {
   /** 日志级别 */

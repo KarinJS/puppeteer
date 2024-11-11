@@ -1,6 +1,7 @@
 import { app } from '../express'
 import { common, logger, auth } from '@/utils'
 import { puppeteer } from '@/puppeteer'
+import { httpErrRes, httpSuccRes } from '@/utils/response'
 
 app.get('/puppeteer/', async (req, res) => {
   logger.info(`[HTTP][get][收到请求]: ${req.ip} ${JSON.stringify(req.query)}`)
@@ -15,7 +16,7 @@ app.get('/puppeteer/', async (req, res) => {
 
   try {
     const start = Date.now()
-    const buffer = await puppeteer.screenshot({
+    const data = await puppeteer.screenshot({
       file,
       type: 'png',
       pageGotoParams: {
@@ -25,9 +26,9 @@ app.get('/puppeteer/', async (req, res) => {
         deviceScaleFactor: 3
       }
     })
-    res.setHeader('Content-Type', 'image/png')
-    res.send(buffer)
-    return common.log(buffer, file, start)
+
+    httpSuccRes(res, data, 'binary', false)
+    return common.log(data, file, start)
   } catch (error: any) {
     console.error(error)
     res.status(500).send({ status: 500, message: '内部错误', error: error.message })
@@ -50,12 +51,12 @@ app.post('/puppeteer', async (req, res) => {
 
   try {
     const start = Date.now()
-    const buffer = await puppeteer.screenshot(req.body)
-    res.setHeader('Content-Type', 'image/png')
-    res.send(buffer)
-    return common.log(buffer, req.body.file, start)
+    const data = await puppeteer.screenshot(req.body)
+
+    httpSuccRes(res, data, req.body.encoding, req.body.multiPage)
+    return common.log(data, req.body.file, start)
   } catch (error: any) {
     console.error(error)
-    res.status(500).send({ status: 500, message: '内部错误', error: error.message })
+    httpErrRes(res, error)
   }
 })

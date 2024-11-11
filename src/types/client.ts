@@ -7,8 +7,10 @@ import { type RenderResult, type screenshot } from '@karinjs/puppeteer-core/lib/
 export const enum Action {
   /** 渲染 */
   render = 'render',
-  /** 请求客户端发送静态资源 */
+  /** 主动请求发起方发送静态资源 */
   static = 'static',
+  /** 返回响应给请求方 */
+  response = 'response',
 }
 
 /**

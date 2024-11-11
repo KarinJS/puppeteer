@@ -3,6 +3,7 @@ import { app } from '../express'
 import { auth, common, logger } from '@/utils'
 import { puppeteer } from '@/puppeteer'
 import { dealTpl } from './template'
+import { httpErrRes, httpSuccRes } from '@/utils/response'
 
 app.post('/render', async (req, res) => {
   logger.info(`[HTTP][post][收到请求]: ${req.ip} ${JSON.stringify(req.body)}`)
@@ -25,9 +26,9 @@ app.post('/render', async (req, res) => {
     delete req.body.data
 
     const start = Date.now()
-    const buffer = await puppeteer.screenshot(req.body)
-    res.setHeader('Content-Type', 'image/png')
-    res.send(buffer)
+    const data = await puppeteer.screenshot(req.body)
+    httpSuccRes(res, data, req.body.encoding, req.body.multiPage)
+
     /** 5秒之后删除模板 */
     setTimeout(() => {
       try {
@@ -37,9 +38,9 @@ app.post('/render', async (req, res) => {
       }
     }, 5000)
 
-    return common.log(buffer, req.body.file, start)
+    return common.log(data, req.body.file, start)
   } catch (error: any) {
     console.error(error)
-    res.status(500).send({ status: 500, message: '内部错误', error: error.message })
+    httpErrRes(res, error)
   }
 })

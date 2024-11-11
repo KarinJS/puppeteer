@@ -1,8 +1,9 @@
 import WebSocket from 'ws'
 import crypto from 'crypto'
-import { common, config, logger } from '@/utils'
 import { Action } from '@/types/client'
 import { puppeteer } from '@/puppeteer'
+import { common, config, logger } from '@/utils'
+import { wsErrRes, wsSuccRes } from '@/utils/response'
 
 /**
  * ws客户端
@@ -18,8 +19,6 @@ export const Client = (url: string, token: string) => {
       authorization: crypto.createHash('md5').update(`Bearer ${token}`).digest('hex')
     }
   })
-
-  const send = (echo: string, data: any, status = true) => client.send(JSON.stringify({ echo, type: 'response', status: status ? 'ok' : 'error', data }))
 
   client.on('open', () => {
     init = true
@@ -38,15 +37,16 @@ export const Client = (url: string, token: string) => {
         try {
           const start = Date.now()
           const result = await puppeteer.screenshot(data)
-          send(echo, result)
+
+          wsSuccRes(client, echo, result, data.encoding, data.multiPage)
           return common.log(result, data.file, start)
         } catch (error) {
           logger.error(`[WebSocket][client][截图失败]: ${error}`)
-          return send(echo, { error }, false)
+          return wsErrRes(client, echo, error)
         }
       }
       default:
-        return send(echo, { error: '未知的action' })
+        return wsErrRes(client, echo, { message: '未知的请求类型' })
     }
   })
 
