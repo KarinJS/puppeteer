@@ -82,6 +82,7 @@ export const wsSuccRes = (
  * @param error 错误信息对象
  */
 export const wsErrRes = (socket: WebSocket, echo: string, error: unknown) => {
-  const result = { echo, action: Action.response, status: 'error', data: { error } }
+  const action = echo === 'auth' ? Action.close : Action.response
+  const result = { echo, action, status: 'error', data: { error } }
   socket.send(JSON.stringify(result))
 }

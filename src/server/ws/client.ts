@@ -45,6 +45,8 @@ export const Client = (url: string, token: string) => {
           return wsErrRes(client, echo, error)
         }
       }
+      case Action.close:
+        return logger.warn(`[WebSocket][client][服务端主动关闭连接]: ${url} message: ${data.message}`)
       default:
         return wsErrRes(client, echo, { message: '未知的请求类型' })
     }

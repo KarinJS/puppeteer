@@ -11,6 +11,8 @@ export const enum Action {
   static = 'static',
   /** 返回响应给请求方 */
   response = 'response',
+  /** 服务端主动关闭连接 */
+  close = 'close',
 }
 
 /**
