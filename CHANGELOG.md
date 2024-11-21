@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.3](https://github.com/KarinJS/puppeteer/compare/v1.2.2...v1.2.3) (2024-11-20)
+
+
+### Bug Fixes
+
+* 修正鉴权失败返回 新增鉴权测试接口 ([0c9240c](https://github.com/KarinJS/puppeteer/commit/0c9240cd25e9d8cebeb18495cbfb676734a22a14))
+
 ## [1.2.2](https://github.com/KarinJS/puppeteer/compare/v1.2.1...v1.2.2) (2024-11-11)
 
 
