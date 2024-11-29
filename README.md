@@ -2,20 +2,12 @@
 
 ## 安装
 
-> 需要先`npm init`初始化项目
-
 ```bash
-npm install @karinjs/puppeteer && node .
-# or
-npm install @karinjs/puppeteer && npx init && node .
-# or
-pnpm init && pnpm install @karinjs/puppeteer && node .
+npm init -y && npm install @karinjs/puppeteer && npx init && node .
 # or
 pnpm init && pnpm install @karinjs/puppeteer && npx init && node .
 # or
-yarn init && yarn add @karinjs/puppeteer && node .
-# or
-yarn init && yarn add @karinjs/puppeteer && npx init && node .
+yarn init -y && yarn add @karinjs/puppeteer && npx init && node .
 ```
 
 ## 1. 项目配置
