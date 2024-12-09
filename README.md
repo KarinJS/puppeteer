@@ -17,6 +17,7 @@ yarn init -y && yarn add @karinjs/puppeteer && npx init && node .
 ```json
 {
   "logLevel": "info",
+  "headless": true,
   "http": {
     "host": "0.0.0.0",
     "port": 7005,
@@ -179,4 +180,31 @@ curl http://127.0.0.1:7005/puppeteer?auth=123456&file=http://www.baidu.com
     ]
   }
 }
+```
+
+## 启动
+
+```bash
+# 前台启动
+node .
+
+# 查看全部指令
+npx k
+
+# 初始化
+npx init
+
+# 后台启动 需要全局安装pm2 `npm install -g pm2`
+npx k .
+npx k app
+npx k start
+
+# pm2重启
+npx k rs
+
+# pm2停止
+npx k stop
+
+# pm2查看日志
+npx k log
 ```

@@ -12,13 +12,18 @@ const pm2File = path.join(process.cwd(), basename)
 
 /** 前台启动 */
 const start = async () => {
-  fork(process.cwd() + './index.js')
+  fork(process.cwd() + '/index.js')
 }
 
 /** pm2运行 */
 const pm2 = async () => {
   await init()
-  await exec(`pm2 start ${basename}`)
+  const { status, error } = await exec(`pm2 start ${basename}`)
+  if (!status) {
+    console.error('[pm2] 启动失败')
+    throw error
+  }
+
   console.log('[pm2] 启动成功')
   console.log('[pm2] 重启服务: npx k rs')
   console.log('[pm2] 查看日志: npx k log')
@@ -50,7 +55,12 @@ const stop = async () => {
 
 /** pm2重启 */
 const restart = async () => {
-  await exec(`pm2 restart ${basename}`)
+  const { status, error } = await exec(`pm2 restart ${basename}`)
+  if (!status) {
+    console.error('[pm2] 重启失败')
+    throw error
+  }
+
   console.log('[pm2] 重启成功')
   process.exit()
 }
@@ -144,6 +154,7 @@ const version = JSON.parse(fs.readFileSync(pkg, 'utf-8')).version
 
 program.version(version, '-v, --version', '显示版本号')
 program.command('.').description('前台启动').action(start)
+program.command('app').description('前台启动').action(start)
 program.command('start').description('前台启动').action(start)
 program.command('init').description('初始化').action(init)
 program.command('pm2').description('[pm2] 后台运行').action(pm2)

@@ -11,6 +11,7 @@ if (!fs.existsSync(path.dirname(logsDir))) fs.mkdirSync(path.dirname(logsDir), {
 if (!fs.existsSync(file)) {
   fs.writeFileSync(file, JSON.stringify({
     logLevel: 'info',
+    headless: true,
     http: {
       host: '0.0.0.0',
       port: 7005,
@@ -46,6 +47,8 @@ export const pkg = JSON.parse(fs.readFileSync(path.join(path.dirname(fileURLToPa
 export const config = JSON.parse(fs.readFileSync(file, 'utf-8')) as {
   /** 日志级别 */
   logLevel: 'trace' | 'debug' | 'info' | 'mark' | 'warn' | 'error' | 'fatal'
+  /** 是否启用纯无头 */
+  headless: boolean
   /** 服务配置 */
   http: {
     /** 监听地址 */

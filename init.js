@@ -15,7 +15,30 @@ const findProjectRoot = (startDir) => {
   return startDir
 }
 
+const defaultCfg = {
+  lines: 1000,
+  apps: [
+    {
+      name: 'karin-puppeteer',
+      script: 'index.js',
+      autorestart: true,
+      max_restarts: 10,
+      max_memory_restart: '1G',
+      restart_delay: 2000,
+      merge_logs: true,
+      error_file: 'logs/pm2Error.log',
+      out_file: 'logs/pm2Out.log'
+    }
+  ]
+}
+
 const projectRoot = process.env.INIT_CWD || findProjectRoot(process.cwd())
+const pm2File = path.join(projectRoot, 'pm2.json')
+
+if (!fs.existsSync(pm2File)) {
+  fs.writeFileSync(pm2File, JSON.stringify(defaultCfg, null, 2))
+}
+
 /** 处于postinstall脚本环境 无法修改package.json */
 if (process.env.INIT_CWD) {
   fs.writeFileSync(path.join(projectRoot, 'index.js'), `import('@karinjs/puppeteer')\n`)
