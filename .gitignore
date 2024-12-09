@@ -16,3 +16,5 @@ test.js
 *.png
 data
 *.html
+index.js
+pm2.json
