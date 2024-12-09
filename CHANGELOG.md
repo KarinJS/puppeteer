@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.5](https://github.com/KarinJS/puppeteer/compare/v1.2.4...v1.2.5) (2024-12-09)
+
+
+### Bug Fixes
+
+* cli ([0d77f82](https://github.com/KarinJS/puppeteer/commit/0d77f82e286c8aaa2df4e69a277c3b52cbcffc2e))
+
 ## [1.2.4](https://github.com/KarinJS/puppeteer/compare/v1.2.3...v1.2.4) (2024-12-09)
 
 
