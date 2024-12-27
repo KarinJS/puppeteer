@@ -12,12 +12,12 @@
     "packages/puppeteer": {
       "release-type": "node",
       "package-name": "@karinjs/puppeteer",
-      "component": "puppeteer"
+      "component": "puppeteer-repo"
     },
     "packages/puppeteer-core": {
       "release-type": "node",
       "package-name": "@karinjs/puppeteer-core",
-      "component": "puppeteer-core"
+      "component": "puppeteer-repo"
     }
   }
 }
