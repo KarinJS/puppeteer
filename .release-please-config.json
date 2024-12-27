@@ -17,7 +17,7 @@
     "packages/puppeteer-core": {
       "release-type": "node",
       "package-name": "@karinjs/puppeteer-core",
-      "component": "core"
+      "component": "puppeteer-core"
     }
   }
 }
