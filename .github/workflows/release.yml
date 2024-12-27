@@ -49,8 +49,8 @@ jobs:
         run: pnpm build
         if: ${{ steps.release.outputs.releases_created }}
       # 重新安装依赖 让core指向本地
-      - name: 重新安装依赖
-        run: pnpm install
+      - name: 删除所文件 重新安装依赖
+        run: rm -rf pnpm-lock.yaml && pnpm install
         if: ${{ steps.release.outputs.releases_created }}
       # 发布到 npm
       - name: 发布到 npm
