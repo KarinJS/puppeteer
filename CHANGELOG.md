@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.4.1](https://github.com/KarinJS/puppeteer/compare/root-v1.4.0...root-v1.4.1) (2024-12-27)
+
+
+### Bug Fixes
+
+* **all:** ？？？ ([c68a687](https://github.com/KarinJS/puppeteer/commit/c68a6874ca15570c8347ec1ad62bcdb0bcf1187b))
+* 提升个版本 ([7f9395b](https://github.com/KarinJS/puppeteer/commit/7f9395b0c936d1dc610eebe4146505c1b350c1b2))
+
 ## [1.4.0](https://github.com/KarinJS/puppeteer/compare/root-v1.3.0...root-v1.4.0) (2024-12-27)
 
 
