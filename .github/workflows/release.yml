@@ -1,0 +1,65 @@
+name: release
+on:
+  push:
+    branches:
+      - main
+
+# 赋予 release-please-action 权限
+permissions:
+  contents: write
+  pull-requests: write
+jobs:
+  # 设置 release-please 任务
+  release-please:
+    # 设置任务运行环境为 ubuntu-latest
+    runs-on: ubuntu-latest
+    steps:
+      # 使用 release-please-action 动作来自动创建发布 PR
+      - uses: googleapis/release-please-action@v4
+        id: release
+        with:
+          # 配置为 monorepo 模式
+          command: manifest
+          monorepo-tags: true
+          # 配置包路径
+          packages:
+            packages/puppeteer
+            packages/puppeteer-core
+          # 配置发布类型
+          release-type: node
+      - name: 检出代码
+        uses: actions/checkout@v4
+        if: ${{ steps.release.outputs.releases_created }}
+      # 安装 pnpm
+      - uses: pnpm/action-setup@v2
+        if: ${{ steps.release.outputs.releases_created }}
+        with:
+          version: 8
+      # 设置 Node.js 环境
+      - name: 设置 Node.js 环境
+        uses: actions/setup-node@v4
+        with:
+          # 设置 Node.js 版本
+          node-version: 20
+          # 设置 npm 源
+          registry-url: "https://registry.npmjs.org"
+          cache: 'pnpm'
+        if: ${{ steps.release.outputs.releases_created }}
+      # 安装依赖
+      - name: 安装依赖
+        run: pnpm install
+        if: ${{ steps.release.outputs.releases_created }}
+      # 构建输出
+      - name: 构建输出
+        run: pnpm build
+        if: ${{ steps.release.outputs.releases_created }}
+      # 重新安装依赖 让core指向本地
+      - name: 重新安装依赖
+        run: pnpm install
+        if: ${{ steps.release.outputs.releases_created }}
+      # 发布到 npm
+      - name: 发布到 npm
+        run: pnpm pub
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        if: ${{ steps.release.outputs.releases_created }}

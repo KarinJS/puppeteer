@@ -1,5 +1,5 @@
 import { type Puppeteer } from '@karinjs/puppeteer-core'
-import { type RenderResult, type screenshot } from '@karinjs/puppeteer-core/lib/puppeteer/core'
+import { type RenderResult, type screenshot } from '@karinjs/puppeteer-core'
 
 /**
  * ws交互Api
