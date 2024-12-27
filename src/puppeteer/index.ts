@@ -1,7 +1,7 @@
 import path from 'node:path'
 import { config } from '@/utils'
 import { Puppeteer, screenshot as Screenshot } from '@karinjs/puppeteer-core'
-import { vueToHtml } from '@/vue'
+import { vueToHtml } from '@/ssr'
 
 /**
  * 浏览器实例

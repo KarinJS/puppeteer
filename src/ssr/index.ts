@@ -9,7 +9,7 @@ import { renderToString } from 'vue/server-renderer'
  * @param data 传递给组件的数据
  */
 export const vueToHtml = async (file: string, options: Record<string, any>) => {
-  const component = await fs.readFile(file, 'utf-8')
+  const component = await fs.readFile(file.replace('file://', ''), 'utf-8')
   const { descriptor } = parse(component)
   const template = descriptor.template?.content || ''
   const app = createSSRApp({ template, data: () => options })

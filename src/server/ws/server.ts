@@ -3,7 +3,7 @@ import crypto from 'node:crypto'
 import type WebSocket from 'ws'
 import { server } from '../express'
 import { WebSocketServer } from 'ws'
-import { puppeteer } from '@/puppeteer'
+import { screenshot } from '@/puppeteer'
 import { Action } from '@/types/client'
 import { lookup } from 'mime-types'
 import Puppeteer from '@karinjs/puppeteer-core'
@@ -97,14 +97,14 @@ export const Server = () => {
     const render = (request.socket.remoteAddress === '::1' || request.socket.remoteAddress === '127.0.0.1')
       /** 本地ip */
       ? async (data: any) => {
-        const result = await puppeteer.screenshot(data)
+        const result = await screenshot(data)
         return result
       }
       /** 强制性等待并且劫持请求通过ws进行交互 */
       : async (data: any) => {
         data.pageGotoParams = data.pageGotoParams || {}
         data.pageGotoParams.waitUntil = 'networkidle2'
-        const result = await puppeteer.screenshot({ ...data, setRequestInterception })
+        const result = await screenshot({ ...data, setRequestInterception })
         return result
       }
 
@@ -122,7 +122,7 @@ export const Server = () => {
             const start = Date.now()
             /** http */
             if (data.file.startsWith('http')) {
-              const result = await puppeteer.screenshot(data)
+              const result = await screenshot(data)
               wsSuccRes(server, echo, result, data.encoding, data.multiPage)
               return common.log(result, data.file, start)
             }

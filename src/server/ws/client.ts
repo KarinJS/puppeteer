@@ -1,7 +1,7 @@
 import WebSocket from 'ws'
 import crypto from 'crypto'
 import { Action } from '@/types/client'
-import { puppeteer } from '@/puppeteer'
+import { screenshot } from '@/puppeteer'
 import { common, config, logger } from '@/utils'
 import { wsErrRes, wsSuccRes } from '@/utils/response'
 
@@ -36,7 +36,7 @@ export const Client = (url: string, token: string) => {
       case Action.render: {
         try {
           const start = Date.now()
-          const result = await puppeteer.screenshot(data)
+          const result = await screenshot(data)
 
           wsSuccRes(client, echo, result, data.encoding, data.multiPage)
           return common.log(result, data.file, start)

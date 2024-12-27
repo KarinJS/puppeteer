@@ -17,6 +17,10 @@ export const common = {
     }
 
     const kb = (length / 1024).toFixed(2) + 'KB'
-    logger.mark(`[图片生成][${path.basename(file)}][${count.count}次] ${kb} ${Date.now() - start}ms`)
+    let name = path.basename(file)
+    if (!file.startsWith('http') || !file.startsWith('file')) {
+      name = 'str.html'
+    }
+    logger.mark(`[图片生成][${name}][${count.count}次] ${kb} ${Date.now() - start}ms`)
   }
 }

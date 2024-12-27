@@ -354,7 +354,7 @@ const bio = '这是一段个人简介'
 
 ```json
 {
-  "componentPath": "/root/test.vue",
+  "file": "/root/test.vue",
   "data": {
     "name": "张三",
     "age": 28,

@@ -1,6 +1,6 @@
 import { app } from '../express'
 import { common, logger, auth } from '@/utils'
-import { puppeteer } from '@/puppeteer'
+import { screenshot } from '@/puppeteer'
 import { httpErrRes, httpSuccRes } from '@/utils/response'
 
 app.get('/puppeteer/', async (req, res) => {
@@ -16,7 +16,7 @@ app.get('/puppeteer/', async (req, res) => {
 
   try {
     const start = Date.now()
-    const data = await puppeteer.screenshot({
+    const data = await screenshot({
       file,
       type: 'png',
       pageGotoParams: {
@@ -51,7 +51,7 @@ app.post('/puppeteer', async (req, res) => {
 
   try {
     const start = Date.now()
-    const data = await puppeteer.screenshot(req.body)
+    const data = await screenshot(req.body)
 
     httpSuccRes(res, data, req.body.encoding, req.body.multiPage)
     return common.log(data, req.body.file, start)

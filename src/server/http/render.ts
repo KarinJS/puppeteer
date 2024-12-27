@@ -1,7 +1,7 @@
 import fs from 'node:fs'
 import { app } from '../express'
 import { auth, common, logger } from '@/utils'
-import { puppeteer } from '@/puppeteer'
+import { screenshot } from '@/puppeteer'
 import { dealTpl } from './template'
 import { httpErrRes, httpSuccRes } from '@/utils/response'
 
@@ -26,7 +26,7 @@ app.post('/render', async (req, res) => {
     delete req.body.data
 
     const start = Date.now()
-    const data = await puppeteer.screenshot(req.body)
+    const data = await screenshot(req.body)
     httpSuccRes(res, data, req.body.encoding, req.body.multiPage)
 
     /** 5秒之后删除模板 */
