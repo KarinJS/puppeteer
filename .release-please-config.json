@@ -1,0 +1,15 @@
+{
+  "packages": {
+    "packages/puppeteer": {
+      "release-type": "node",
+      "package-name": "@karinjs/puppeteer"
+    },
+    "packages/puppeteer-core": {
+      "release-type": "node",
+      "package-name": "@karinjs/puppeteer-core"
+    }
+  },
+  "bootstrap-sha": "commit-sha-here",
+  "release-type": "node",
+  "include-component-in-tag": true
+}

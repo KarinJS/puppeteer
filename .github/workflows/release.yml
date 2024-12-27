@@ -20,13 +20,10 @@ jobs:
         with:
           # 配置为 monorepo 模式
           command: manifest
+          # 确保使用 manifest 配置文件
+          config-file: .release-please-config.json
+          manifest-file: .release-please-manifest.json
           monorepo-tags: true
-          # 配置包路径
-          packages:
-            packages/puppeteer
-            packages/puppeteer-core
-          # 配置发布类型
-          release-type: node
       - name: 检出代码
         uses: actions/checkout@v4
       # 安装 pnpm
