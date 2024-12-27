@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.3.0](https://github.com/KarinJS/puppeteer/compare/v1.2.5...v1.3.0) (2024-12-27)
+
+
+### Features
+
+* 更新依赖并重构 API，添加 Vue 组件支持 ([bc6e91d](https://github.com/KarinJS/puppeteer/commit/bc6e91db1bc31c87860ede45fddfb601c84c7bd9))
+* 添加 Vue 单组件示例及接口请求参数说明 ([c6459b7](https://github.com/KarinJS/puppeteer/commit/c6459b7dc344b6afeab0df3fffefcb13156be32f))
+
 ## [1.2.5](https://github.com/KarinJS/puppeteer/compare/v1.2.4...v1.2.5) (2024-12-09)
 
 
