@@ -26,35 +26,34 @@ jobs:
           monorepo-tags: true
       - name: 检出代码
         uses: actions/checkout@v4
+        if: ${{ steps.release.outputs.release_created }}
       # 安装 pnpm
       - uses: pnpm/action-setup@v2
-        if: ${{ steps.release.outputs.releases_created }}
+        if: ${{ steps.release.outputs.release_created }}
         with:
           version: 8
       # 设置 Node.js 环境
       - name: 设置 Node.js 环境
         uses: actions/setup-node@v4
+        if: ${{ steps.release.outputs.release_created }}
         with:
-          # 设置 Node.js 版本
           node-version: 20
-          # 设置 npm 源
           registry-url: "https://registry.npmjs.org"
-        if: ${{ steps.release.outputs.releases_created }}
       # 安装依赖
       - name: 安装依赖
+        if: ${{ steps.release.outputs.release_created }}
         run: pnpm install
-        if: ${{ steps.release.outputs.releases_created }}
       # 构建输出
       - name: 构建输出
+        if: ${{ steps.release.outputs.release_created }}
         run: pnpm build
-        if: ${{ steps.release.outputs.releases_created }}
-      # 重新安装依赖 让core指向本地
+      # 重新安装依赖
       - name: 删除所文件 重新安装依赖
+        if: ${{ steps.release.outputs.release_created }}
         run: rm -rf pnpm-lock.yaml && pnpm install
-        if: ${{ steps.release.outputs.releases_created }}
       # 发布到 npm
       - name: 发布到 npm
+        if: ${{ steps.release.outputs.release_created }}
         run: pnpm pub
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-        if: ${{ steps.release.outputs.releases_created }}
