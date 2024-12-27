@@ -2,19 +2,22 @@
   "$schema": "https://raw.githubusercontent.com/googleapis/release-please/main/schemas/config.json",
   "release-type": "node",
   "include-component-in-tag": true,
-  "pull-request-title-pattern": "chore: release ${component} ${version} [skip-ci]",
+  "pull-request-title-pattern": "chore(release): ${component} ${version} [skip-ci]",
   "pull-request-header": "Please run the release_notes action before releasing to generate release highlights",
   "packages": {
     ".": {
-      "release-type": "node"
+      "release-type": "node",
+      "component": "puppeteer-repo"
     },
     "packages/puppeteer": {
       "release-type": "node",
-      "package-name": "@karinjs/puppeteer"
+      "package-name": "@karinjs/puppeteer",
+      "component": "puppeteer"
     },
     "packages/puppeteer-core": {
       "release-type": "node",
-      "package-name": "@karinjs/puppeteer-core"
+      "package-name": "@karinjs/puppeteer-core",
+      "component": "puppeteer-core"
     }
   }
 }

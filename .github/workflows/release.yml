@@ -18,12 +18,8 @@ jobs:
       - uses: googleapis/release-please-action@v4
         id: release
         with:
-          # 配置为 monorepo 模式
-          command: manifest
-          # 确保使用 manifest 配置文件
           config-file: .release-please-config.json
           manifest-file: .release-please-manifest.json
-          monorepo-tags: true
       - name: 检出代码
         uses: actions/checkout@v4
         if: ${{ steps.release.outputs.release_created }}
