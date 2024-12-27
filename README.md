@@ -208,3 +208,161 @@ npx k stop
 # pm2查看日志
 npx k log
 ```
+
+
+### vue单组件
+
+```vue
+<template>
+  <div class="profile-card" data-v-component>
+    <div class="profile-header">
+      <div class="avatar">
+        <img :src="avatar" alt="头像" v-if="avatar">
+        <div class="avatar-placeholder" v-else>{{ nameInitial }}</div>
+      </div>
+      <h2 class="name">{{ name }}</h2>
+    </div>
+
+    <div class="profile-info">
+      <div class="info-item">
+        <span class="label">年龄:</span>
+        <span class="value">{{ age }}岁</span>
+      </div>
+      <div class="info-item">
+        <span class="label">职业:</span>
+        <span class="value">{{ occupation }}</span>
+      </div>
+      <div class="info-item">
+        <span class="label">所在地:</span>
+        <span class="value">{{ location }}</span>
+      </div>
+      <div class="info-item">
+        <span class="label">邮箱:</span>
+        <span class="value">{{ email }}</span>
+      </div>
+    </div>
+
+    <div class="profile-bio">
+      <p>{{ bio }}</p>
+    </div>
+  </div>
+</template>
+
+<style scoped>
+.profile-card {
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  padding: 24px;
+  width: 100%;
+  max-width: 400px;
+  box-sizing: border-box;
+}
+
+.profile-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.avatar {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  margin-bottom: 16px;
+  overflow: hidden;
+}
+
+.avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.avatar-placeholder {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 36px;
+  font-weight: bold;
+}
+
+.name {
+  font-size: 24px;
+  color: #1f2937;
+  margin: 0;
+  font-weight: 600;
+}
+
+.profile-info {
+  background: #f3f4f6;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 20px;
+}
+
+.info-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.info-item:last-child {
+  border-bottom: none;
+}
+
+.label {
+  color: #6b7280;
+  font-size: 14px;
+}
+
+.value {
+  color: #111827;
+  font-weight: 500;
+  font-size: 14px;
+}
+
+.profile-bio {
+  color: #4b5563;
+  font-size: 14px;
+  line-height: 1.6;
+  padding: 0 8px;
+}
+</style>
+
+<script setup>
+const name = '张三'
+const avatar = ''
+const age = 18
+const occupation = '前端工程师'
+const location = '北京'
+const email = 'test@gmail.com'
+const bio = '这是一段个人简介'
+
+</script>
+```
+
+- 将上面的代码保存为`test.vue`文件
+- 使用接口 [#2.4 自定义传参截图post)](#24-自定义传参截图post)
+- 请求参数如下:
+
+```json
+{
+  "componentPath": "/root/test.vue",
+  "data": {
+    "name": "张三",
+    "age": 28,
+    "occupation": "前端工程师",
+    "location": "北京市朝阳区",
+    "email": "zhangsan@example.com",
+    "bio": "热爱技术，专注于前端开发5年，擅长 Vue.js 和 React。工作之余喜欢摄影和旅行，希望能用技术改变世界。",
+    "avatar": "https://upload-bbs.miyoushe.com/upload/2023/10/24/80663279/3e83fef3d037b0de8d838cfe53582f5e_2622909253864094745.jpg"
+  }
+}
+```
