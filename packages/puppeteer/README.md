@@ -212,6 +212,9 @@ npx k log
 
 ### vue单组件
 
+<details>
+  <summary>点击查看 Vue 单组件代码</summary>
+
 ```vue
 <template>
   <div class="profile-card" data-v-component>
@@ -347,6 +350,8 @@ const bio = '这是一段个人简介'
 
 </script>
 ```
+
+</details>
 
 - 将上面的代码保存为`test.vue`文件
 - 使用接口 [#2.4 自定义传参截图post)](#24-自定义传参截图post)
