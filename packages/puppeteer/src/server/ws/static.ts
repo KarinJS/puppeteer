@@ -11,6 +11,15 @@ export const cacheHtml = (file: string) => {
 
   // 生成虚拟路径 判断是windows还是linux
   const html = process.platform === 'win32' ? `file:///C:/uuid/${uuid}.html` : `file:///root/uuid/${uuid}.html`
+
+  // 模拟puppeteer的file路径
+  file = file.replace('file://', '')
+  if (/^[a-zA-Z]:/.test(file)) {
+    file = `file:///${file}`
+  } else {
+    file = `file://${file}`
+  }
+
   cache.set(html, file)
   return html
 }

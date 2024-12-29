@@ -70,13 +70,16 @@ export const Server = () => {
         script: 'text/javascript',
       } as const
 
+      /** 请求的源html文件 */
+      const srcFile = data.file
       let file = path.dirname(data.file).replace('file://', '')
-      if (data.file.startsWith('file:///C:/uuid') || data.file.startsWith('file:///root/uuid')) {
+      if (srcFile.startsWith('file:///C:/uuid') || srcFile.startsWith('file:///root/uuid')) {
         file = getHtml(data.file)
       }
 
       const handleRequest = async (type: keyof typeof typeMap) => {
-        const actionPath = request.url()
+        /** 命中文件进行替换 */
+        const actionPath = request.url() === srcFile ? file : request.url()
 
         /** http */
         if (actionPath.startsWith('http')) return request.continue()

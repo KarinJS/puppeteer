@@ -232,44 +232,8 @@ export class Render {
   async page (data: screenshot) {
     /** 创建页面 */
     const page = await this.browser.newPage()
-    // let page: Page
-
     /** 打开页面数+1 */
     common.emit('newPage', this.id)
-
-    // /** 如果waitUntil传参了 直接加载页面 */
-    // if (data?.pageGotoParams?.waitUntil) {
-    //   /** 有监听器需求 new一个 */
-    //   if (typeof data.setRequestInterception === 'function') {
-    //     page = await this.browser.newPage()
-    //     this.pages.push(page)
-
-    //     /** 请求拦截处理 */
-    //     await page.setRequestInterception(true)
-    //     page.on('request', (req) => data.setRequestInterception!(req, data))
-    //   } else {
-    //     /** 无监听器需求 从页面中拿一个 */
-    //     page = this.pages[0]
-    //   }
-
-    //   /** 设置HTTP 标头 */
-    //   if (data.headers) await page.setExtraHTTPHeaders(data.headers)
-
-    //   /** 打开、加载页面 */
-    //   if (data.file.startsWith('http') || data.file.startsWith('file://')) {
-    //     await page.goto(data.file, data.pageGotoParams)
-    //   } else {
-    //     await page.setContent(data.file, data.pageGotoParams)
-    //   }
-    // } else {
-    //   /** 有监听器需求 new一个 */
-    //   page = await this.browser.newPage()
-    //   this.pages.push(page)
-    //   /** 设置HTTP 标头 */
-    //   if (data.headers) await page.setExtraHTTPHeaders(data.headers)
-    //   /** 模拟0毫秒的waitUntil */
-    //   await this.simulateWaitUntil(page, data)
-    // }
 
     /** 设置HTTP 标头 */
     if (data.headers) await page.setExtraHTTPHeaders(data.headers)
