@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.3](https://github.com/KarinJS/puppeteer/compare/puppeteer-core-v1.4.2...puppeteer-core-v1.4.3) (2024-12-29)
+
+
+### Bug Fixes
+
+* 修复文件路径处理逻辑，增强跨平台兼容性 ([d60f2eb](https://github.com/KarinJS/puppeteer/commit/d60f2eb23e8654f961257f128d595813e5af7133))
+
 ## [1.4.2](https://github.com/KarinJS/puppeteer/compare/puppeteer-core-v1.4.1...puppeteer-core-v1.4.2) (2024-12-29)
 
 

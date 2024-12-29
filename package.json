@@ -1,6 +1,6 @@
 {
   "name": "@karinjs/puppeteer-repo",
-  "version": "1.4.2",
+  "version": "1.4.3",
   "scripts": {
     "build": "pnpm -r build",
     "dev": "pnpm -r dev",
