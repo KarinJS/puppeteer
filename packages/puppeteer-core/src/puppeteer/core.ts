@@ -1,13 +1,6 @@
 import { common } from '@Common'
 import { ChildProcess } from 'child_process'
-import puppeteer, { Browser, GoToOptions, HTTPRequest, Page, LaunchOptions as PuppeteerLaunchOptions, ScreenshotOptions } from 'puppeteer-core'
-import { PagePool } from './pagePool'
-
-// 扩展 LaunchOptions 类型
-export interface LaunchOptions extends PuppeteerLaunchOptions {
-  /** 页面池最大数量 默认10 */
-  maxPages?: number
-}
+import puppeteer, { Browser, GoToOptions, HTTPRequest, Page, LaunchOptions, ScreenshotOptions } from 'puppeteer-core'
 
 export interface screenshot extends ScreenshotOptions {
   /** http地址、本地文件路径、html字符串 */
@@ -107,8 +100,6 @@ export class Render {
   process!: ChildProcess | null
   /** 页面实例 */
   // pages: Page[]
-  pagePool!: PagePool
-
   constructor (id: number, config: LaunchOptions) {
     this.id = id
     this.config = config
@@ -125,13 +116,10 @@ export class Render {
     /** 浏览器id */
     this.process = this.browser.process()
 
-    // 初始化页面池，传入最大页面数配置
-    this.pagePool = new PagePool(this, this.config.maxPages)
-
     /** 监听浏览器关闭事件 移除浏览器实例 */
     this.browser.on('disconnected', async () => {
       console.error(`[浏览器][${this.id}] 已关闭或崩溃`)
-      await this.pagePool.closeAll()
+
       /** 传递一个浏览器崩溃事件出去 用于在浏览器池子中移除掉当前浏览器 */
       common.emit('browserCrash', this.id)
       /** 尝试关闭 */
@@ -156,7 +144,7 @@ export class Render {
     try {
       this.list.set(echo, true)
       /** 创建页面 */
-      page = await this.newPage(data)
+      page = await this.page(data)
 
       const options = {
         path: data.path,
@@ -226,20 +214,13 @@ export class Render {
       }
 
       return list as RenderResult<T>
-    } catch (error) {
-      /** 如果发生错误，从池中移除页面 */
-      if (page) {
-        await this.pagePool.removePage(page)
-        page = undefined
-      }
-      throw error
     } finally {
       /** 从队列中去除 */
       this.list.delete(echo)
       if (page) {
         common.emit('screenshot', this.id)
-        // 不再直接关闭页面，而是将其释放回池中
-        await this.pagePool.releasePage(page)
+        page.removeAllListeners()
+        await page?.close().catch(() => { })
       }
     }
   }
@@ -248,24 +229,54 @@ export class Render {
    * 初始化页面
    * @param data 截图参数
    */
-  async newPage (data: screenshot) {
-    let page: Page
-
-    if (typeof data.setRequestInterception === 'function') {
-      page = await this.pagePool.createPage()
-
-      /** 设置HTTP 标头 */
-      if (data.headers) await page.setExtraHTTPHeaders(data.headers)
-      await page.setRequestInterception(true)
-      page.on('request', (req) => data.setRequestInterception!(req, data))
-    } else {
-      page = await this.pagePool.acquirePage()
-      /** 设置HTTP 标头 */
-      if (data.headers) await page.setExtraHTTPHeaders(data.headers)
-    }
+  async page (data: screenshot) {
+    /** 创建页面 */
+    const page = await this.browser.newPage()
+    // let page: Page
 
     /** 打开页面数+1 */
     common.emit('newPage', this.id)
+
+    // /** 如果waitUntil传参了 直接加载页面 */
+    // if (data?.pageGotoParams?.waitUntil) {
+    //   /** 有监听器需求 new一个 */
+    //   if (typeof data.setRequestInterception === 'function') {
+    //     page = await this.browser.newPage()
+    //     this.pages.push(page)
+
+    //     /** 请求拦截处理 */
+    //     await page.setRequestInterception(true)
+    //     page.on('request', (req) => data.setRequestInterception!(req, data))
+    //   } else {
+    //     /** 无监听器需求 从页面中拿一个 */
+    //     page = this.pages[0]
+    //   }
+
+    //   /** 设置HTTP 标头 */
+    //   if (data.headers) await page.setExtraHTTPHeaders(data.headers)
+
+    //   /** 打开、加载页面 */
+    //   if (data.file.startsWith('http') || data.file.startsWith('file://')) {
+    //     await page.goto(data.file, data.pageGotoParams)
+    //   } else {
+    //     await page.setContent(data.file, data.pageGotoParams)
+    //   }
+    // } else {
+    //   /** 有监听器需求 new一个 */
+    //   page = await this.browser.newPage()
+    //   this.pages.push(page)
+    //   /** 设置HTTP 标头 */
+    //   if (data.headers) await page.setExtraHTTPHeaders(data.headers)
+    //   /** 模拟0毫秒的waitUntil */
+    //   await this.simulateWaitUntil(page, data)
+    // }
+
+    /** 设置HTTP 标头 */
+    if (data.headers) await page.setExtraHTTPHeaders(data.headers)
+    if (typeof data.setRequestInterception === 'function') {
+      await page.setRequestInterception(true)
+      page.on('request', (req) => data.setRequestInterception!(req, data))
+    }
 
     /** 打开页面 */
     if (data.file.startsWith('http') || data.file.startsWith('file://')) {

@@ -11,7 +11,7 @@ if (!fs.existsSync(path.dirname(logsDir))) fs.mkdirSync(path.dirname(logsDir), {
 if (!fs.existsSync(file)) {
   fs.writeFileSync(file, JSON.stringify({
     logLevel: 'info',
-    headless: true,
+    headless: false,
     http: {
       host: '0.0.0.0',
       port: 7005,

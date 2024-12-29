@@ -9,6 +9,7 @@ import { lookup } from 'mime-types'
 import Puppeteer from '@karinjs/puppeteer-core'
 import { auth, common, config, logger } from '@/utils'
 import { wsErrRes, wsSuccRes } from '@/utils/response'
+import { cacheHtml, delHtml, getHtml } from './static'
 
 /**
  * WebSocket实例缓存
@@ -28,6 +29,13 @@ export const Server = () => {
 
     /** 鉴权 */
     const authorization = request.headers.authorization
+    /**
+     * 客户端来源
+     * - `local`: 本地
+     * - `remote`: 远程
+     */
+    const origin: 'local' | 'remote' = request.headers?.['x-client-origin'] as 'local' | 'remote' || (request.headers.host === '127.0.0.1' ? 'local' : 'remote')
+
     if (!auth('ws', request.socket.remoteAddress, authorization)) {
       logger.error(`[WebSocket][server][鉴权失败]: ${request.socket.remoteAddress}`)
       wsErrRes(server, 'auth', { message: '鉴权失败' })
@@ -62,7 +70,11 @@ export const Server = () => {
         script: 'text/javascript',
       } as const
 
-      const file = path.dirname(data.file).replace('file://', '')
+      let file = path.dirname(data.file).replace('file://', '')
+      if (data.file.startsWith('file:///C:/uuid') || data.file.startsWith('file:///root/uuid')) {
+        file = getHtml(data.file)
+      }
+
       const handleRequest = async (type: keyof typeof typeMap) => {
         const actionPath = request.url()
 
@@ -94,7 +106,7 @@ export const Server = () => {
     logger.mark(`[WebSocket][server][连接成功]: ${request.socket.remoteAddress}`)
 
     // 判断是否为127.0.0.1的ip
-    const render = (request.socket.remoteAddress === '::1' || request.socket.remoteAddress === '127.0.0.1')
+    const render = (origin === 'local')
       /** 本地ip */
       ? async (data: any) => {
         const result = await screenshot(data)
@@ -102,9 +114,12 @@ export const Server = () => {
       }
       /** 强制性等待并且劫持请求通过ws进行交互 */
       : async (data: any) => {
+        const html = cacheHtml(data.file)
+        data.file = html
         data.pageGotoParams = data.pageGotoParams || {}
         data.pageGotoParams.waitUntil = 'networkidle2'
         const result = await screenshot({ ...data, setRequestInterception })
+        delHtml(html)
         return result
       }
 

@@ -36,8 +36,6 @@ export interface RunConfig extends LaunchOptions {
    * @default 'chrome-headless-shell'
    */
   chrome?: 'chrome-headless-shell' | 'chrome'
-  /** 页面池最大数量 默认10 */
-  maxPages?: number
 }
 
 /**
