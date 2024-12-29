@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.4.2](https://github.com/KarinJS/puppeteer/compare/puppeteer-v1.4.1...puppeteer-v1.4.2) (2024-12-29)
+
+
+### Bug Fixes
+
+* 回退页面池 修正已知问题 ([c1750b3](https://github.com/KarinJS/puppeteer/commit/c1750b34c5938fdb4305eac1d94a76e580a320d4))
+* 更新发布流程，优化依赖安装和发布命令 ([b5e5d53](https://github.com/KarinJS/puppeteer/commit/b5e5d53d6150f5f72335f45e0809fd5c25c1f54c))
+
 ## [1.4.1](https://github.com/KarinJS/puppeteer/compare/puppeteer-v1.4.0...puppeteer-v1.4.1) (2024-12-27)
 
 

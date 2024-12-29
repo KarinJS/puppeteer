@@ -1,6 +1,6 @@
 {
   "name": "@karinjs/puppeteer-core",
-  "version": "1.4.1",
+  "version": "1.4.2",
   "description": "轻量·高效·易用的 Puppeteer 截图、视频生成工具",
   "keywords": [
     "puppeteer",

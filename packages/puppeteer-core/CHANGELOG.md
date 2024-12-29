@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.2](https://github.com/KarinJS/puppeteer/compare/puppeteer-core-v1.4.1...puppeteer-core-v1.4.2) (2024-12-29)
+
+
+### Bug Fixes
+
+* 回退页面池 修正已知问题 ([c1750b3](https://github.com/KarinJS/puppeteer/commit/c1750b34c5938fdb4305eac1d94a76e580a320d4))
+
 ## [1.4.1](https://github.com/KarinJS/puppeteer/compare/puppeteer-core-v1.4.0...puppeteer-core-v1.4.1) (2024-12-27)
 
 
