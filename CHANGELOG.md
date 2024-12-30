@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.4.4](https://github.com/KarinJS/puppeteer/compare/root-v1.4.3...root-v1.4.4) (2024-12-30)
+
+
+### Bug Fixes
+
+* sync ([6f007b1](https://github.com/KarinJS/puppeteer/commit/6f007b19f1745ff6422631b28e0c63daa6fa1afc))
+* 支持超时截图设置 ([0b54aef](https://github.com/KarinJS/puppeteer/commit/0b54aefb3b150904bb7ab08c3dac17b6d3c0fdfc))
+
 ## [1.4.3](https://github.com/KarinJS/puppeteer/compare/root-v1.4.2...root-v1.4.3) (2024-12-29)
 
 

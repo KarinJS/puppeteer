@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.4](https://github.com/KarinJS/puppeteer/compare/puppeteer-v1.4.3...puppeteer-v1.4.4) (2024-12-30)
+
+
+### Bug Fixes
+
+* sync ([6f007b1](https://github.com/KarinJS/puppeteer/commit/6f007b19f1745ff6422631b28e0c63daa6fa1afc))
+
 ## [1.4.3](https://github.com/KarinJS/puppeteer/compare/puppeteer-v1.4.2...puppeteer-v1.4.3) (2024-12-29)
 
 

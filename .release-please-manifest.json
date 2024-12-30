@@ -1,5 +1,5 @@
 {
-  ".": "1.4.3",
-  "packages/puppeteer": "1.4.3",
-  "packages/puppeteer-core": "1.4.3"
+  ".": "1.4.4",
+  "packages/puppeteer": "1.4.4",
+  "packages/puppeteer-core": "1.4.4"
 }
