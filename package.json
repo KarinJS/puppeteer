@@ -4,7 +4,8 @@
   "scripts": {
     "build": "pnpm -r build",
     "dev": "pnpm -r dev",
-    "pub": "pnpm -r pub"
+    "pub": "pnpm -r pub",
+    "app": "node packages/puppeteer/lib/index.js"
   },
   "devDependencies": {
     "@types/decompress": "^4.2.7",

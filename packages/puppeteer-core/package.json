@@ -45,6 +45,7 @@
   "dependencies": {
     "decompress": "4.2.1",
     "progress": "^2.0.3",
-    "puppeteer-core": "23.10.1"
+    "puppeteer-core": "13.7.0",
+    "p-limit": "4.0.0"
   }
 }

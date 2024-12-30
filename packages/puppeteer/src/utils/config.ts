@@ -12,6 +12,8 @@ if (!fs.existsSync(file)) {
   fs.writeFileSync(file, JSON.stringify({
     logLevel: 'info',
     headless: false,
+    debug: false,
+    maxPages: 15,
     http: {
       host: '0.0.0.0',
       port: 7005,
@@ -49,6 +51,10 @@ export const config = JSON.parse(fs.readFileSync(file, 'utf-8')) as {
   logLevel: 'trace' | 'debug' | 'info' | 'mark' | 'warn' | 'error' | 'fatal'
   /** 是否启用纯无头 */
   headless: boolean
+  /** debug模式 */
+  debug: boolean
+  /** 同时可存在多少个标签页进行工作 */
+  maxPages: number
   /** 服务配置 */
   http: {
     /** 监听地址 */

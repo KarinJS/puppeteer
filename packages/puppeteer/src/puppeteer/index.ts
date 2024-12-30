@@ -7,8 +7,7 @@ import { vueToHtml } from '@/ssr'
  * 浏览器实例
  */
 export const puppeteer = await new Puppeteer({
-  args: config.args,
-  browserCount: config.browserCount,
+  ...config,
   chrome: config.headless ? 'chrome-headless-shell' : 'chrome',
 }).init()
 

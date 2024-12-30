@@ -1,6 +1,16 @@
 import { common } from '@Common'
-import { ChildProcess } from 'child_process'
-import puppeteer, { Browser, GoToOptions, HTTPRequest, Page, LaunchOptions, ScreenshotOptions, ElementHandle } from 'puppeteer-core'
+import puppeteer from 'puppeteer-core'
+import type { ChildProcess } from 'child_process'
+import type { RunConfig } from '.'
+import type {
+  Browser,
+  WaitForOptions,
+  HTTPRequest,
+  Page,
+  ScreenshotOptions,
+  ElementHandle,
+  BoundingBox
+} from 'puppeteer-core'
 
 export interface screenshot extends ScreenshotOptions {
   /** http地址、本地文件路径、html字符串 */
@@ -67,7 +77,7 @@ export interface screenshot extends ScreenshotOptions {
   /** 分页截图 传递数字则视为视窗高度 返回数组 */
   multiPage?: number | boolean
   /** 页面goto时的参数 */
-  pageGotoParams?: GoToOptions,
+  pageGotoParams?: WaitForOptions,
   /** 等待指定元素加载完成 */
   waitForSelector?: string | string[]
   /** 等待特定函数完成 */
@@ -81,26 +91,24 @@ export interface screenshot extends ScreenshotOptions {
 }
 
 /** 截图返回 */
-export type RenderEncoding<T extends screenshot> = T['encoding'] extends 'base64' ? string : Uint8Array
+export type RenderEncoding<T extends screenshot> = T['encoding'] extends 'base64' ? string : Buffer
 /** 单页或多页截图返回 */
 export type RenderResult<T extends screenshot> = T['multiPage'] extends true | number
-  ? RenderEncoding<T> extends string ? string[] : Uint8Array[]
+  ? RenderEncoding<T> extends string ? string[] : Buffer[]
   : RenderEncoding<T>
 
 export class Render {
   /** 浏览器id */
   id: number
   /** 浏览器启动配置 */
-  config: LaunchOptions
+  config: RunConfig
   /** 浏览器实例 */
   browser!: Browser
   /** 截图队列 存放每个任务的唯一标识 */
   list: Map<string, any>
   /** 浏览器进程 */
   process!: ChildProcess | null
-  /** 页面实例 */
-  // pages: Page[]
-  constructor (id: number, config: LaunchOptions) {
+  constructor (id: number, config: RunConfig) {
     this.id = id
     this.config = config
     this.list = new Map()
@@ -143,87 +151,35 @@ export class Render {
     let page: Page | undefined
     try {
       this.list.set(echo, true)
-      /** 创建页面 */
       page = await this.page(data)
 
-      const options = {
-        path: data.path,
-        type: data.type || 'jpeg',
-        quality: data.quality || 90 as number | undefined,
-        fullPage: data.fullPage || false,
-        optimizeForSpeed: data.optimizeForSpeed || false,
-        encoding: data.encoding || 'binary',
-        omitBackground: data.omitBackground || false,
-        captureBeyondViewport: data.captureBeyondViewport || false,
-      }
-
+      const options = this.getScreenshotOptions(data)
       const timeout = Number(data?.pageGotoParams?.timeout) || 20000
 
-      /** 如果是png并且有quality则删除quality */
-      if (options.quality && data.type === 'png') options.quality = undefined
-
-      /** 整个页面截图 */
+      /** 处理全页面截图 */
       if (data.fullPage) {
-        options.captureBeyondViewport = true
-        const uint8Array = await this.screenshot(page, options, timeout)
-        await this.setViewport(page, data?.setViewport?.width, data?.setViewport?.height, data?.setViewport?.deviceScaleFactor)
-        return uint8Array as RenderResult<T>
+        return await this.handleFullPageScreenshot(page, data, options, timeout)
       }
 
-      /** 获取页面元素 */
+      /** 获取目标元素和尺寸 */
       const body = await this.elementHandle(page, data.selector)
-      /** 计算页面高度 */
       const box = await body!.boundingBox()
 
-      await this.setViewport(page,
+      /** 设置视窗 */
+      await this.setViewport(
+        page,
         data?.setViewport?.width || box?.width,
         data?.setViewport?.height || box?.height,
         data?.setViewport?.deviceScaleFactor
       )
 
-      /** 指定元素截图 */
-      if (!data.multiPage) {
-        /** 截图 */
-        const uint8Array = await this.screenshot(body!, options, timeout)
-        return uint8Array as RenderResult<T>
-      }
+      /** 处理单元素或分页截图 */
+      return data.multiPage
+        ? await this.handleMultiPageScreenshot(body!, data, box, timeout)
+        : await this.handleSingleElementScreenshot(body!, options, timeout)
 
-      /** 分页截图 */
-      const list: Array<Uint8Array | string> = []
-      const boxWidth = box?.width ?? 1200
-      const boxHeight = box?.height ?? 2000
-
-      /** 高度 不传参则为2000 */
-      const height = typeof data.multiPage === 'number' ? data.multiPage : (boxHeight >= 2000 ? 2000 : boxHeight)
-      /** 分页数量 */
-      const count = Math.ceil(boxHeight / height)
-
-      for (let i = 0; i < count; i++) {
-        /** 计算截图位置 */
-        let y = i * height
-        /** 计算截图高度 */
-        let clipHeight = Math.min(height, boxHeight - i * height)
-        /** 第二页开始y-100 */
-        if (i !== 0) {
-          y -= 100
-          clipHeight += 100
-        }
-
-        /** 截图位置 */
-        data.clip = { x: 0, y, width: boxWidth, height: clipHeight }
-        const uint8Array = await this.screenshot(body!, data, timeout)
-        list.push(uint8Array)
-      }
-
-      return list as RenderResult<T>
     } finally {
-      /** 从队列中去除 */
-      this.list.delete(echo)
-      if (page) {
-        common.emit('screenshot', this.id)
-        page.removeAllListeners()
-        await page?.close().catch(() => { })
-      }
+      this.cleanupPage(page, echo)
     }
   }
 
@@ -408,5 +364,135 @@ export class Render {
     })
 
     await result
+  }
+
+  /**
+   * 截图选项
+   * @paaam data 截图参数
+   */
+  private getScreenshotOptions (data: screenshot) {
+    const options = {
+      path: data.path,
+      type: data.type || 'jpeg',
+      quality: data.quality || 90 as number | undefined,
+      fullPage: data.fullPage || false,
+      optimizeForSpeed: data.optimizeForSpeed || false,
+      encoding: data.encoding || 'binary',
+      omitBackground: data.omitBackground || false,
+      captureBeyondViewport: data.captureBeyondViewport || false,
+    }
+
+    /** PNG格式不支持quality选项 */
+    if (options.quality && data.type === 'png') {
+      options.quality = undefined
+    }
+
+    return options
+  }
+
+  /**
+   * 处理全页面截图
+   * @param page 页面实例
+   * @param data 截图参数
+   * @param options 截图选项
+   * @param timeout 超时时间
+   */
+  private async handleFullPageScreenshot<T extends screenshot> (
+    page: Page,
+    data: T,
+    options: ScreenshotOptions,
+    timeout: number
+  ): Promise<RenderResult<T>> {
+    options.captureBeyondViewport = true
+    const uint8Array = await this.screenshot(page, options, timeout)
+    await this.setViewport(
+      page,
+      data?.setViewport?.width,
+      data?.setViewport?.height,
+      data?.setViewport?.deviceScaleFactor
+    )
+    return uint8Array as RenderResult<T>
+  }
+
+  /**
+   * 处理单截图
+   * @param body 页面实例
+   * @param options 截图选项
+   * @param timeout 超时时间
+   */
+  private async handleSingleElementScreenshot<T extends screenshot> (
+    body: ElementHandle<Element>,
+    options: ScreenshotOptions,
+    timeout: number
+  ): Promise<RenderResult<T>> {
+    const uint8Array = await this.screenshot(body, options, timeout)
+    return uint8Array as RenderResult<T>
+  }
+
+  /**
+   * 处理分页截图
+   * @param body 页面实例
+   * @param data 截图参数
+   * @param box 盒子尺寸
+   * @param timeout 超时时间
+   */
+  private async handleMultiPageScreenshot<T extends screenshot> (
+    body: ElementHandle<Element>,
+    data: T,
+    box: BoundingBox | null,
+    timeout: number
+  ): Promise<RenderResult<T>> {
+    const list: Array<Uint8Array | string> = []
+    const boxWidth = box?.width ?? 1200
+    const boxHeight = box?.height ?? 2000
+    const height = typeof data.multiPage === 'number'
+      ? data.multiPage
+      : (boxHeight >= 2000 ? 2000 : boxHeight)
+    const count = Math.ceil(boxHeight / height)
+
+    for (let i = 0; i < count; i++) {
+      const { y, clipHeight } = this.calculatePageDimensions(i, height, boxHeight)
+      data.clip = { x: 0, y, width: boxWidth, height: clipHeight }
+      const uint8Array = await this.screenshot(body, data, timeout)
+      list.push(uint8Array)
+    }
+
+    return list as RenderResult<T>
+  }
+
+  /**
+   * 计算页面尺寸
+   * @param pageIndex 页面索引
+   * @param pageHeight 页面高度
+   * @param totalHeight 总高度
+   */
+  private calculatePageDimensions (pageIndex: number, pageHeight: number, totalHeight: number) {
+    let y = pageIndex * pageHeight
+    let clipHeight = Math.min(pageHeight, totalHeight - pageIndex * pageHeight)
+
+    if (pageIndex !== 0) {
+      y -= 100
+      clipHeight += 100
+    }
+
+    return { y, clipHeight }
+  }
+
+  /**
+   * 清理页面
+   * @param page 页面实例
+   * @param echo 唯一标识
+   */
+  private async cleanupPage (page: Page | undefined, echo: string) {
+    this.list.delete(echo)
+    if (page) {
+      common.emit('screenshot', this.id)
+      if (!this.config.debug) {
+        await page.close()
+        if (!page.isClosed()) {
+          await page.close().catch((error) => process.emit('uncaughtException', error))
+        }
+      }
+    }
   }
 }

@@ -1,11 +1,18 @@
 import crypto from 'crypto'
 import { InitChrome } from './init'
 import { common } from '@Common'
-import { Render, RenderResult, screenshot } from './core'
-import { LaunchOptions } from 'puppeteer-core'
-import { PUPPETEER_REVISIONS } from 'puppeteer-core/internal/revisions.js'
+import pLimit, { type LimitFunction } from 'p-limit'
 
-export interface RunConfig extends LaunchOptions {
+import { Render, type RenderResult, type screenshot } from './core'
+
+export const PUPPETEER_REVISIONS = Object.freeze({
+  chrome: '131.0.6778.87',
+  'chrome-headless-shell': '131.0.6778.87',
+  firefox: 'stable_133.0',
+})
+
+
+export interface RunConfig {
   /**
    * 启动浏览器数量
    * @default 1
@@ -36,7 +43,24 @@ export interface RunConfig extends LaunchOptions {
    * @default 'chrome-headless-shell'
    */
   chrome?: 'chrome-headless-shell' | 'chrome'
+  /**
+   * debug模式
+   * - 在该模式下，浏览器将前台运行，并且打开页面后不会关闭
+   * @default false
+   */
+  debug?: boolean
+  /**
+   * 同时可存在多少个标签页进行工作
+   * @default 15
+   */
+  maxPages?: number
 }
+
+/**
+ * @description 启动浏览器的参数
+ */
+export type LaunchOptions = Parameters<typeof import('puppeteer-core').launch>[0] & RunConfig
+
 
 /**
  * @description Puppeteer多浏览器实例管理
@@ -47,11 +71,12 @@ export class Puppeteer {
   /** 浏览器实例列表 */
   list: Render[]
   /** 实例管理器配置 初始化的时候传递 */
-  config: RunConfig
+  config: LaunchOptions
   /** 启动浏览器的参数 初始化后才产生 */
   browserOptions: LaunchOptions
   /** 浏览器路径 */
   chromePath!: string
+  limit: LimitFunction
   constructor (config?: RunConfig) {
     this.index = 0
     this.list = []
@@ -60,6 +85,8 @@ export class Puppeteer {
       headless: true,
       devtools: false,
       chrome: 'chrome',
+      debug: false,
+      maxPages: 15,
       args: [
         '--enable-gpu',
         '--no-sandbox',
@@ -70,7 +97,11 @@ export class Puppeteer {
       ],
     }
     this.browserOptions = this.config
+
+    this.config.maxPages = Number(this.config.maxPages) || 15
+    if (this.config.debug) this.browserOptions.headless = false
     if (!this.config.chrome) this.config.chrome = 'chrome'
+    this.limit = pLimit(10)
   }
 
   async init () {
@@ -128,15 +159,17 @@ export class Puppeteer {
    * @returns 截图结果
    */
   async screenshot<T extends screenshot> (options: T): Promise<RenderResult<T>> {
-    try {
-      /** 第一次 */
-      return await this.task(options)
-    } catch (error) {
-      /** 第二次 */
-      console.error('[chrome] 第一次截图失败，正在重试~')
-      console.error(error)
-      return await this.task(options)
-    }
+    return this.limit(async () => {
+      try {
+        /** 第一次 */
+        return await this.task(options)
+      } catch (error) {
+        /** 第二次 */
+        console.error('[chrome] 第一次截图失败，正在重试')
+        process.emit('uncaughtException', error as Error)
+        return await this.task(options)
+      }
+    })
   }
 
   /**
