@@ -17,7 +17,7 @@ yarn init -y && yarn add @karinjs/puppeteer && npx init && node .
 ```json
 {
   "logLevel": "info",
-  "headless": true,
+  "headless": false,
   "http": {
     "host": "0.0.0.0",
     "port": 7005,
@@ -50,7 +50,7 @@ yarn init -y && yarn add @karinjs/puppeteer && npx init && node .
 }
 ```
 
-## 2. http接口
+## 2. http 接口
 
 ### 2.1 ping
 
@@ -60,7 +60,7 @@ yarn init -y && yarn add @karinjs/puppeteer && npx init && node .
 curl http://127.0.0.1:7005/ping
 ```
 
-### 2.2 计算token的md5值
+### 2.2 计算 token 的 md5 值
 
 请求示例:
 
@@ -82,7 +82,7 @@ curl http://127.0.0.1:7005/puppeteer?auth=123456&file=http://www.baidu.com
 请求地址: `http://127.0.0.1:7005/puppeteer`  
 请求方式: `POST`  
 请求参数: `json` 详细参数查看[参数说明](https://github.com/KarinJS/puppeteer-core/blob/d92140a9f156aee07a855f6824f3ae8a8cd95da1/src/puppeteer/core.ts#L5)  
-鉴权方式: http头部`authorization`字段  
+鉴权方式: http 头部`authorization`字段
 
 ```json
 {
@@ -91,14 +91,13 @@ curl http://127.0.0.1:7005/puppeteer?auth=123456&file=http://www.baidu.com
     "waitUntil": "networkidle2"
   }
 }
-
 ```
 
 ### 2.5 模板渲染(POST)
 
 请求地址: `http://127.0.0.1:7005/render`
 
-> 这里只是在2.4的基础上增加了模板渲染的功能，所有参数不变，新增了`data`参数，传递给`art-template`模板的数据
+> 这里只是在 2.4 的基础上增加了模板渲染的功能，所有参数不变，新增了`data`参数，传递给`art-template`模板的数据
 
 ```html
 <style>
@@ -115,7 +114,7 @@ curl http://127.0.0.1:7005/puppeteer?auth=123456&file=http://www.baidu.com
   }
 
   .table th {
-    background-color: #4CAF50;
+    background-color: #4caf50;
     color: white;
   }
 
@@ -148,7 +147,10 @@ curl http://127.0.0.1:7005/puppeteer?auth=123456&file=http://www.baidu.com
   <tfoot>
     <tr>
       <td colspan="4" style="text-align: right;"><strong>总计</strong></td>
-      <td>{{items.reduce((sum, item) => sum + item.quantity * item.price, 0).toFixed(2)}}</td>
+      <td>
+        {{items.reduce((sum, item) => sum + item.quantity * item.price,
+        0).toFixed(2)}}
+      </td>
     </tr>
   </tfoot>
 </table>
@@ -209,8 +211,7 @@ npx k stop
 npx k log
 ```
 
-
-### vue单组件
+### vue 单组件
 
 <details>
   <summary>点击查看 Vue 单组件代码</summary>
@@ -220,7 +221,7 @@ npx k log
   <div class="profile-card" data-v-component>
     <div class="profile-header">
       <div class="avatar">
-        <img :src="avatar" alt="头像" v-if="avatar">
+        <img :src="avatar" alt="头像" v-if="avatar" />
         <div class="avatar-placeholder" v-else>{{ nameInitial }}</div>
       </div>
       <h2 class="name">{{ name }}</h2>
@@ -340,21 +341,20 @@ npx k log
 </style>
 
 <script setup>
-const name = '张三'
-const avatar = ''
-const age = 18
-const occupation = '前端工程师'
-const location = '北京'
-const email = 'test@gmail.com'
-const bio = '这是一段个人简介'
-
+const name = "张三";
+const avatar = "";
+const age = 18;
+const occupation = "前端工程师";
+const location = "北京";
+const email = "test@gmail.com";
+const bio = "这是一段个人简介";
 </script>
 ```
 
 </details>
 
 - 将上面的代码保存为`test.vue`文件
-- 使用接口 [#2.4 自定义传参截图post)](#24-自定义传参截图post)
+- 使用接口 [#2.4 自定义传参截图 post)](#24-自定义传参截图post)
 - 请求参数如下:
 
 ```json

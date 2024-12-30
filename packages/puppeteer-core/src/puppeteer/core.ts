@@ -240,7 +240,10 @@ export class Render {
   ): ReturnType<Page['screenshot']> {
     return new Promise((resolve, reject) => {
       const timer = setTimeout(() => {
-        reject(new Error(`TimeoutError: Navigation Timeout Exceeded: ${timeout}ms exceeded`))
+        reject(new Error(JSON.stringify({
+          message: `TimeoutError: Navigation Timeout Exceeded: ${timeout}ms exceeded`,
+          options
+        }, null, 2)))
       }, timeout)
 
       page.screenshot(options)
