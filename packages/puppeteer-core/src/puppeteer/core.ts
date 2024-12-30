@@ -1,6 +1,6 @@
 import { common } from '@Common'
 import { ChildProcess } from 'child_process'
-import puppeteer, { Browser, GoToOptions, HTTPRequest, Page, LaunchOptions, ScreenshotOptions } from 'puppeteer-core'
+import puppeteer, { Browser, GoToOptions, HTTPRequest, Page, LaunchOptions, ScreenshotOptions, ElementHandle } from 'puppeteer-core'
 
 export interface screenshot extends ScreenshotOptions {
   /** http地址、本地文件路径、html字符串 */
@@ -157,13 +157,15 @@ export class Render {
         captureBeyondViewport: data.captureBeyondViewport || false,
       }
 
+      const timeout = Number(data?.pageGotoParams?.timeout) || 20000
+
       /** 如果是png并且有quality则删除quality */
       if (options.quality && data.type === 'png') options.quality = undefined
 
       /** 整个页面截图 */
       if (data.fullPage) {
         options.captureBeyondViewport = true
-        const uint8Array = await page.screenshot(options)
+        const uint8Array = await this.screenshot(page, options, timeout)
         await this.setViewport(page, data?.setViewport?.width, data?.setViewport?.height, data?.setViewport?.deviceScaleFactor)
         return uint8Array as RenderResult<T>
       }
@@ -182,7 +184,7 @@ export class Render {
       /** 指定元素截图 */
       if (!data.multiPage) {
         /** 截图 */
-        const uint8Array = await page.screenshot(options)
+        const uint8Array = await this.screenshot(body!, options, timeout)
         return uint8Array as RenderResult<T>
       }
 
@@ -209,7 +211,7 @@ export class Render {
 
         /** 截图位置 */
         data.clip = { x: 0, y, width: boxWidth, height: clipHeight }
-        const uint8Array = await body!.screenshot(data)
+        const uint8Array = await this.screenshot(body!, data, timeout)
         list.push(uint8Array)
       }
 
@@ -223,6 +225,34 @@ export class Render {
         await page?.close().catch(() => { })
       }
     }
+  }
+
+  /**
+   * 截图
+   * @param page 页面实例
+   * @param options 截图参数
+   * @returns 截图结果
+   */
+  screenshot (
+    page: Page | ElementHandle<Element>,
+    options: Readonly<ScreenshotOptions>,
+    timeout: number
+  ): ReturnType<Page['screenshot']> {
+    return new Promise((resolve, reject) => {
+      const timer = setTimeout(() => {
+        reject(new Error(`TimeoutError: Navigation Timeout Exceeded: ${timeout}ms exceeded`))
+      }, timeout)
+
+      page.screenshot(options)
+        .then((data) => {
+          clearTimeout(timer)
+          resolve(data)
+        })
+        .catch((err) => {
+          clearTimeout(timer)
+          reject(err)
+        })
+    })
   }
 
   /**
