@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.5.0](https://github.com/KarinJS/puppeteer/compare/root-v1.4.5...root-v1.5.0) (2024-12-30)
+
+
+### Features
+
+* 添加新的配置选项，支持调试模式和最大标签页数 ([975b634](https://github.com/KarinJS/puppeteer/commit/975b6348b024b730cf7c103b64c653e0d7765001))
+
 ## [1.4.5](https://github.com/KarinJS/puppeteer/compare/root-v1.4.4...root-v1.4.5) (2024-12-30)
 
 
