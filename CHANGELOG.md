@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.5](https://github.com/KarinJS/puppeteer/compare/root-v1.4.4...root-v1.4.5) (2024-12-30)
+
+
+### Bug Fixes
+
+* 改进超时错误信息格式，增加详细选项信息 ([d0c11d5](https://github.com/KarinJS/puppeteer/commit/d0c11d5d182538e0aef1fffe441ee2c1a689589c))
+
 ## [1.4.4](https://github.com/KarinJS/puppeteer/compare/root-v1.4.3...root-v1.4.4) (2024-12-30)
 
 
