@@ -9,18 +9,18 @@ import type {
   Page,
   ScreenshotOptions,
   ElementHandle,
-  BoundingBox
+  BoundingBox,
 } from 'puppeteer-core'
 
 export interface screenshot extends ScreenshotOptions {
   /** http地址、本地文件路径、html字符串 */
   file: string
   /**
- * 选择的元素截图
- * fullPage为false时生效
- * 如果未找到指定元素则使用body
- * @default 'body'
- */
+   * 选择的元素截图
+   * fullPage为false时生效
+   * 如果未找到指定元素则使用body
+   * @default 'body'
+   */
   selector?: string
   /** 截图类型 默认'jpeg' */
   type?: 'png' | 'jpeg' | 'webp'
@@ -77,7 +77,7 @@ export interface screenshot extends ScreenshotOptions {
   /** 分页截图 传递数字则视为视窗高度 返回数组 */
   multiPage?: number | boolean
   /** 页面goto时的参数 */
-  pageGotoParams?: WaitForOptions,
+  pageGotoParams?: WaitForOptions
   /** 等待指定元素加载完成 */
   waitForSelector?: string | string[]
   /** 等待特定函数完成 */
@@ -91,11 +91,11 @@ export interface screenshot extends ScreenshotOptions {
 }
 
 /** 截图返回 */
-export type RenderEncoding<T extends screenshot> = T['encoding'] extends 'base64' ? string : Buffer
+export type RenderEncoding<T extends screenshot> =
+  T['encoding'] extends 'base64' ? string : Buffer
 /** 单页或多页截图返回 */
-export type RenderResult<T extends screenshot> = T['multiPage'] extends true | number
-  ? RenderEncoding<T> extends string ? string[] : Buffer[]
-  : RenderEncoding<T>
+export type RenderResult<T extends screenshot> = T['multiPage'] extends | true | number
+  ? RenderEncoding<T> extends string ? string[] : Buffer[] : RenderEncoding<T>
 
 export class Render {
   /** 浏览器id */
@@ -147,7 +147,10 @@ export class Render {
    * @param data 截图参数
    * @returns 截图结果
    */
-  async render<T extends screenshot> (echo: string, data: T): Promise<RenderResult<T>> {
+  async render<T extends screenshot> (
+    echo: string,
+    data: T
+  ): Promise<RenderResult<T>> {
     let page: Page | undefined
     try {
       this.list.set(echo, true)
@@ -177,7 +180,6 @@ export class Render {
       return data.multiPage
         ? await this.handleMultiPageScreenshot(body!, data, box, timeout)
         : await this.handleSingleElementScreenshot(body!, options, timeout)
-
     } finally {
       this.cleanupPage(page, echo)
     }
@@ -196,13 +198,22 @@ export class Render {
   ): ReturnType<Page['screenshot']> {
     return new Promise((resolve, reject) => {
       const timer = setTimeout(() => {
-        reject(new Error(JSON.stringify({
-          message: `TimeoutError: Navigation Timeout Exceeded: ${timeout}ms exceeded`,
-          options
-        }, null, 2)))
+        reject(
+          new Error(
+            JSON.stringify(
+              {
+                message: `TimeoutError: Navigation Timeout Exceeded: ${timeout}ms exceeded`,
+                options,
+              },
+              null,
+              2
+            )
+          )
+        )
       }, timeout)
 
-      page.screenshot(options)
+      page
+        .screenshot(options)
         .then((data) => {
           clearTimeout(timer)
           resolve(data)
@@ -238,42 +249,85 @@ export class Render {
       await page.setContent(data.file, data.pageGotoParams)
     }
 
-    /** 等待body加载完成 */
-    await page.waitForSelector('body')
+    const timeout = Number(data?.pageGotoParams?.timeout) || 20000
+    if (!data.waitForSelector) {
+      data.waitForSelector = ['body']
+    } else if (!Array.isArray(data.waitForSelector)) {
+      data.waitForSelector = [data.waitForSelector || 'body']
+    } else {
+      data.waitForSelector.push('body')
+    }
+
+    const list: Promise<unknown>[] = []
 
     /** 等待指定元素加载完成 */
-    if (data.waitForSelector) {
-      if (!Array.isArray(data.waitForSelector)) data.waitForSelector = [data.waitForSelector]
-      for (const selector of data.waitForSelector) {
-        await page.waitForSelector(selector).catch(() => { })
-      }
+    const waitForSelector = async (selector: string) => {
+      const isExist = await this.checkElement(page, selector)
+      if (!isExist) return
+      await page.waitForSelector(selector, { timeout }).catch(() => {
+        console.warn(`[chrome] 页面元素 ${selector} 加载超时`)
+      })
     }
 
     /** 等待特定函数完成 */
-    if (data.waitForFunction) {
-      if (!Array.isArray(data.waitForFunction)) data.waitForFunction = [data.waitForFunction]
-      for (const func of data.waitForFunction) {
-        await page.waitForFunction(func).catch(() => { })
-      }
+    const waitForFunction = async (func: string) => {
+      await page.waitForFunction(func, { timeout }).catch(() => {
+        console.warn(`[chrome] 函数 ${func} 加载超时`)
+      })
     }
 
     /** 等待特定请求完成 */
-    if (data.waitForRequest) {
-      if (!Array.isArray(data.waitForRequest)) data.waitForRequest = [data.waitForRequest]
-      for (const req of data.waitForRequest) {
-        await page.waitForRequest(req).catch(() => { })
-      }
+    const waitForRequest = async (req: string) => {
+      await page.waitForRequest(req, { timeout }).catch(() => {
+        console.warn(`[chrome] 请求 ${req} 加载超时`)
+      })
     }
 
     /** 等待特定响应完成 */
-    if (data.waitForResponse) {
-      if (!Array.isArray(data.waitForResponse)) data.waitForResponse = [data.waitForResponse]
-      for (const res of data.waitForResponse) {
-        await page.waitForResponse(res).catch(() => { })
-      }
+    const waitForResponse = async (res: string) => {
+      await page.waitForResponse(res, { timeout }).catch(() => {
+        console.warn(`[chrome] 响应 ${res} 加载超时`)
+      })
     }
 
+    data.waitForSelector.forEach((selector) => {
+      list.push(waitForSelector(selector))
+    })
+
+    if (data.waitForFunction) {
+      if (!Array.isArray(data.waitForFunction)) data.waitForFunction = [data.waitForFunction]
+      data.waitForFunction.forEach((func) => {
+        list.push(waitForFunction(func))
+      })
+    }
+
+    if (data.waitForRequest) {
+      if (!Array.isArray(data.waitForRequest)) data.waitForRequest = [data.waitForRequest]
+      data.waitForRequest.forEach((req) => {
+        list.push(waitForRequest(req))
+      })
+    }
+
+    if (data.waitForResponse) {
+      if (!Array.isArray(data.waitForResponse)) data.waitForResponse = [data.waitForResponse]
+      data.waitForResponse.forEach((res) => {
+        list.push(waitForResponse(res))
+      })
+    }
+
+    /** 等待所有任务完成 */
+    await Promise.allSettled(list)
     return page
+  }
+
+  /**
+   * 检查指定元素是否存在
+   * @param page 页面实例
+   * @param selector 选择器
+   */
+  async checkElement (page: Page, selector: string): Promise<boolean> {
+    const result = await page.$(selector)
+    return !!result
   }
 
   /**
@@ -284,13 +338,16 @@ export class Render {
   async elementHandle (page: Page, name?: string) {
     try {
       if (name) {
-        const element = await page.$(name) || await page.$('#container') || await page.$('body')
+        const element =
+          (await page.$(name)) ||
+          (await page.$('#container')) ||
+          (await page.$('body'))
         return element
       }
-      const element = await page.$('#container') || await page.$('body')
+      const element = (await page.$('#container')) || (await page.$('body'))
       return element
     } catch (err) {
-      return await page.$('#container') || await page.$('body')
+      return (await page.$('#container')) || (await page.$('body'))
     }
   }
 
@@ -300,7 +357,12 @@ export class Render {
    * @param width 视窗宽度
    * @param height 视窗高度
    */
-  async setViewport (page: Page, width?: number, height?: number, deviceScaleFactor?: number) {
+  async setViewport (
+    page: Page,
+    width?: number,
+    height?: number,
+    deviceScaleFactor?: number
+  ) {
     if (!width && !height && !deviceScaleFactor) return
     const setViewport = {
       width: Math.round(width || 1920),
@@ -339,9 +401,9 @@ export class Render {
       req.continue()
     })
 
-    page.on('response', request => delCount(request.url()))
-    page.on('requestfailed', request => delCount(request.url()))
-    page.on('requestfinished', request => delCount(request.url()))
+    page.on('response', (request) => delCount(request.url()))
+    page.on('requestfailed', (request) => delCount(request.url()))
+    page.on('requestfinished', (request) => delCount(request.url()))
 
     /** 加载页面 */
     let result
@@ -374,7 +436,7 @@ export class Render {
     const options = {
       path: data.path,
       type: data.type || 'jpeg',
-      quality: data.quality || 90 as number | undefined,
+      quality: data.quality || (90 as number | undefined),
       fullPage: data.fullPage || false,
       optimizeForSpeed: data.optimizeForSpeed || false,
       encoding: data.encoding || 'binary',
@@ -445,13 +507,20 @@ export class Render {
     const list: Array<Uint8Array | string> = []
     const boxWidth = box?.width ?? 1200
     const boxHeight = box?.height ?? 2000
-    const height = typeof data.multiPage === 'number'
-      ? data.multiPage
-      : (boxHeight >= 2000 ? 2000 : boxHeight)
+    const height =
+      typeof data.multiPage === 'number'
+        ? data.multiPage
+        : boxHeight >= 2000
+          ? 2000
+          : boxHeight
     const count = Math.ceil(boxHeight / height)
 
     for (let i = 0; i < count; i++) {
-      const { y, clipHeight } = this.calculatePageDimensions(i, height, boxHeight)
+      const { y, clipHeight } = this.calculatePageDimensions(
+        i,
+        height,
+        boxHeight
+      )
       data.clip = { x: 0, y, width: boxWidth, height: clipHeight }
       const uint8Array = await this.screenshot(body, data, timeout)
       list.push(uint8Array)
@@ -466,7 +535,11 @@ export class Render {
    * @param pageHeight 页面高度
    * @param totalHeight 总高度
    */
-  private calculatePageDimensions (pageIndex: number, pageHeight: number, totalHeight: number) {
+  private calculatePageDimensions (
+    pageIndex: number,
+    pageHeight: number,
+    totalHeight: number
+  ) {
     let y = pageIndex * pageHeight
     let clipHeight = Math.min(pageHeight, totalHeight - pageIndex * pageHeight)
 
@@ -490,7 +563,9 @@ export class Render {
       if (!this.config.debug) {
         await page.close()
         if (!page.isClosed()) {
-          await page.close().catch((error) => process.emit('uncaughtException', error))
+          await page
+            .close()
+            .catch((error) => process.emit('uncaughtException', error))
         }
       }
     }

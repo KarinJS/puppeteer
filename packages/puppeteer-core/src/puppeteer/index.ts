@@ -11,7 +11,6 @@ export const PUPPETEER_REVISIONS = Object.freeze({
   firefox: 'stable_133.0',
 })
 
-
 export interface RunConfig {
   /**
    * 启动浏览器数量
@@ -60,7 +59,6 @@ export interface RunConfig {
  * @description 启动浏览器的参数
  */
 export type LaunchOptions = Parameters<typeof import('puppeteer-core').launch>[0] & RunConfig
-
 
 /**
  * @description Puppeteer多浏览器实例管理
