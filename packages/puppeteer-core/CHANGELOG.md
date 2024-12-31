@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.6.0](https://github.com/KarinJS/puppeteer/compare/puppeteer-core-v1.5.1...puppeteer-core-v1.6.0) (2024-12-31)
+
+
+### Features
+
+* 添加静态文件处理接口，更新截图参数类型，优化模板渲染逻辑 ([0ea1e82](https://github.com/KarinJS/puppeteer/commit/0ea1e826e8460396d40215a47a32fab7698b4667))
+
 ## [1.5.1](https://github.com/KarinJS/puppeteer/compare/puppeteer-core-v1.5.0...puppeteer-core-v1.5.1) (2024-12-31)
 
 

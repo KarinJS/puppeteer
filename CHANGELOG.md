@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.6.0](https://github.com/KarinJS/puppeteer/compare/root-v1.5.1...root-v1.6.0) (2024-12-31)
+
+
+### Features
+
+* 更新静态文件处理接口，添加鉴权和请求验证逻辑 ([a360214](https://github.com/KarinJS/puppeteer/commit/a360214efd9f97849918eb9b95f9efaef92e6735))
+* 添加静态文件处理接口，更新截图参数类型，优化模板渲染逻辑 ([0ea1e82](https://github.com/KarinJS/puppeteer/commit/0ea1e826e8460396d40215a47a32fab7698b4667))
+
 ## [1.5.1](https://github.com/KarinJS/puppeteer/compare/root-v1.5.0...root-v1.5.1) (2024-12-31)
 
 
