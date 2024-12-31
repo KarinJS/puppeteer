@@ -94,13 +94,8 @@ export interface screenshot extends ScreenshotOptions {
 export type RenderEncoding<T extends screenshot> =
   T['encoding'] extends 'base64' ? string : Buffer
 /** 单页或多页截图返回 */
-export type RenderResult<T extends screenshot> = T['multiPage'] extends
-  | true
-  | number
-  ? RenderEncoding<T> extends string
-    ? string[]
-    : Buffer[]
-  : RenderEncoding<T>
+export type RenderResult<T extends screenshot> = T['multiPage'] extends | true | number
+  ? RenderEncoding<T> extends string ? string[] : Buffer[] : RenderEncoding<T>
 
 export class Render {
   /** 浏览器id */
@@ -113,7 +108,7 @@ export class Render {
   list: Map<string, any>
   /** 浏览器进程 */
   process!: ChildProcess | null
-  constructor(id: number, config: RunConfig) {
+  constructor (id: number, config: RunConfig) {
     this.id = id
     this.config = config
     this.list = new Map()
@@ -123,7 +118,7 @@ export class Render {
   /**
    * 初始化启动浏览器
    */
-  async init() {
+  async init () {
     /** 启动浏览器 */
     this.browser = await puppeteer.launch(this.config)
     /** 浏览器id */
@@ -137,7 +132,7 @@ export class Render {
       common.emit('browserCrash', this.id)
       /** 尝试关闭 */
       if (this.browser) {
-        await this.browser?.close().catch(() => {})
+        await this.browser?.close().catch(() => { })
       }
       /** 如果pid存在 再使用node自带的kill杀一次 */
       if (this.process?.pid) {
@@ -152,7 +147,7 @@ export class Render {
    * @param data 截图参数
    * @returns 截图结果
    */
-  async render<T extends screenshot>(
+  async render<T extends screenshot> (
     echo: string,
     data: T
   ): Promise<RenderResult<T>> {
@@ -196,7 +191,7 @@ export class Render {
    * @param options 截图参数
    * @returns 截图结果
    */
-  screenshot(
+  screenshot (
     page: Page | ElementHandle<Element>,
     options: Readonly<ScreenshotOptions>,
     timeout: number
@@ -234,7 +229,7 @@ export class Render {
    * 初始化页面
    * @param data 截图参数
    */
-  async page(data: screenshot) {
+  async page (data: screenshot) {
     /** 创建页面 */
     const page = await this.browser.newPage()
     /** 打开页面数+1 */
@@ -254,49 +249,85 @@ export class Render {
       await page.setContent(data.file, data.pageGotoParams)
     }
 
-    /** 等待body加载完成 */
-    await page.waitForSelector('body')
+    const timeout = Number(data?.pageGotoParams?.timeout) || 20000
+    if (!data.waitForSelector) {
+      data.waitForSelector = ['body']
+    } else if (!Array.isArray(data.waitForSelector)) {
+      data.waitForSelector = [data.waitForSelector || 'body']
+    } else {
+      data.waitForSelector.push('body')
+    }
+
+    const list: Promise<unknown>[] = []
 
     /** 等待指定元素加载完成 */
-    if (data.waitForSelector) {
-      if (!Array.isArray(data.waitForSelector))
-        data.waitForSelector = [data.waitForSelector]
-      for (const selector of data.waitForSelector) {
-        /** 等待元素超时10秒，以防元素不存在等待过长 */
-        await page.waitForSelector(selector, { timeout: 10000 }).catch(() => {
-          console.error(`${selector}元素可能不存在`)
-        })
-      }
+    const waitForSelector = async (selector: string) => {
+      const isExist = await this.checkElement(page, selector)
+      if (!isExist) return
+      await page.waitForSelector(selector, { timeout }).catch(() => {
+        console.warn(`[chrome] 页面元素 ${selector} 加载超时`)
+      })
     }
 
     /** 等待特定函数完成 */
-    if (data.waitForFunction) {
-      if (!Array.isArray(data.waitForFunction))
-        data.waitForFunction = [data.waitForFunction]
-      for (const func of data.waitForFunction) {
-        await page.waitForFunction(func).catch(() => {})
-      }
+    const waitForFunction = async (func: string) => {
+      await page.waitForFunction(func, { timeout }).catch(() => {
+        console.warn(`[chrome] 函数 ${func} 加载超时`)
+      })
     }
 
     /** 等待特定请求完成 */
-    if (data.waitForRequest) {
-      if (!Array.isArray(data.waitForRequest))
-        data.waitForRequest = [data.waitForRequest]
-      for (const req of data.waitForRequest) {
-        await page.waitForRequest(req).catch(() => {})
-      }
+    const waitForRequest = async (req: string) => {
+      await page.waitForRequest(req, { timeout }).catch(() => {
+        console.warn(`[chrome] 请求 ${req} 加载超时`)
+      })
     }
 
     /** 等待特定响应完成 */
-    if (data.waitForResponse) {
-      if (!Array.isArray(data.waitForResponse))
-        data.waitForResponse = [data.waitForResponse]
-      for (const res of data.waitForResponse) {
-        await page.waitForResponse(res).catch(() => {})
-      }
+    const waitForResponse = async (res: string) => {
+      await page.waitForResponse(res, { timeout }).catch(() => {
+        console.warn(`[chrome] 响应 ${res} 加载超时`)
+      })
     }
 
+    data.waitForSelector.forEach((selector) => {
+      list.push(waitForSelector(selector))
+    })
+
+    if (data.waitForFunction) {
+      if (!Array.isArray(data.waitForFunction)) data.waitForFunction = [data.waitForFunction]
+      data.waitForFunction.forEach((func) => {
+        list.push(waitForFunction(func))
+      })
+    }
+
+    if (data.waitForRequest) {
+      if (!Array.isArray(data.waitForRequest)) data.waitForRequest = [data.waitForRequest]
+      data.waitForRequest.forEach((req) => {
+        list.push(waitForRequest(req))
+      })
+    }
+
+    if (data.waitForResponse) {
+      if (!Array.isArray(data.waitForResponse)) data.waitForResponse = [data.waitForResponse]
+      data.waitForResponse.forEach((res) => {
+        list.push(waitForResponse(res))
+      })
+    }
+
+    /** 等待所有任务完成 */
+    await Promise.allSettled(list)
     return page
+  }
+
+  /**
+   * 检查指定元素是否存在
+   * @param page 页面实例
+   * @param selector 选择器
+   */
+  async checkElement (page: Page, selector: string): Promise<boolean> {
+    const result = await page.$(selector)
+    return !!result
   }
 
   /**
@@ -304,7 +335,7 @@ export class Render {
    * @param page 页面实例
    * @param name 元素名称
    */
-  async elementHandle(page: Page, name?: string) {
+  async elementHandle (page: Page, name?: string) {
     try {
       if (name) {
         const element =
@@ -326,7 +357,7 @@ export class Render {
    * @param width 视窗宽度
    * @param height 视窗高度
    */
-  async setViewport(
+  async setViewport (
     page: Page,
     width?: number,
     height?: number,
@@ -347,7 +378,7 @@ export class Render {
    * @param data 截图参数
    * @description 通过捕获请求和响应来模拟0毫秒的waitUntil
    */
-  async simulateWaitUntil(page: Page, data: screenshot) {
+  async simulateWaitUntil (page: Page, data: screenshot) {
     if (!data.pageGotoParams) data.pageGotoParams = {}
     data.pageGotoParams.waitUntil = 'load'
 
@@ -401,7 +432,7 @@ export class Render {
    * 截图选项
    * @paaam data 截图参数
    */
-  private getScreenshotOptions(data: screenshot) {
+  private getScreenshotOptions (data: screenshot) {
     const options = {
       path: data.path,
       type: data.type || 'jpeg',
@@ -428,7 +459,7 @@ export class Render {
    * @param options 截图选项
    * @param timeout 超时时间
    */
-  private async handleFullPageScreenshot<T extends screenshot>(
+  private async handleFullPageScreenshot<T extends screenshot> (
     page: Page,
     data: T,
     options: ScreenshotOptions,
@@ -451,7 +482,7 @@ export class Render {
    * @param options 截图选项
    * @param timeout 超时时间
    */
-  private async handleSingleElementScreenshot<T extends screenshot>(
+  private async handleSingleElementScreenshot<T extends screenshot> (
     body: ElementHandle<Element>,
     options: ScreenshotOptions,
     timeout: number
@@ -467,7 +498,7 @@ export class Render {
    * @param box 盒子尺寸
    * @param timeout 超时时间
    */
-  private async handleMultiPageScreenshot<T extends screenshot>(
+  private async handleMultiPageScreenshot<T extends screenshot> (
     body: ElementHandle<Element>,
     data: T,
     box: BoundingBox | null,
@@ -480,8 +511,8 @@ export class Render {
       typeof data.multiPage === 'number'
         ? data.multiPage
         : boxHeight >= 2000
-        ? 2000
-        : boxHeight
+          ? 2000
+          : boxHeight
     const count = Math.ceil(boxHeight / height)
 
     for (let i = 0; i < count; i++) {
@@ -504,7 +535,7 @@ export class Render {
    * @param pageHeight 页面高度
    * @param totalHeight 总高度
    */
-  private calculatePageDimensions(
+  private calculatePageDimensions (
     pageIndex: number,
     pageHeight: number,
     totalHeight: number
@@ -525,7 +556,7 @@ export class Render {
    * @param page 页面实例
    * @param echo 唯一标识
    */
-  private async cleanupPage(page: Page | undefined, echo: string) {
+  private async cleanupPage (page: Page | undefined, echo: string) {
     this.list.delete(echo)
     if (page) {
       common.emit('screenshot', this.id)
