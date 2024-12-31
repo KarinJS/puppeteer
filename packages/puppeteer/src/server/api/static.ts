@@ -1,7 +1,9 @@
 import express from 'express'
 import { app } from '../express'
 import { common } from '@karinjs/puppeteer-core'
+import { auth } from '@/utils'
 
+app.use(express.json())
 app.use('/static', express.raw({
   type: 'application/octet-stream',
   limit: '30mb'
@@ -9,13 +11,18 @@ app.use('/static', express.raw({
 
 app.post('/static', (req, res) => {
   try {
-    const uuid = req.headers.uuid as string
-    if (!uuid || typeof uuid !== 'string') return
-    const status = req.headers.status as string
+    if (!auth('post', req.ip, req.headers.authorization)) {
+      throw new Error('鉴权失败')
+    }
 
+    if (!req?.body?.echo || !req?.body?.file || typeof req?.body?.status !== 'boolean') {
+      throw new Error('无效的请求')
+    }
+
+    const echo = req?.body.echo
     if (req?.body?.file?.type === 'Buffer') {
-      common.emit(uuid, {
-        status: typeof status === 'boolean' ? status : true,
+      common.emit(echo, {
+        status: req?.body.status,
         data: Buffer.from(req.body.file)
       })
     } else {
