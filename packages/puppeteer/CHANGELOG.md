@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.5.1](https://github.com/KarinJS/puppeteer/compare/puppeteer-v1.5.0...puppeteer-v1.5.1) (2024-12-31)
+
+
+### Bug Fixes
+
+* 等待元素超时10秒，以防元素不存在等待过长 ([#28](https://github.com/KarinJS/puppeteer/issues/28)) ([c951c54](https://github.com/KarinJS/puppeteer/commit/c951c54a9f7c425b5da108e7ced5d862688a7ca3))
+
 ## [1.5.0](https://github.com/KarinJS/puppeteer/compare/puppeteer-v1.4.5...puppeteer-v1.5.0) (2024-12-30)
 
 
