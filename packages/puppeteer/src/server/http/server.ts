@@ -12,7 +12,9 @@ app.get('/puppeteer/', async (req, res) => {
 
   const file = String(req.query.file)
   if (!file) return res.status(400).send({ status: 400, message: 'path is required' })
-  if (!file.startsWith('file://') && !file.startsWith('http')) return res.status(400).send({ status: 400, message: '此接口仅接受file://开头的本地绝对路径或者http连接' })
+  if (!file.startsWith('file://') && !file.startsWith('http')) {
+    return res.status(400).send({ status: 400, message: '此接口仅接受file://开头的本地绝对路径或者http连接' })
+  }
 
   try {
     const start = Date.now()
@@ -20,7 +22,7 @@ app.get('/puppeteer/', async (req, res) => {
       file,
       type: 'png',
       pageGotoParams: {
-        waitUntil: 'networkidle2'
+        waitUntil: 'networkidle0'
       },
       setViewport: {
         deviceScaleFactor: 3

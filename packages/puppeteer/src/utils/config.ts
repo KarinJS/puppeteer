@@ -13,6 +13,7 @@ if (!fs.existsSync(file)) {
     logLevel: 'info',
     headless: false,
     debug: false,
+    browser: 'chrome',
     maxPages: 15,
     http: {
       host: '0.0.0.0',
@@ -53,6 +54,8 @@ export const config = JSON.parse(fs.readFileSync(file, 'utf-8')) as {
   headless: boolean
   /** debug模式 */
   debug: boolean
+  /** 浏览器选择 默认`chrome` */
+  browser: 'chrome-headless-shell' | 'chrome'
   /** 同时可存在多少个标签页进行工作 */
   maxPages: number
   /** 服务配置 */

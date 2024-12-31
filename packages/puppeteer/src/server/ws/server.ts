@@ -6,10 +6,10 @@ import { WebSocketServer } from 'ws'
 import { screenshot } from '@/puppeteer'
 import { Action } from '@/types/client'
 import { lookup } from 'mime-types'
-import Puppeteer from '@karinjs/puppeteer-core'
 import { auth, common, config, logger } from '@/utils'
 import { wsErrRes, wsSuccRes } from '@/utils/response'
 import { cacheHtml, delHtml, getHtml } from './static'
+import Puppeteer, { common as Common } from '@karinjs/puppeteer-core'
 
 /**
  * WebSocket实例缓存
@@ -34,7 +34,7 @@ export const Server = () => {
      * - `local`: 本地
      * - `remote`: 远程
      */
-    const origin: 'local' | 'remote' = request.headers?.['x-client-origin'] as 'local' | 'remote' || (request.headers.host === '127.0.0.1' ? 'local' : 'remote')
+    const origin: 'local' | 'remote' = request.headers?.['x-client-origin'] as 'local' | 'remote' || (request.headers.host?.includes('127.0.0.1') ? 'local' : 'remote')
 
     if (!auth('ws', request.socket.remoteAddress, authorization)) {
       logger.error(`[WebSocket][server][鉴权失败]: ${request.socket.remoteAddress}`)
@@ -42,21 +42,13 @@ export const Server = () => {
       return server.close()
     }
 
-    const SendApi = (file: string, type: string, url: string): Promise<Buffer> => {
+    const SendApi = (file: string, type: string, url: string) => {
       const echo = crypto.randomUUID({ disableEntropyCache: true })
       const action = Action.static
       const data = { file, type, url }
       const params = JSON.stringify({ echo, action, data })
-      return new Promise((resolve) => {
-        server.send(params)
-        server.once(echo, ({ data, status }) => {
-          if (status === 'error') {
-            logger.error(`[WebSocket][server][静态资源请求失败]: ${url}`)
-            return resolve(Buffer.from(''))
-          }
-          resolve(data)
-        })
-      })
+      server.send(params)
+      return echo
     }
 
     const setRequestInterception: Parameters<Puppeteer['screenshot']>[0]['setRequestInterception'] = async (request, data) => {
@@ -70,23 +62,51 @@ export const Server = () => {
         script: 'text/javascript',
       } as const
 
-      /** 请求的源html文件 */
-      const srcFile = data.file
-      let file = path.dirname(data.file).replace('file://', '')
-      if (srcFile.startsWith('file:///C:/uuid') || srcFile.startsWith('file:///root/uuid')) {
-        file = getHtml(data.file)
-      }
+      /**
+       * 如果是远程请求 这里是虚拟路径
+       * - `linux`: `file:///root/uuid`
+       * - `windows`: `file:///C:/uuid`
+       */
+      const requestFile = data.file
+      /**
+       * 请求的文件
+       * - 如果是构建的虚拟路径则替换为真实路径
+       * - 这里存在虚拟路径的原因是跨平台下，`linux`不能访问`windows`的文件路径
+       */
+      const file = requestFile.startsWith('file:///C:/uuid') || requestFile.startsWith('file:///root/uuid')
+        ? getHtml(data.file) // 获取html真实路径
+        : path.dirname(data.file).replace('file://', '') // 真实路径
 
       const handleRequest = async (type: keyof typeof typeMap) => {
         /** 命中文件进行替换 */
-        const actionPath = request.url() === srcFile ? file : request.url()
+        const actionPath = request.url() === requestFile ? file : request.url()
 
         /** http */
         if (actionPath.startsWith('http')) return request.continue()
 
-        const body = await SendApi(file, type, actionPath)
+        const echo = SendApi(requestFile, type, actionPath)
         const contentType = lookup(actionPath) || typeMap[type]
-        request.respond({ status: 200, contentType, body })
+
+        const { status, data } = await new Promise<{
+          status: boolean,
+          data: Buffer
+        }>((resolve, reject) => {
+          const timer = setTimeout(() => {
+            reject(new Error('请求超时'))
+          }, 20000)
+
+          Common.once(echo, ({ status, data }) => {
+            clearTimeout(timer)
+            resolve({ status, data })
+          })
+        })
+
+        if (!status) {
+          logger.error(`[WebSocket][server][请求失败]: ${requestFile}`)
+          return request.respond({ status: 404, contentType: 'text/plain', body: 'Not Found' })
+        }
+
+        request.respond({ status: 200, contentType, body: data })
       }
 
       switch (type) {
@@ -128,7 +148,7 @@ export const Server = () => {
 
     server.on('message', async (event) => {
       const raw = event.toString()
-      const { echo, action, data, status } = JSON.parse(raw)
+      const { echo, action, data } = JSON.parse(raw)
       if (action !== Action.static) {
         logger.info(`[WebSocket][server][收到消息][ip: ${request.socket.remoteAddress}]: ${raw}`)
       }
@@ -138,6 +158,8 @@ export const Server = () => {
         case Action.render: {
           try {
             const start = Date.now()
+            data.srcFile = data.file
+
             /** http */
             if (data.file.startsWith('http')) {
               const result = await screenshot(data)
@@ -152,12 +174,12 @@ export const Server = () => {
             return wsErrRes(server, echo, error)
           }
         }
-        /** 静态资源响应 */
-        case Action.static: {
-          if (status === 'error') throw new Error(data)
-          server.emit(echo, { data: Buffer.from(data), status })
-          return
-        }
+        // /** 静态资源响应 */
+        // case Action.static: {
+        //   if (status === 'error') throw new Error(data)
+        //   server.emit(echo, { data: Buffer.from(data), status })
+        //   return
+        // }
         default:
           return wsErrRes(server, echo, { message: '未知的请求类型' })
       }

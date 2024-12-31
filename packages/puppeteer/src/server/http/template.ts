@@ -28,14 +28,9 @@ export const dealTpl = (file: string, data: Record<string, any>) => {
     watch(tplFile)
   }
 
-  /** 替换模板 */
+  /** 模板引擎渲染后的html内容 */
   const tmpHtml = template.render(list[tplFile], data)
-
-  /** 保存模板 */
-  fs.writeFileSync(filePath, tmpHtml)
-  logger.debug(`[图片生成][使用模板] ${filePath}`)
-
-  return `file://${filePath}`
+  return tmpHtml
 }
 
 /**
