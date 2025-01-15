@@ -184,4 +184,11 @@ export class Puppeteer {
     if (browser) this.list.push(browser)
     return image
   }
+
+  /**
+   * 返回浏览器二进制绝对路径
+   */
+  getChromePath () {
+    return this.chromePath
+  }
 }

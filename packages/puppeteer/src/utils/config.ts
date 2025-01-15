@@ -11,7 +11,7 @@ if (!fs.existsSync(path.dirname(logsDir))) fs.mkdirSync(path.dirname(logsDir), {
 if (!fs.existsSync(file)) {
   fs.writeFileSync(file, JSON.stringify({
     logLevel: 'info',
-    headless: false,
+    headless: true,
     debug: false,
     browser: 'chrome',
     maxPages: 15,
@@ -24,12 +24,7 @@ if (!fs.existsSync(file)) {
       enable: true,
       token: '123456',
       path: '/ws',
-      list: [
-        {
-          url: 'ws://127.0.0.1:7000/puppeteer',
-          token: '123456'
-        }
-      ]
+      list: []
     },
     /** 浏览器启动数量 */
     browserCount: 1,

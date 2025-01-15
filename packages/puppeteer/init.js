@@ -41,7 +41,7 @@ if (!fs.existsSync(pm2File)) {
 
 /** 处于postinstall脚本环境 无法修改package.json */
 if (process.env.INIT_CWD) {
-  fs.writeFileSync(path.join(projectRoot, 'index.js'), `import('@karinjs/puppeteer')\n`)
+  fs.writeFileSync(path.join(projectRoot, 'index.js'), 'import(\'@karinjs/puppeteer\')\n')
   console.log('初始化完成，请使用【node .】启动~')
 } else {
   const file = process.cwd() + '/package.json'
