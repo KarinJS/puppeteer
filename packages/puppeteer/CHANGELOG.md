@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.6.1](https://github.com/KarinJS/puppeteer/compare/puppeteer-v1.6.0...puppeteer-v1.6.1) (2025-01-15)
+
+
+### Bug Fixes
+
+* 默认打开无头模式 ([f669465](https://github.com/KarinJS/puppeteer/commit/f66946576db5d1a4a3224184c1e46b0b5984699c))
+
 ## [1.6.0](https://github.com/KarinJS/puppeteer/compare/puppeteer-v1.5.1...puppeteer-v1.6.0) (2024-12-31)
 
 
