@@ -1,7 +1,7 @@
 {
   "name": "@karinjs/puppeteer",
   "version": "1.6.1",
-  "description": "puppeteer for karin plugin",
+  "description": "轻量·高效·易用的 Puppeteer 截图、视频生成工具",
   "keywords": [
     "puppeteer",
     "screenshot",
@@ -15,37 +15,40 @@
     "type": "git",
     "url": "git+https://github.com/KarinJS/puppeteer.git"
   },
-  "time": "2024-13-31",
   "license": "MIT",
   "author": "shijin",
-  "type": "module",
-  "main": "./lib/index.js",
-  "types": "./lib/index.d.ts",
-  "bin": {
-    "init": "init.js",
-    "k": "lib/cli.js"
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./puppeteer-core": {
+      "import": "./dist/puppeteer.js",
+      "types": "./dist/puppeteer.d.ts"
+    }
   },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "files": [
-    "lib",
-    "init.js",
+    "!*.test.js",
+    "!*.test.d.ts",
+    "dist",
     "LICENSE",
     "package.json"
   ],
   "scripts": {
-    "build": "tsc --project tsconfig.json && tsc-alias -p tsconfig.json",
-    "postinstall": "node init.js",
+    "build": "tsup",
     "pub": "pnpm publish --access public",
-    "sync": "curl -X PUT \"https://registry-direct.npmmirror.com/-/package/@karinjs/puppeteer/syncs\"",
-    "sort": "npx sort-package-json"
+    "sort": "npx sort-package-json",
+    "sync": "curl -X PUT \"https://registry-direct.npmmirror.com/-/package/@karinjs/puppeteer-core/syncs\"",
+    "test": "node ./dist/index.test.js",
+    "test:dev": "tsx ./src/index.test.ts"
   },
   "dependencies": {
-    "@karinjs/puppeteer-core": "workspace:*",
-    "art-template": "4.13.2",
-    "commander": "^12.1.0",
-    "express": "^4.19.2",
-    "log4js": "^6.9.1",
-    "mime-types": "^2.1.35",
-    "vue": "^3.5.13",
-    "ws": "^8.18.0"
+    "@karinjs/puppeteer-core": "workspace:*"
+  },
+  "devDependencies": {
+    "decompress": "^4.2.1",
+    "p-limit": "6.2.0"
   }
 }

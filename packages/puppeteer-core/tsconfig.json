@@ -5,9 +5,16 @@
     "outDir": "./lib",
     "baseUrl": ".",
     "paths": {
-      "@Common": ["./src/common/common"]
+      "@/*": [
+        "./src/*"
+      ]
     }
   },
-  "include": ["src/**/*"],
-  "exclude": ["node_modules", "lib"]
+  "include": [
+    "src/**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    "lib"
+  ]
 }

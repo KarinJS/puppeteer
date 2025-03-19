@@ -23,3 +23,4 @@ pm2.json
 render-ws (1).js
 正向ws.js
 正向渲染.js
+**/dist/**

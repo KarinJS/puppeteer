@@ -1,3 +1,3 @@
 import neostandard from 'neostandard'
 
-export default neostandard({ ts: true, ignores: ['lib'] })
+export default neostandard({ ts: true, ignores: ['lib', 'packages/**/dist'] })
