@@ -24,6 +24,14 @@
     "!LICENSE",
     "!README.md"
   ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.js",
+      "default": "./dist/index.js"
+    }
+  },
   "scripts": {
     "build": "tsup",
     "pub": "npm publish --access public",

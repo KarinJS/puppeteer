@@ -1,5 +1,5 @@
 import fs from 'node:fs'
-import launch from './index'
+import { launch } from './index'
 import path from 'node:path'
 
 // 测试用例配置

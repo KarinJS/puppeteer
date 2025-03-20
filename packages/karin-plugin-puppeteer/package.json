@@ -2,6 +2,7 @@
   "name": "@karinjs/plugin-puppeteer",
   "version": "1.0.0",
   "description": "",
+  "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [
@@ -11,7 +12,8 @@
   ],
   "scripts": {
     "dev": "tsx src/index.ts",
-    "build": "tsup"
+    "build": "tsup",
+    "karin": "karin"
   },
   "keywords": [
     "karin",
@@ -27,7 +29,7 @@
     "@karinjs/puppeteer": "workspace:*"
   },
   "devDependencies": {
-    "node-karin": "^1.7.6"
+    "node-karin": "^1.7.7"
   },
   "karin": {
     "main": "src/index.ts",

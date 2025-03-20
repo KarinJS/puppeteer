@@ -19,12 +19,14 @@
   "author": "shijin",
   "exports": {
     ".": {
+      "types": "./dist/index.d.ts",
       "import": "./dist/index.js",
-      "types": "./dist/index.d.ts"
+      "require": "./dist/index.js"
     },
     "./puppeteer-core": {
-      "import": "./dist/puppeteer.js",
-      "types": "./dist/puppeteer.d.ts"
+      "types": "./dist/puppeteer-core.d.ts",
+      "import": "./dist/puppeteer-core.js",
+      "require": "./dist/puppeteer-core.js"
     }
   },
   "main": "./dist/index.js",

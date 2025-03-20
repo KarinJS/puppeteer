@@ -1,4 +1,5 @@
 import fs from 'node:fs'
+import path from 'node:path'
 import { createLog, debug } from '../../common'
 import type { Page } from '@karinjs/puppeteer-core'
 import type { PuppeteerContext } from '../utils'
@@ -27,12 +28,9 @@ const newPage = async (
 ) => {
   if (!options.pageGotoParams) options.pageGotoParams = {}
   if (!options.pageGotoParams.timeout) options.pageGotoParams.timeout = timeout
-  options.pageGotoParams.waitUntil = 'load'
 
   /** 创建页面 */
   const page = await ctx.browser.newPage()
-  /** 打开页面数+1 */
-  // common.emit('newPage', this.id)
 
   /** 设置HTTP 标头 */
   if (options.headers) await page.setExtraHTTPHeaders(options.headers)
@@ -48,7 +46,7 @@ const newPage = async (
     if (options.file.startsWith('http') || options.file.startsWith('file://')) {
       await page.goto(options.file, options.pageGotoParams)
     } else if (fs.existsSync(options.file)) {
-      await page.goto(`file://${options.file}`, options.pageGotoParams)
+      await page.goto(`file://${path.resolve(options.file)}`, options.pageGotoParams)
     } else {
       throw new Error(`不支持的file: ${options.file}`)
     }
@@ -73,11 +71,11 @@ const newPage = async (
     try {
       await page.waitForNetworkIdle({
         timeout,
-        idleTime: ctx.config.idleTime ?? 0,
+        idleTime: ctx.config.idleTime ?? 10,
         concurrency: 0
       })
     } catch (error) {
-      console.warn(createLog('页面网络请求加载超时'))
+      console.warn(createLog('页面网络请求加载超时'), error)
     }
   }
 
@@ -146,8 +144,10 @@ const newPage = async (
     })
   }
 
-  /** 等待页面网络请求完成 */
-  list.push(waitForNetworkIdle())
+  /** 实验性功能 等待页面网络请求完成 */
+  if (options.pageGotoParams?.waitUntil === 'domcontentloaded') {
+    list.push(waitForNetworkIdle())
+  }
 
   /** 等待所有任务完成 */
   await Promise.allSettled(list)
