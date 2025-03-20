@@ -24,18 +24,14 @@ export interface LaunchOptions extends LaunchOptionsType {
    */
   maxPages?: number
   /**
-   * 每隔多少分钟检查一次不活动的标签页
-   * @default 0 不检查
+   * 网络请求空闲时间
+   * @default 10
    */
-  checkPageInterval?: number
+  idleTime?: number
   /**
-   * 每隔多少分钟检查浏览器的内存
-   * @default 0 不检查
+   * 触发配置热更新是否重载浏览器
+   * @description 需要注意，会强制关闭所有正在进行中的截图任务
+   * @default false
    */
-  checkBrowserMemoryInterval?: number
-  /**
-   * 浏览器内存检查的阈值 如果超过了则重启浏览器 单位MB
-   * @default 500
-   */
-  browserMemoryThreshold?: number
+  hmr?: boolean
 }

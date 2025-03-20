@@ -1,0 +1,68 @@
+{
+  "name": "@karinjs/plugin-puppeteer",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "!LICENSE",
+    "!README.md"
+  ],
+  "scripts": {
+    "dev": "tsx src/index.ts",
+    "build": "tsup"
+  },
+  "keywords": [
+    "karin",
+    "node-karin",
+    "karin-plugin",
+    "puppeteer",
+    "browser",
+    "headless"
+  ],
+  "author": "shijin",
+  "license": "MIT",
+  "dependencies": {
+    "@karinjs/puppeteer": "workspace:*"
+  },
+  "devDependencies": {
+    "node-karin": "^1.7.6"
+  },
+  "karin": {
+    "main": "src/index.ts",
+    "apps": [],
+    "web": "dist/web.config.js",
+    "ts-web": "src/web.config.ts",
+    "files": [
+      "config"
+    ],
+    "env": [
+      {
+        "key": "PUPPETEER_CACHE_DIR",
+        "value": "",
+        "comment": "Puppeteer缓存的默认根目录"
+      },
+      {
+        "key": "PUPPETEER_CACHE_VERSION",
+        "value": "",
+        "comment": "记录puppeteer下载过的浏览器信息"
+      },
+      {
+        "key": "PUPPETEER_CHROME_HEADLESS_SHELL_VERSION",
+        "value": "",
+        "comment": "Puppeteer下载浏览器的版本"
+      },
+      {
+        "key": "PUPPETEER_EXECUTABLE_PATH",
+        "value": "",
+        "comment": "Puppeteer可执行文件路径 配置后将使用此路径的浏览器"
+      },
+      {
+        "key": "PUPPETEER_CHROME_HEADLESS_SHELL_DOWNLOAD_BASE_URL",
+        "value": "",
+        "comment": "Puppeteer浏览器host地址"
+      }
+    ]
+  }
+}

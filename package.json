@@ -3,9 +3,11 @@
   "version": "1.6.1",
   "scripts": {
     "build": "pnpm -r build",
+    "build:dev": "pnpm build:minify",
+    "build:minify": "pnpm -r build -- --false",
     "dev": "pnpm -r dev",
     "pub": "pnpm -r pub",
-    "app": "node packages/puppeteer/lib/index.js"
+    "test": "pnpm -r test"
   },
   "devDependencies": {
     "@types/decompress": "^4.2.7",
@@ -14,12 +16,12 @@
     "@types/node": "^22.5.4",
     "@types/progress": "^2.0.7",
     "@types/ws": "^8.5.12",
+    "cross-env": "^7.0.3",
     "devtools-protocol": "^0.0.1433962",
     "eslint": "latest",
     "neostandard": "latest",
     "puppeteer-core": "^24.4.0",
-    "sort-package-json": "2.10.0",
-    "tsc-alias": "1.8.10",
+    "sort-package-json": "^3.0.0",
     "tsup": "^8.4.0",
     "typed-query-selector": "^2.12.0",
     "typescript": "5.4.5"

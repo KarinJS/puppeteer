@@ -1,8 +1,8 @@
 import fs from 'node:fs'
-import { puppeteerCache } from '../common/version'
-import { isWindows, platform, createLog, ping, NPMMIRROR, GOOGLE } from '../common'
-import { downloadBrowser } from '../init'
-import type { LaunchOptions } from '../types/LaunchOptions'
+import { downloadBrowser } from '../../init'
+import { puppeteerCache, isWindows, platform, createLog, ping, NPMMIRROR, GOOGLE } from '../../common'
+
+import type { LaunchOptions } from '../../types/LaunchOptions'
 
 /**
  * @internal
@@ -87,11 +87,32 @@ export const browserOptions = async (options: LaunchOptions): Promise<LaunchOpti
     return cache.executablePath
   }
 
+  /**
+   * 获取网络请求空闲时间
+   */
+  const idleTime = () => {
+    if (typeof options.idleTime === 'number') return options.idleTime
+    const time = Number(options.idleTime)
+    if (isNaN(time)) return 10
+    return time
+  }
+
+  /**
+   * 获取最大并发数
+   */
+  const maxPages = () => {
+    if (typeof options.maxPages === 'number') return options.maxPages
+    const pages = Number(options.maxPages)
+    if (isNaN(pages)) return 10
+    return pages
+  }
+
   return {
     ...options,
+    idleTime: idleTime(),
     headless: headless(),
     browser: 'chrome', // 暂时只支持chrome
-    maxPages: Number(options.maxPages) || 15,
+    maxPages: maxPages(),
     args: args(),
     executablePath: await executablePath(),
   }

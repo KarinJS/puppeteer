@@ -33,7 +33,8 @@
     "!*.test.js",
     "!*.test.d.ts",
     "dist",
-    "LICENSE",
+    "!LICENSE",
+    "!README.md",
     "package.json"
   ],
   "scripts": {
@@ -41,8 +42,9 @@
     "pub": "pnpm publish --access public",
     "sort": "npx sort-package-json",
     "sync": "curl -X PUT \"https://registry-direct.npmmirror.com/-/package/@karinjs/puppeteer-core/syncs\"",
-    "test": "node ./dist/index.test.js",
-    "test:dev": "tsx ./src/index.test.ts"
+    "test": "cross-env NODE_ENV=development node ./dist/index.test.js",
+    "test:dev": "cross-env NODE_ENV=development tsx ./src/index.test.ts",
+    "test:auto": "cross-env NODE_ENV=development tsx ./src/index.test.ts --auto"
   },
   "dependencies": {
     "@karinjs/puppeteer-core": "workspace:*"

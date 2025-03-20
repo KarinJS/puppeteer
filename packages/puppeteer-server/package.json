@@ -32,7 +32,6 @@
     "package.json"
   ],
   "scripts": {
-    "build": "tsc --project tsconfig.json && tsc-alias -p tsconfig.json",
     "postinstall": "node init.js",
     "pub": "pnpm publish --access public",
     "sync": "curl -X PUT \"https://registry-direct.npmmirror.com/-/package/@karinjs/puppeteer/syncs\"",
