@@ -1,0 +1,62 @@
+{
+  "name": "@karinjs/puppeteer-server",
+  "version": "0.0.1",
+  "description": "puppeteer for karin plugin",
+  "keywords": [
+    "puppeteer",
+    "screenshot",
+    "karin"
+  ],
+  "homepage": "https://github.com/KarinJS/puppeteer",
+  "bugs": {
+    "url": "https://github.com/KarinJS/puppeteer/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KarinJS/puppeteer.git"
+  },
+  "license": "MIT",
+  "author": "shijin",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "bin": {
+    "puppeteer-server": "./dist/index.js"
+  },
+  "files": [
+    "dist",
+    "LICENSE",
+    "package.json"
+  ],
+  "scripts": {
+    "build": "tsc && tsup",
+    "pub": "pnpm publish --access public",
+    "sort": "sort-package-json",
+    "sync": "curl -X PUT \"https://registry-direct.npmmirror.com/-/package/@karinjs/puppeteer-server/syncs\"",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "pkg": "pkg pkg.config.json --compress Brotli",
+    "pkg:all": "pnpm build && pnpm run pkg",
+    "pkg:debug": "pkg pkg.config.json --compress Brotli --debug"
+  },
+  "devDependencies": {
+    "@karinjs/puppeteer": "workspace:*",
+    "@types/express": "^5.0.0",
+    "@types/lodash": "^4.17.16",
+    "@types/mime-types": "^2.1.4",
+    "@types/multer": "^1.4.12",
+    "@types/ws": "^8.5.12",
+    "art-template": "4.13.2",
+    "commander": "^13.1.0",
+    "express": "^5.0.1",
+    "lodash": "^4.17.21",
+    "log4js": "^6.9.1",
+    "mime-types": "^3.0.0",
+    "multer": "1.4.5-lts.2",
+    "pkg": "^5.8.1",
+    "postject": "^1.0.0-alpha.6",
+    "vue": "^3.5.13",
+    "vitest": "^3.0.9",
+    "ws": "^8.18.0"
+  }
+}

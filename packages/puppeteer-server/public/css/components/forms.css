@@ -1,0 +1,15 @@
+/* 输入框样式 */
+.input {
+  height: 3rem;
+  font-size: 0.95rem;
+}
+
+/* 输入框样式 - 移除聚焦效果 */
+.input:focus {
+  box-shadow: none !important;
+  border-color: theme('colors.gray.300') !important;
+}
+
+.dark .input:focus {
+  border-color: theme('colors.gray.600') !important;
+}

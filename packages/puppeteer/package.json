@@ -1,7 +1,7 @@
 {
   "name": "@karinjs/puppeteer",
   "version": "1.6.1",
-  "description": "puppeteer for karin plugin",
+  "description": "轻量·高效·易用的 Puppeteer 截图、视频生成工具",
   "keywords": [
     "puppeteer",
     "screenshot",
@@ -15,37 +15,44 @@
     "type": "git",
     "url": "git+https://github.com/KarinJS/puppeteer.git"
   },
-  "time": "2024-13-31",
   "license": "MIT",
   "author": "shijin",
-  "type": "module",
-  "main": "./lib/index.js",
-  "types": "./lib/index.d.ts",
-  "bin": {
-    "init": "init.js",
-    "k": "lib/cli.js"
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.js"
+    },
+    "./puppeteer-core": {
+      "types": "./dist/puppeteer-core.d.ts",
+      "import": "./dist/puppeteer-core.js",
+      "require": "./dist/puppeteer-core.js"
+    }
   },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "files": [
-    "lib",
-    "init.js",
-    "LICENSE",
+    "!*.test.js",
+    "!*.test.d.ts",
+    "dist",
+    "!LICENSE",
+    "!README.md",
     "package.json"
   ],
   "scripts": {
-    "build": "tsc --project tsconfig.json && tsc-alias -p tsconfig.json",
-    "postinstall": "node init.js",
+    "build": "tsc && tsup",
     "pub": "pnpm publish --access public",
-    "sync": "curl -X PUT \"https://registry-direct.npmmirror.com/-/package/@karinjs/puppeteer/syncs\"",
-    "sort": "npx sort-package-json"
+    "sort": "npx sort-package-json",
+    "sync": "curl -X PUT \"https://registry-direct.npmmirror.com/-/package/@karinjs/puppeteer-core/syncs\"",
+    "test": "cross-env NODE_ENV=development tsx ./src/index.test.ts --auto",
+    "test:prod": "cross-env NODE_ENV=development node ./dist/index.test.js",
+    "test:dev": "cross-env NODE_ENV=development tsx ./src/index.test.ts"
   },
   "dependencies": {
-    "@karinjs/puppeteer-core": "workspace:*",
-    "art-template": "4.13.2",
-    "commander": "^12.1.0",
-    "express": "^4.19.2",
-    "log4js": "^6.9.1",
-    "mime-types": "^2.1.35",
-    "vue": "^3.5.13",
-    "ws": "^8.18.0"
+    "@karinjs/puppeteer-core": "workspace:*"
+  },
+  "devDependencies": {
+    "decompress": "^4.2.1",
+    "p-limit": "6.2.0"
   }
 }

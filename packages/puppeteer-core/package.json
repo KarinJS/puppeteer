@@ -1,11 +1,10 @@
 {
   "name": "@karinjs/puppeteer-core",
   "version": "1.6.1",
-  "description": "轻量·高效·易用的 Puppeteer 截图、视频生成工具",
+  "description": "Repackage puppeteer-core and compress the size",
   "keywords": [
-    "puppeteer",
-    "screenshot",
-    "karin"
+    "puppeteer-core",
+    "puppeteer"
   ],
   "homepage": "https://github.com/KarinJS/puppeteer",
   "bugs": {
@@ -15,38 +14,28 @@
     "type": "git",
     "url": "git+https://github.com/KarinJS/puppeteer.git"
   },
+  "license": "Apache-2.0",
+  "author": "shijin",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist",
+    "package.json",
+    "!LICENSE",
+    "!README.md"
+  ],
   "exports": {
     ".": {
-      "import": "./lib/index.js",
-      "types": "./lib/index.d.ts"
-    },
-    "./puppeteer-core": {
-      "import": "./lib/puppeteer.js",
-      "types": "./lib/puppeteer.d.ts"
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.js",
+      "default": "./dist/index.js"
     }
   },
-  "time": "2024-13-31-1",
-  "license": "MIT",
-  "author": "shijin",
-  "type": "module",
-  "main": "./lib/index.js",
-  "types": "./lib/index.d.ts",
-  "files": [
-    "lib",
-    "LICENSE",
-    "package.json"
-  ],
   "scripts": {
-    "build": "tsc --project tsconfig.json && tsc-alias -p tsconfig.json",
-    "pub": "npm publish --access public",
+    "build": "tsc && tsup",
+    "pub": "pnpm publish --access public",
     "sort": "npx sort-package-json",
-    "sync": "curl -X PUT \"https://registry-direct.npmmirror.com/-/package/@karinjs/puppeteer-core/syncs\"",
-    "test": "node ./test/index.js"
-  },
-  "dependencies": {
-    "decompress": "4.2.1",
-    "progress": "^2.0.3",
-    "puppeteer-core": "13.7.0",
-    "p-limit": "4.0.0"
+    "sync": "curl -X PUT \"https://registry-direct.npmmirror.com/-/package/@karinjs/puppeteer-core/syncs\""
   }
 }

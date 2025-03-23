@@ -1,5 +1,2 @@
-export * from './common/common'
-export * from './puppeteer/init'
-export * from './puppeteer/core'
-export * from './puppeteer/index'
-export { Puppeteer as default } from './puppeteer/index'
+export * from 'puppeteer-core'
+export { PUPPETEER_REVISIONS } from 'puppeteer-core/lib/cjs/puppeteer/revisions.js'

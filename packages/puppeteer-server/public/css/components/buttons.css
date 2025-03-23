@@ -1,0 +1,51 @@
+/* 按钮样式 */
+.btn-primary {
+  @apply bg-gradient-to-r from-primary-500 to-primary-600 border-none text-white;
+}
+
+/* 处理所有按钮状态，防止变紫 */
+.btn-primary:active,
+.btn-primary:focus,
+.btn-primary:focus-visible,
+.btn-primary.btn-active {
+  @apply bg-gradient-to-r from-primary-500 to-primary-600 !important;
+  box-shadow: none !important;
+  outline: none !important;
+  transform: scale(0.98);
+}
+
+.dark .btn-primary {
+  @apply bg-gradient-to-r from-primary-600 to-primary-700;
+}
+
+.dark .btn-primary:active,
+.dark .btn-primary:focus,
+.dark .btn-primary:focus-visible,
+.dark .btn-primary.btn-active {
+  @apply bg-gradient-to-r from-primary-600 to-primary-700 !important;
+  box-shadow: none !important;
+  outline: none !important;
+  transform: scale(0.98);
+}
+
+/* 简化按钮悬停效果 */
+.login-btn:hover {
+  transform: scale(1.02);
+  transition: transform 0.2s ease;
+}
+
+/* 主题图标按钮 */
+.theme-btn {
+  @apply p-2 rounded-full transition-all duration-200 hover:bg-gray-100 dark:hover:bg-gray-700;
+}
+
+/* 禁用按钮焦点样式 */
+.btn:focus {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.btn:focus-visible {
+  outline: none !important;
+  box-shadow: none !important;
+}

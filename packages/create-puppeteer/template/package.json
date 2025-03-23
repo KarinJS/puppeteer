@@ -1,0 +1,27 @@
+{
+  "name": "template",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "app": "node index.js",
+    "start": "pm2 start pm2.json",
+    "stop": "pm2 delete puppeteer-server",
+    "rs": "npm run restart",
+    "restart": "pm2 restart puppeteer-server",
+    "delete": "pm2 delete puppeteer-server",
+    "status": "pm2 status",
+    "log": "npm run logs",
+    "logs": "pm2 logs puppeteer-server --lines 1000",
+    "error-logs": "pm2 logs puppeteer-server --err --lines 1000",
+    "monitor": "pm2 monit",
+    "update": "npm install @karinjs/puppeteer-server@latest --save",
+    "up": "npm run update"
+  },
+  "dependencies": {
+    "@karinjs/puppeteer-server": "latest"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
