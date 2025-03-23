@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Puppeteer Server 配置管理</title>
+  <script src="./js/tailwindcss.js"></script>
+
+  <!-- 添加DaisyUI组件库 -->
+  <link href="./css/daisyui.full.css" rel="stylesheet" type="text/css" />
+
+  <!-- 主题样式表 -->
+  <link rel="stylesheet" href="./css/theme.css">
+
+  <!-- 配置页面样式表 -->
+  <link rel="stylesheet" href="./css/index.css">
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            primary: {
+              50: '#f0f9ff',
+              100: '#e0f2fe',
+              200: '#bae6fd',
+              300: '#7dd3fc',
+              400: '#38bdf8',
+              500: '#0ea5e9',
+              600: '#0284c7',
+              700: '#0369a1',
+              800: '#075985',
+              900: '#0c4a6e',
+              950: '#082f49',
+            }
+          }
+        }
+      },
+      plugins: [],
+      daisyui: {
+        themes: ["light", "dark"],
+      }
+    }
+  </script>
+
+  <!-- 可以保留一些自定义样式来补充DaisyUI，但应该精简 -->
+  <style>
+    .animate-fadeIn {
+      animation: fadeIn 0.5s ease-out forwards;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .tab-btn.active {
+      @apply border-primary-500 text-primary-600 dark:text-primary-400;
+    }
+
+    .tab-btn {
+      @apply transition-all duration-200;
+    }
+
+    /* 自定义表单紧凑布局 */
+    .form-control-compact .label {
+      padding-top: 0.25rem;
+      padding-bottom: 0.25rem;
+    }
+  </style>
+</head>
+
+<body class="bg-gray-50 dark:bg-gray-900 min-h-screen transition-colors duration-300">
+  <div class="container mx-auto px-4 py-6">
+    <header class="mb-8">
+      <div class="flex justify-between items-center">
+        <div class="flex items-center">
+          <div class="h-10 w-10 rounded-full bg-primary-100 dark:bg-primary-900 flex items-center justify-center mr-3">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-primary-600 dark:text-primary-400" fill="none"
+              viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+            </svg>
+          </div>
+          <h1 class="text-3xl font-bold text-gray-900 dark:text-white">Puppeteer Server 配置管理</h1>
+        </div>
+        <div class="flex items-center space-x-3">
+          <!-- 主题切换和登出按钮组 -->
+          <div class="flex items-center bg-gray-100 dark:bg-gray-800 rounded-lg p-1">
+            <!-- 主题切换按钮 -->
+            <button type="button" id="theme-toggle" class="theme-btn rounded-md p-2 mr-1" title="切换主题">
+              <svg id="theme-icon-system" xmlns="http://www.w3.org/2000/svg"
+                class="h-5 w-5 text-gray-700 dark:text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z" />
+              </svg>
+              <svg id="theme-icon-dark" xmlns="http://www.w3.org/2000/svg"
+                class="h-5 w-5 hidden text-gray-700 dark:text-gray-300" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+              </svg>
+              <svg id="theme-icon-light" xmlns="http://www.w3.org/2000/svg"
+                class="h-5 w-5 hidden text-gray-700 dark:text-gray-300" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+              </svg>
+            </button>
+
+            <!-- 登出按钮 -->
+            <button id="logout-button"
+              class="flex items-center gap-2 px-3 py-2 rounded-md text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+              </svg>
+              <span>登出</span>
+            </button>
+          </div>
+        </div>
+      </div>
+      <p class="text-gray-600 dark:text-gray-300 mt-2">修改和管理 Puppeteer Server 的配置项</p>
+    </header>
+
+    <main>
+      <div class="card bg-base-100 shadow-xl p-6 mb-6 animate-fadeIn">
+        <div class="flex justify-between items-center mb-4 card-header">
+          <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-100">配置项</h2>
+          <div>
+            <button id="save-btn" class="btn btn-primary login-btn">
+              <span class="inline-flex items-center">
+                保存配置
+                <svg class="ml-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+              </span>
+            </button>
+          </div>
+        </div>
+
+        <div class="border-b border-gray-200 dark:border-gray-700 pb-2 mb-4">
+          <p class="text-sm text-gray-500 dark:text-gray-400">上次更新时间: <span id="last-update">--</span></p>
+        </div>
+
+        <div id="loading" class="text-center py-8">
+          <span class="loading loading-spinner loading-lg text-primary"></span>
+          <p class="mt-2 text-gray-600 dark:text-gray-400">正在加载配置...</p>
+        </div>
+
+        <form id="config-form" class="hidden space-y-6">
+          <!-- Tabs -->
+          <div class="border-b border-gray-200 dark:border-gray-700">
+            <div class="tabs">
+              <button type="button" data-tab="browser" class="tab tab-btn tab-bordered tab-active">浏览器</button>
+              <button type="button" data-tab="http" class="tab tab-btn tab-bordered">HTTP 服务</button>
+              <button type="button" data-tab="ws-server" class="tab tab-btn tab-bordered">WS 服务端</button>
+              <button type="button" data-tab="ws-client" class="tab tab-btn tab-bordered">WS 客户端</button>
+              <button type="button" data-tab="logger" class="tab tab-btn tab-bordered">日志</button>
+              <button type="button" data-tab="env" class="tab tab-btn tab-bordered">环境变量</button>
+            </div>
+          </div>
+
+          <!-- Tab Content -->
+          <div id="tab-content">
+            <!-- Browser Tab -->
+            <div data-tab-content="browser" class="tab-content form-control-compact">
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="form-control w-full">
+                  <label class="label" for="browser-download">
+                    <span class="label-text text-gray-700 dark:text-gray-300">下载浏览器</span>
+                  </label>
+                  <select id="browser-download" name="browser.downloadBrowser" class="select select-bordered w-full">
+                    <option value="chrome">Chrome 内核浏览器</option>
+                    <option value="chrome-headless-shell">Chrome Headless Shell (纯无头浏览器)</option>
+                  </select>
+                  <label class="label">
+                    <span class="label-text-alt text-gray-600 dark:text-gray-400">没有浏览器时下载的浏览器类型</span>
+                  </label>
+                </div>
+                <div class="form-control w-full">
+                  <label class="label" for="browser-debug">
+                    <span class="label-text text-gray-700 dark:text-gray-300">调试模式</span>
+                  </label>
+                  <select id="browser-debug" name="browser.debug" class="select select-bordered w-full">
+                    <option value="false">关闭</option>
+                    <option value="true">开启</option>
+                  </select>
+                  <label class="label">
+                    <span class="label-text-alt text-gray-600 dark:text-gray-400">在该模式下，浏览器将前台运行，并打开页面后不会关闭
+                      (仅Windows有效)</span>
+                  </label>
+                </div>
+                <div class="form-control w-full">
+                  <label class="label" for="browser-maxPages">
+                    <span class="label-text text-gray-700 dark:text-gray-300">最大页面数</span>
+                  </label>
+                  <input type="number" id="browser-maxPages" name="browser.maxPages"
+                    class="input input-bordered w-full">
+                  <label class="label">
+                    <span class="label-text-alt text-gray-600 dark:text-gray-400">最大并发处理页面数量</span>
+                  </label>
+                </div>
+                <div class="form-control w-full">
+                  <label class="label" for="browser-idleTime">
+                    <span class="label-text text-gray-700 dark:text-gray-300">空闲时间（秒）</span>
+                  </label>
+                  <input type="number" id="browser-idleTime" name="browser.idleTime"
+                    class="input input-bordered w-full">
+                  <label class="label">
+                    <span class="label-text-alt text-gray-600 dark:text-gray-400">网络请求空闲时间</span>
+                  </label>
+                </div>
+                <div class="form-control w-full">
+                  <label class="label" for="browser-hmr">
+                    <span class="label-text text-gray-700 dark:text-gray-300">HMR</span>
+                  </label>
+                  <select id="browser-hmr" name="browser.hmr" class="select select-bordered w-full">
+                    <option value="false">关闭</option>
+                    <option value="true">开启</option>
+                  </select>
+                  <label class="label">
+                    <span class="label-text-alt text-gray-600 dark:text-gray-400">配置热更新时重载浏览器（会强制关闭所有正在进行中的任务）</span>
+                  </label>
+                </div>
+                <div class="form-control w-full">
+                  <label class="label" for="browser-headless">
+                    <span class="label-text text-gray-700 dark:text-gray-300">无头模式</span>
+                  </label>
+                  <select id="browser-headless" name="browser.headless" class="select select-bordered w-full">
+                    <option value="true">开启</option>
+                    <option value="false">关闭</option>
+                  </select>
+                  <label class="label">
+                    <span class="label-text-alt text-gray-600 dark:text-gray-400">在无头模式下浏览器不会显示界面，运行更加高效</span>
+                  </label>
+                </div>
+                <div class="form-control w-full">
+                  <label class="label" for="browser-executablePath">
+                    <span class="label-text text-gray-700 dark:text-gray-300">可执行路径</span>
+                  </label>
+                  <input type="text" id="browser-executablePath" name="browser.executablePath"
+                    class="input input-bordered w-full">
+                  <label class="label">
+                    <span class="label-text-alt text-gray-600 dark:text-gray-400">自定义浏览器执行文件路径，留空则自动下载</span>
+                  </label>
+                </div>
+                <div class="form-control w-full">
+                  <label class="label" for="browser-protocol">
+                    <span class="label-text text-gray-700 dark:text-gray-300">协议</span>
+                  </label>
+                  <select id="browser-protocol" name="browser.protocol" class="select select-bordered w-full">
+                    <option value="cdp">CDP</option>
+                    <option value="webDriverBiDi">WebDriver BiDi</option>
+                  </select>
+                  <label class="label">
+                    <span class="label-text-alt text-gray-600 dark:text-gray-400">浏览器通信协议，建议使用默认CDP协议</span>
+                  </label>
+                </div>
+                <div class="form-control w-full md:col-span-2">
+                  <label class="label" for="browser-args">
+                    <span class="label-text text-gray-700 dark:text-gray-300">启动参数</span>
+                  </label>
+                  <textarea id="browser-args" name="browser.args" rows="5"
+                    class="textarea textarea-bordered w-full"></textarea>
+                  <label class="label">
+                    <span class="label-text-alt text-gray-600 dark:text-gray-400">每行一个参数，例如: --no-sandbox</span>
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <!-- HTTP Tab -->
+            <div data-tab-content="http" class="tab-content hidden form-control-compact">
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="form-control w-full">
+                  <label class="label" for="http-host">
+                    <span class="label-text text-gray-700 dark:text-gray-300">主机</span>
+                  </label>
+                  <input type="text" id="http-host" name="http.host" class="input input-bordered w-full">
+                  <label class="label">
+                    <span class="label-text-alt text-gray-600 dark:text-gray-400">HTTP服务监听地址，默认0.0.0.0表示所有地址</span>
+                  </label>
+                </div>
+                <div class="form-control w-full">
+                  <label class="label" for="http-port">
+                    <span class="label-text text-gray-700 dark:text-gray-300">端口</span>
+                  </label>
+                  <input type="number" id="http-port" name="http.port" class="input input-bordered w-full">
+                  <label class="label">
+                    <span class="label-text-alt text-gray-600 dark:text-gray-400">HTTP服务监听端口，默认7777</span>
+                  </label>
+                </div>
+                <div class="form-control w-full">
+                  <label class="label" for="http-token">
+                    <span class="label-text text-gray-700 dark:text-gray-300">令牌</span>
+                  </label>
+                  <input type="text" id="http-token" name="http.token" class="input input-bordered w-full">
+                  <label class="label">
+                    <span class="label-text-alt text-gray-600 dark:text-gray-400">API访问令牌，用于权限验证</span>
+                  </label>
+                </div>
+                <div class="form-control w-full">
+                  <label class="label" for="http-limit">
+                    <span class="label-text text-gray-700 dark:text-gray-300">JSON限制</span>
+                  </label>
+                  <input type="text" id="http-limit" name="http.limit" class="input input-bordered w-full">
+                  <label class="label">
+                    <span class="label-text-alt text-gray-600 dark:text-gray-400">JSON请求体大小限制，例如: 50mb 需重启生效</span>
+                  </label>
+                </div>
+                <div class="form-control w-full">
+                  <label class="label" for="http-upload">
+                    <span class="label-text text-gray-700 dark:text-gray-300">上传限制 (MB) 需重启生效</span>
+                  </label>
+                  <input type="number" id="http-upload" name="http.upload" class="input input-bordered w-full"
+                    step="0.1">
+                  <label class="label">
+                    <span class="label-text-alt text-gray-600 dark:text-gray-400">文件上传大小限制，单位MB (后端将自动转换为字节)
+                      需重启生效</span>
+                  </label>
+                </div>
+                <div class="form-control w-full">
+                  <label class="label" for="http-screenshot">
+                    <span class="label-text text-gray-700 dark:text-gray-300">启用截图API</span>
+                  </label>
+                  <select id="http-screenshot" name="http.screenshot" class="select select-bordered w-full">
+                    <option value="true">开启</option>
+                    <option value="false">关闭</option>
+                  </select>
+                  <label class="label">
+                    <span class="label-text-alt text-gray-600 dark:text-gray-400">是否启用截图API功能</span>
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <!-- WS Server Tab -->
+            <div data-tab-content="ws-server" class="tab-content hidden form-control-compact">
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="form-control w-full">
+                  <label class="label" for="ws-server-enable">
+                    <span class="label-text text-gray-700 dark:text-gray-300">启用 WebSocket 服务</span>
+                  </label>
+                  <select id="ws-server-enable" name="ws_server.enable" class="select select-bordered w-full">
+                    <option value="true">开启</option>
+                    <option value="false">关闭</option>
+                  </select>
+                  <label class="label">
+                    <span class="label-text-alt text-gray-600 dark:text-gray-400">是否开启WebSocket服务端 需重启生效</span>
+                  </label>
+                </div>
+                <div class="form-control w-full">
+                  <label class="label" for="ws-server-path">
+                    <span class="label-text text-gray-700 dark:text-gray-300">路径</span>
+                  </label>
+                  <input type="text" id="ws-server-path" name="ws_server.path" class="input input-bordered w-full">
+                  <label class="label">
+                    <span class="label-text-alt text-gray-600 dark:text-gray-400">WebSocket服务路径，例如: /ws</span>
+                  </label>
+                </div>
+                <div class="form-control w-full">
+                  <label class="label" for="ws-server-token">
+                    <span class="label-text text-gray-700 dark:text-gray-300">令牌</span>
+                  </label>
+                  <input type="text" id="ws-server-token" name="ws_server.token" class="input input-bordered w-full">
+                  <label class="label">
+                    <span class="label-text-alt text-gray-600 dark:text-gray-400">WebSocket连接验证令牌</span>
+                  </label>
+                </div>
+                <div class="form-control w-full">
+                  <label class="label" for="ws-server-timeout">
+                    <span class="label-text text-gray-700 dark:text-gray-300">超时时间 (毫秒)</span>
+                  </label>
+                  <input type="number" id="ws-server-timeout" name="ws_server.timeout"
+                    class="input input-bordered w-full">
+                  <label class="label">
+                    <span class="label-text-alt text-gray-600 dark:text-gray-400">WebSocket连接超时时间，单位毫秒</span>
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <!-- WS Client Tab -->
+            <div data-tab-content="ws-client" class="tab-content hidden form-control-compact">
+              <div id="ws-client-container">
+                <!-- 客户端配置会动态添加到这里 -->
+              </div>
+              <button type="button" id="add-ws-client" class="mt-4 btn btn-primary login-btn">
+                <span class="inline-flex items-center">
+                  添加客户端
+                  <svg class="ml-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                  </svg>
+                </span>
+              </button>
+            </div>
+
+            <!-- Logger Tab -->
+            <div data-tab-content="logger" class="tab-content hidden form-control-compact">
+              <div class="grid grid-cols-1 gap-4">
+                <div class="form-control w-full">
+                  <label class="label" for="logger-level">
+                    <span class="label-text text-gray-700 dark:text-gray-300">日志级别</span>
+                  </label>
+                  <select id="logger-level" name="logger.level" class="select select-bordered w-full">
+                    <option value="trace">trace</option>
+                    <option value="debug">debug</option>
+                    <option value="info">info</option>
+                    <option value="warn">warn</option>
+                    <option value="error">error</option>
+                    <option value="fatal">fatal</option>
+                    <option value="mark">mark</option>
+                  </select>
+                  <label class="label">
+                    <span class="label-text-alt text-gray-600 dark:text-gray-400">日志输出级别，级别越低记录越详细</span>
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <!-- Env Tab -->
+            <div data-tab-content="env" class="tab-content hidden form-control-compact">
+              <div class="card bg-base-100 p-4 mb-4">
+                <div class="card-body p-2">
+                  <div class="mb-4 card-header">
+                    <h3 class="font-medium mb-2 text-gray-800 dark:text-gray-100">环境变量</h3>
+                    <p class="text-sm text-gray-500 dark:text-gray-400">设置系统环境变量，无值请输入null</p>
+                  </div>
+                  <div class="grid grid-cols-1 gap-3 mb-2">
+                    <div class="flex gap-4 mb-2 font-medium">
+                      <div class="flex-grow text-gray-700 dark:text-gray-300">变量名</div>
+                      <div class="flex-grow text-gray-700 dark:text-gray-300">变量值</div>
+                      <div class="w-12"></div>
+                    </div>
+                    <div id="env-container" class="space-y-2">
+                      <!-- 环境变量会动态添加到这里 -->
+                    </div>
+                  </div>
+                  <div class="mt-4 flex items-center gap-4">
+                    <div class="flex-grow">
+                      <input type="text" id="new-env-key" placeholder="变量名" class="input input-bordered w-full">
+                    </div>
+                    <button type="button" id="add-env" class="btn btn-primary login-btn">
+                      <span class="inline-flex items-center">
+                        添加环境变量
+                        <svg class="ml-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                        </svg>
+                      </span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </main>
+
+    <footer class="mt-8 text-center text-sm text-gray-500 dark:text-gray-400">
+      <p>Puppeteer Server WebUI &copy; <span id="current-year"></span></p>
+    </footer>
+  </div>
+
+  <!-- 提示框 -->
+  <div id="toast"
+    class="fixed top-4 right-4 bg-base-100 shadow-lg rounded-xl p-4 transform transition-all duration-300 translate-x-full opacity-0 flex items-center gap-3">
+    <div id="toast-icon" class="flex-shrink-0">
+      <svg class="h-6 w-6 text-primary" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+        stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+      </svg>
+    </div>
+    <div class="ml-3">
+      <p id="toast-message" class="text-sm font-medium">操作成功</p>
+    </div>
+  </div>
+
+  <script src="./js/main.js"></script>
+  <!-- 引入主题脚本 -->
+  <script src="./js/theme.js"></script>
+  <script src="./js/index.js"></script>
+</body>
+
+</html>

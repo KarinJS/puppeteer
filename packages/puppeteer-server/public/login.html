@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>登录 - Puppeteer Server</title>
+
+  <!-- 引入 Tailwind CSS -->
+  <script src="./js/tailwindcss.js"></script>
+
+  <!-- 引入 DaisyUI 组件库 -->
+  <link href="./css/daisyui.full.css" rel="stylesheet" type="text/css" />
+
+  <!-- 主题样式表 -->
+  <link rel="stylesheet" href="./css/theme.css">
+
+  <!-- 登录页面样式 -->
+  <link rel="stylesheet" href="./css/login.css">
+
+  <!-- 引入MD5加密库 -->
+  <script src="./js/md5.min.js"></script>
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            primary: {
+              50: '#f0f9ff',
+              100: '#e0f2fe',
+              200: '#bae6fd',
+              300: '#7dd3fc',
+              400: '#38bdf8',
+              500: '#0ea5e9',
+              600: '#0284c7',
+              700: '#0369a1',
+              800: '#075985',
+              900: '#0c4a6e',
+              950: '#082f49',
+            }
+          }
+        }
+      },
+      plugins: [],
+      daisyui: {
+        themes: ["light", "dark"],
+      }
+    }
+  </script>
+
+  <script src="./js/theme.js" defer></script>
+</head>
+
+<body class="bg-white dark:bg-gray-900 min-h-screen flex items-center justify-center transition-colors duration-300">
+  <!-- 动态波浪背景 -->
+  <div class="wave-bg">
+    <div class="wave wave1"></div>
+    <div class="wave wave2"></div>
+    <div class="wave wave3"></div>
+  </div>
+
+  <!-- 粒子效果 -->
+  <div class="particles" id="particles"></div>
+
+  <!-- 修改容器样式，减少侧边空白，设置最大宽度 -->
+  <div class="mx-auto z-10 w-full px-4 sm:px-6 md:max-w-5xl">
+    <div class="flex flex-col lg:flex-row overflow-hidden rounded-xl shadow-2xl">
+      <!-- 左侧品牌区域 - 调整为斜边设计 -->
+      <div class="left-panel lg:w-[45%] p-8 lg:p-10 text-white flex flex-col justify-between relative overflow-hidden">
+        <div class="relative z-10">
+          <div class="mb-8">
+            <div class="h-14 w-14 rounded-xl bg-white/20 backdrop-blur-md flex items-center justify-center mb-6">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z" />
+              </svg>
+            </div>
+            <h1 class="text-3xl md:text-4xl font-bold mb-2">Puppeteer Server</h1>
+            <p class="text-white/80">自动化浏览器控制系统</p>
+          </div>
+
+          <div class="space-y-6">
+            <div class="flex items-center space-x-3">
+              <div class="rounded-full bg-white/20 p-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                  stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+              </div>
+              <span>高效的浏览器自动化</span>
+            </div>
+            <div class="flex items-center space-x-3">
+              <div class="rounded-full bg-white/20 p-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                  stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+              </div>
+              <span>强大的API控制能力</span>
+            </div>
+            <div class="flex items-center space-x-3">
+              <div class="rounded-full bg-white/20 p-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                  stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+              </div>
+              <span>简单易用的配置界面</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="text-sm text-white/60">
+          <p class="mb-1">© <span id="current-year"></span> Puppeteer Server</p>
+          <p>基于 Chrome DevTools Protocol 技术</p>
+        </div>
+
+        <!-- 装饰圆形 -->
+        <div class="absolute -bottom-20 -right-20 w-48 h-48 rounded-full bg-white/10"></div>
+        <div class="absolute -top-20 -left-20 w-32 h-32 rounded-full bg-white/10"></div>
+      </div>
+
+      <!-- 右侧登录区域 -->
+      <div class="lg:w-[55%] bg-white dark:bg-gray-800 p-6 lg:p-8 flex items-center">
+        <div class="w-full">
+          <div class="flex justify-between items-center mb-8">
+            <h2 class="text-2xl font-bold text-gray-800 dark:text-white">管理员登录</h2>
+            <button type="button" id="theme-toggle"
+              class="theme-btn p-2 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-white"
+              title="切换主题">
+              <svg id="theme-icon-system" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
+                viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z" />
+              </svg>
+              <svg id="theme-icon-dark" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 hidden" fill="none"
+                viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+              </svg>
+              <svg id="theme-icon-light" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 hidden" fill="none"
+                viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+              </svg>
+            </button>
+          </div>
+
+          <p class="text-gray-600 dark:text-gray-400 mb-5">请输入管理密码继续访问系统</p>
+
+          <form id="login-form">
+            <div class="relative mb-6">
+              <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                <svg class="h-5 w-5 text-primary-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                </svg>
+              </div>
+              <input type="password" id="password" name="password"
+                class="input input-bordered w-full pl-12 bg-gray-100 dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-800 dark:text-white"
+                placeholder="请输入管理密码">
+            </div>
+
+            <p id="error-message" class="text-sm text-red-400 hidden mb-4"></p>
+
+            <button type="submit" id="login-button" class="btn login-btn btn-primary rounded-md py-3 w-full">
+              <span class="inline-flex items-center">
+                登录系统
+                <svg class="ml-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                </svg>
+              </span>
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- 成功提示 -->
+    <div id="toast"
+      class="fixed top-4 right-4 bg-gray-800 border-l-4 border-primary-500 shadow-2xl rounded-xl p-4 transform transition-all duration-300 translate-x-full opacity-0 flex items-center gap-3 z-50">
+      <div id="toast-icon" class="flex-shrink-0">
+        <svg class="h-6 w-6 text-primary-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+          stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+        </svg>
+      </div>
+      <div class="ml-3">
+        <p id="toast-message" class="text-sm font-medium text-white">登录成功</p>
+      </div>
+    </div>
+
+    <script>
+      // 生成粒子效果
+      document.addEventListener('DOMContentLoaded', () => {
+        const particlesContainer = document.getElementById('particles')
+        const particleCount = 15 // 减少粒子数量
+
+        for (let i = 0; i < particleCount; i++) {
+          const size = Math.random() * 6 + 2 // 减小粒子尺寸
+          const particle = document.createElement('div')
+          particle.classList.add('particle')
+
+          // 随机位置
+          const x = Math.random() * 100
+          const y = Math.random() * 100
+
+          // 随机动画方向和时长
+          const xDirection = (Math.random() - 0.5) * 100
+          const yDirection = (Math.random() - 0.5) * 100
+          const duration = Math.random() * 25 + 20
+
+          particle.style.width = `${size}px`
+          particle.style.height = `${size}px`
+          particle.style.left = `${x}%`
+          particle.style.top = `${y}%`
+          particle.style.setProperty('--x-direction', `${xDirection}px`)
+          particle.style.setProperty('--y-direction', `${yDirection}px`)
+          particle.style.setProperty('--animation-duration', `${duration}s`)
+
+          particlesContainer.appendChild(particle)
+        }
+
+        // 设置当前年份
+        const yearSpan = document.getElementById('current-year')
+        if (yearSpan) {
+          yearSpan.textContent = new Date().getFullYear()
+        }
+
+        // 主题切换逻辑
+        const themeToggle = document.getElementById('theme-toggle')
+        const iconSystem = document.getElementById('theme-icon-system')
+        const iconDark = document.getElementById('theme-icon-dark')
+        const iconLight = document.getElementById('theme-icon-light')
+
+        // 主题切换顺序：自动 -> 夜间 -> 白天
+        const themeOrder = ['system', 'dark', 'light']
+
+        // 显示当前主题图标
+        function showThemeIcon (theme) {
+          // 隐藏所有图标
+          iconSystem.classList.add('hidden')
+          iconDark.classList.add('hidden')
+          iconLight.classList.add('hidden')
+
+          // 显示对应主题的图标
+          if (theme === 'system') {
+            iconSystem.classList.remove('hidden')
+          } else if (theme === 'dark') {
+            iconDark.classList.remove('hidden')
+          } else if (theme === 'light') {
+            iconLight.classList.remove('hidden')
+          }
+        }
+
+        // 应用主题
+        function applyTheme (theme) {
+          if (theme === 'system') {
+            const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+            document.documentElement.classList.toggle('dark', isDarkMode)
+            document.documentElement.setAttribute('data-theme', isDarkMode ? 'dark' : 'light')
+          } else if (theme === 'dark') {
+            document.documentElement.classList.add('dark')
+            document.documentElement.setAttribute('data-theme', 'dark')
+          } else if (theme === 'light') {
+            document.documentElement.classList.remove('dark')
+            document.documentElement.setAttribute('data-theme', 'light')
+          }
+
+          // 显示当前主题图标
+          showThemeIcon(theme)
+        }
+
+        // 初始化主题
+        let currentThemeIndex = 0
+        const savedTheme = localStorage.getItem('theme') || 'system'
+
+        // 找到保存的主题在数组中的索引
+        currentThemeIndex = themeOrder.indexOf(savedTheme)
+        if (currentThemeIndex === -1) currentThemeIndex = 0 // 默认使用system
+
+        // 应用当前主题
+        applyTheme(themeOrder[currentThemeIndex])
+
+        // 主题切换按钮点击事件
+        themeToggle.addEventListener('click', () => {
+          // 循环切换主题
+          currentThemeIndex = (currentThemeIndex + 1) % themeOrder.length
+          const newTheme = themeOrder[currentThemeIndex]
+
+          // 保存并应用新主题
+          localStorage.setItem('theme', newTheme)
+          applyTheme(newTheme)
+        })
+
+        // 监听系统主题变化
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+          if (localStorage.getItem('theme') === 'system') {
+            document.documentElement.classList.toggle('dark', e.matches)
+            document.documentElement.setAttribute('data-theme', e.matches ? 'dark' : 'light')
+          }
+        })
+      })
+    </script>
+
+    <script src="./js/login.js"></script>
+</body>
+
+</html>

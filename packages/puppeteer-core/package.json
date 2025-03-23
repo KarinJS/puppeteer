@@ -37,5 +37,6 @@
     "pub": "pnpm publish --access public",
     "sort": "npx sort-package-json",
     "sync": "curl -X PUT \"https://registry-direct.npmmirror.com/-/package/@karinjs/puppeteer-core/syncs\""
-  }
+  },
+  "timestamp": "2025-03-23T16:28:21.440Z"
 }
