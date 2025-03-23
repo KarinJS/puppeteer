@@ -17,7 +17,8 @@ export const initWeb = (app: express.Application) => {
 
   app.use(express.static(dir))
   app.get('/web', (_req, res) => {
-    res.sendFile(path.resolve(dir, 'login.html'))
+    // 重定向到index.html
+    res.redirect('/login.html')
   })
 
   // /** 全部重定向到index.html */
