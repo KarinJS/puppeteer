@@ -1,4 +1,4 @@
-import type { screenshot } from '@karinjs/puppeteer-core'
+import type { screenshot } from '@karinjs/puppeteer'
 
 /**
  * 截图参数

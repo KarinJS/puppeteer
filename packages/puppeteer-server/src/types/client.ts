@@ -1,30 +1,35 @@
-import { type Puppeteer } from '@karinjs/puppeteer-core'
-import { type RenderResult, type screenshot } from '@karinjs/puppeteer-core'
-
 /**
- * ws交互Api
+ * 创建ws客户端配置
  */
-export const enum Action {
-  /** 渲染 */
-  render = 'render',
-  /** 主动请求发起方发送静态资源 */
-  static = 'static',
-  /** 返回响应给请求方 */
-  response = 'response',
-  /** 服务端主动关闭连接 */
-  close = 'close',
+export interface CreateWebSocketOptions {
+  /** 链接地址 */
+  url: string,
+  /** 心跳时间 单位: 毫秒 */
+  heartbeatTime: number,
+  /** 重连时间 单位: 毫秒 */
+  reconnectionTime: number,
+  /** 鉴权密钥 - 明文 */
+  authorization?: string
 }
 
 /**
- * 每个API对应的请求参数和响应类型
+ * 要求客户端上传文件请求参数
  */
-export interface ApiMap {
-  [Action.render]: {
-    params: Parameters<Puppeteer['screenshot']>[0],
-    result: RenderResult<screenshot>,
-  },
-  [Action.static]: {
-    params: { file: string, url: string },
-    result: Buffer,
-  },
+export interface UploadFileRequestParams {
+  /** 文件类型 */
+  type: string,
+  /** 文件路径 */
+  path: string,
+  /** 请求唯一标识符 */
+  echo: string
+}
+
+/**
+ * 要求客户端上传文件响应参数
+ */
+export interface UploadFileResponseParams {
+  /** 请求唯一标识符 */
+  echo: string,
+  /** 文件哈希 md5 */
+  hash: string,
 }

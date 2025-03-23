@@ -1,5 +1,4 @@
 import path from 'path'
-import { logger } from './logger'
 import { count } from './count'
 
 export const common = {

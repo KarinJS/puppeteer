@@ -1,32 +1,15 @@
-import path from 'node:path'
-import { config } from '@/utils'
-import { vueToHtml } from '@/ssr'
-import { Puppeteer } from '@karinjs/puppeteer-core'
-import type { ScreenshotOptions } from './types'
+import { launch } from '@karinjs/puppeteer'
+import type { LaunchOptions } from '@karinjs/puppeteer'
 
 /**
  * 浏览器实例
  */
-export const puppeteer = await new Puppeteer({
-  ...config,
-  chrome: config.browser === 'chrome-headless-shell'
-    ? 'chrome-headless-shell'
-    : 'chrome',
-}).init()
+export let puppeteer: Awaited<ReturnType<typeof launch>>
 
 /**
- * 截图
- * @param options 截图参数
+ * 创建浏览器实例
+ * @param config 浏览器配置
  */
-export const screenshot = async (options: ScreenshotOptions) => {
-  options.srcFile = options.file
-
-  // 检查是否为.vue组件
-  if (options.components === 'vue' || path.extname(options.file) === '.vue') {
-    options.file = await vueToHtml(options.file, options.data || {})
-    options.selector = '#app'
-    delete options.data
-  }
-
-  return puppeteer.screenshot(options)
+export const createPuppeteer = async (config: LaunchOptions = {}) => {
+  puppeteer = await launch(config)
 }

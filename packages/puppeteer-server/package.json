@@ -1,5 +1,5 @@
 {
-  "name": "@karinjs/puppeteer-express",
+  "name": "@karinjs/puppeteer-server",
   "version": "1.6.1",
   "description": "puppeteer for karin plugin",
   "keywords": [
@@ -15,10 +15,8 @@
     "type": "git",
     "url": "git+https://github.com/KarinJS/puppeteer.git"
   },
-  "time": "2024-13-31",
   "license": "MIT",
   "author": "shijin",
-  "type": "module",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
   "bin": {
@@ -34,16 +32,21 @@
   "scripts": {
     "postinstall": "node init.js",
     "pub": "pnpm publish --access public",
-    "sync": "curl -X PUT \"https://registry-direct.npmmirror.com/-/package/@karinjs/puppeteer/syncs\"",
-    "sort": "npx sort-package-json"
+    "sort": "sort-package-json",
+    "sync": "curl -X PUT \"https://registry-direct.npmmirror.com/-/package/@karinjs/puppeteer-server/syncs\""
   },
-  "dependencies": {
-    "@karinjs/puppeteer-core": "workspace:*",
+  "devDependencies": {
+    "@karinjs/puppeteer": "workspace:*",
+    "@types/express": "^5.0.0",
+    "@types/mime-types": "^2.1.4",
+    "@types/multer": "^1.4.12",
+    "@types/ws": "^8.5.12",
     "art-template": "4.13.2",
-    "commander": "^12.1.0",
-    "express": "^4.19.2",
+    "commander": "^13.1.0",
+    "express": "^5.0.1",
     "log4js": "^6.9.1",
-    "mime-types": "^2.1.35",
+    "mime-types": "^3.0.0",
+    "multer": "1.4.5-lts.2",
     "vue": "^3.5.13",
     "ws": "^8.18.0"
   }

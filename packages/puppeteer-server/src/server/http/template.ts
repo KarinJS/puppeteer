@@ -1,7 +1,6 @@
 import fs from 'node:fs'
 import path from 'node:path'
 import template from 'art-template'
-import { logger } from '@/utils'
 
 const htmlPath = `${process.cwd()}/data/html`
 const list: Record<string, string> = {}
