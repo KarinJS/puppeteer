@@ -12,7 +12,6 @@ import type { RequestHandler } from 'express'
 export const authMiddleware: RequestHandler = async (req, res, next) => {
   const token = req?.headers?.authorization || req?.query?.token as string
 
-  console.log(token)
   if (typeof token !== 'string') {
     createUnauthorizedResponse(res, 'header 或 query 中缺少 token')
     return
@@ -30,7 +29,6 @@ export const authMiddleware: RequestHandler = async (req, res, next) => {
   }
 
   const md5 = 'Bearer ' + getMd5(getMd5(config.http.token))
-  logger.info(token, md5)
   if (
     token !== md5 &&
     token !== `Bearer ${config.http.token}`
@@ -38,8 +36,6 @@ export const authMiddleware: RequestHandler = async (req, res, next) => {
     createUnauthorizedResponse(res, 'token 不正确')
     return
   }
-
-  // TODO: 验证 token 需要将token进行两次md5加密
 
   next()
 }

@@ -17,19 +17,15 @@
   },
   "license": "MIT",
   "author": "shijin",
-  "main": "./lib/index.js",
-  "types": "./lib/index.d.ts",
-  "bin": {
-    "init": "init.js",
-    "k": "lib/cli.js"
-  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "files": [
-    "lib",
-    "init.js",
+    "dist",
     "LICENSE",
     "package.json"
   ],
   "scripts": {
+    "build": "tsup",
     "postinstall": "node init.js",
     "pub": "pnpm publish --access public",
     "sort": "sort-package-json",

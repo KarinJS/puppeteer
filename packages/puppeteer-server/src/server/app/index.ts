@@ -25,5 +25,6 @@ export const server: http.Server = http.createServer(app)
 export const init = (port: number, hostname: string) => {
   server.listen(port, hostname, () => {
     logger.info(`express启动成功 正在监听: http://${hostname}:${port}`)
+    logger.info(`webui: \x1b[32m http://127.0.0.1:${port}/web \x1b[0m`)
   })
 }

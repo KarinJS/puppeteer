@@ -75,7 +75,7 @@ export function createQueueManager<T, I> (options: CreateQueueManagerOptions<T>)
         saveData(data)
       }
     } catch (error) {
-      console.error('处理队列时出错:', error)
+      logger.error('处理队列时出错:', error)
     } finally {
       isProcessing = false
 
