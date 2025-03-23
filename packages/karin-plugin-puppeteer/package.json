@@ -14,7 +14,8 @@
     "dev": "tsx src/index.ts",
     "dev:test": "node dist/index.js",
     "build": "tsc && tsup",
-    "pub": "pnpm publish --access public"
+    "pub": "pnpm publish --access public",
+    "sync": "curl -X PUT \"https://registry-direct.npmmirror.com/-/package/@karinjs/plugin-puppeteer/syncs\""
   },
   "keywords": [
     "karin",

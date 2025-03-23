@@ -10,7 +10,8 @@
     "build": "tsc && tsup",
     "dev": "tsx src/index.ts",
     "dev:test": "node dist/index.js",
-    "pub": "pnpm publish --access public"
+    "pub": "pnpm publish --access public",
+    "sync": "curl -X PUT \"https://registry-direct.npmmirror.com/-/package/@karinjs/create-puppeteer/syncs\""
   },
   "keywords": [
     "puppeteer",

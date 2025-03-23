@@ -10,7 +10,8 @@
     "test": "pnpm -r test",
     "test:watch": "pnpm -r test:watch",
     "test:coverage": "pnpm -r test:coverage",
-    "web": "tsx packages/puppeteer-server/src/index.ts"
+    "web": "tsx packages/puppeteer-server/src/index.ts",
+    "sync": "pnpm -r sync"
   },
   "devDependencies": {
     "@types/decompress": "^4.2.7",
