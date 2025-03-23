@@ -11,7 +11,8 @@
     "test:watch": "pnpm -r test:watch",
     "test:coverage": "pnpm -r test:coverage",
     "web": "tsx packages/puppeteer-server/src/index.ts",
-    "sync": "pnpm -r sync"
+    "sync": "pnpm -r sync",
+    "up-version": "node up-version.cjs"
   },
   "devDependencies": {
     "@types/decompress": "^4.2.7",
