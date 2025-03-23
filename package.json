@@ -8,6 +8,8 @@
     "dev": "pnpm -r dev",
     "pub": "pnpm -r pub",
     "test": "pnpm -r test",
+    "test:watch": "pnpm -r test:watch",
+    "test:coverage": "pnpm -r test:coverage",
     "web": "tsx packages/puppeteer-server/src/index.ts"
   },
   "devDependencies": {
