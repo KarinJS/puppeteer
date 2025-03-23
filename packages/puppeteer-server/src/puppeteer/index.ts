@@ -13,3 +13,10 @@ export let puppeteer: Awaited<ReturnType<typeof launch>>
 export const createPuppeteer = async (config: LaunchOptions = {}) => {
   puppeteer = await launch(config)
 }
+
+/**
+ * 更新浏览器配置
+ */
+export const hmrConfig = async (config: LaunchOptions = {}) => {
+  puppeteer.hmrConfig(config)
+}

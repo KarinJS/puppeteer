@@ -1,0 +1,120 @@
+/* 主题基础变量 */
+:root {
+  --bg-base: #ffffff;
+  --text-base: #1f2937;
+  --text-muted: #6b7280;
+  --bg-card: #ffffff;
+  --border-color: #e5e7eb;
+}
+
+/* 暗色主题变量 */
+[data-theme="dark"] {
+  --bg-base: #111827;
+  --text-base: #f3f4f6;
+  --text-muted: #9ca3af;
+  --bg-card: #1f2937;
+  --border-color: #374151;
+}
+
+/* 全局主题应用 */
+html[data-theme="dark"],
+body[data-theme="dark"] {
+  background-color: var(--bg-base);
+  color: var(--text-base);
+}
+
+html[data-theme="light"],
+body[data-theme="light"] {
+  background-color: var(--bg-base);
+  color: var(--text-base);
+}
+
+/* 确保过渡效果平滑 */
+html,
+body {
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* 主题组件样式 */
+.card,
+.btn,
+.dropdown-content,
+.menu,
+.navbar,
+.tab,
+.textarea,
+.input,
+.select,
+.modal,
+.tooltip,
+.collapse,
+.alert {
+  background-color: var(--bg-card);
+  color: var(--text-base);
+  border-color: var(--border-color);
+}
+
+/* 暗色主题特殊处理 */
+[data-theme="dark"] .card,
+[data-theme="dark"] .btn,
+[data-theme="dark"] .dropdown-content,
+[data-theme="dark"] .menu,
+[data-theme="dark"] .navbar,
+[data-theme="dark"] .tab,
+[data-theme="dark"] .textarea,
+[data-theme="dark"] .input,
+[data-theme="dark"] .select,
+[data-theme="dark"] .modal,
+[data-theme="dark"] .tooltip,
+[data-theme="dark"] .collapse,
+[data-theme="dark"] .alert {
+  background-color: var(--bg-card);
+  color: var(--text-base);
+  border-color: var(--border-color);
+}
+
+/* 确保所有内容区域正确应用主题 */
+main,
+header,
+footer,
+.container {
+  background-color: var(--bg-base);
+  color: var(--text-base);
+}
+
+/* Toast组件主题 */
+#toast {
+  background-color: var(--bg-card);
+  color: var(--text-base);
+}
+
+/* 菜单项悬停效果 */
+.menu li>*:not(ul):not(.menu-title):not(details):active,
+.menu li>*:not(ul):not(.menu-title):not(details).active,
+.menu li>details>summary:active {
+  background-color: var(--bg-card);
+  color: var(--text-base);
+}
+
+/* 下拉菜单样式 */
+.dropdown .dropdown-content {
+  background-color: var(--bg-card);
+  color: var(--text-base);
+  border-color: var(--border-color);
+}
+
+/* Tailwind主题相关样式 */
+
+/* 深色模式下的背景和文本颜色 */
+.dark .bg-white {
+  background-color: #1e293b !important;
+}
+
+.dark .text-gray-800 {
+  color: #f8fafc !important;
+}
+
+/* 确保深色模式下的登录面板颜色正确 */
+.dark .lg\:w-\[55\%\] {
+  background-color: #1e293b !important;
+}

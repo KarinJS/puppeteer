@@ -1,5 +1,5 @@
 import type WebSocket from 'ws'
-import type { UploadFileRequestParams } from '@/types/client'
+import type { UploadFileRequestParams } from '../../types/client'
 
 let echo = 0
 

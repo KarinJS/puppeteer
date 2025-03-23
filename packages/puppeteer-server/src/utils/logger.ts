@@ -1,7 +1,8 @@
 import log4js from 'log4js'
-import { count } from './count'
+import { getCount } from '../cache/count'
 import { launch, ScreenshotOptions } from '@karinjs/puppeteer'
 import { getFilename } from './file'
+import type { pkg as Pkg } from './config'
 
 /**
  * 创建日志实例
@@ -9,6 +10,7 @@ import { getFilename } from './file'
  * @param logLevel 日志级别
  */
 export const createLogger = (
+  pkg: typeof Pkg,
   dir: string,
   logLevel: string
 ) => {
@@ -18,7 +20,7 @@ export const createLogger = (
         type: 'console',
         layout: {
           type: 'pattern',
-          pattern: '%[[Karin-puppeteer][%d{hh:mm:ss.SSS}][%4.4p]%] %m'
+          pattern: '%[[karin-puppeteer][%d{hh:mm:ss.SSS}][%4.4p]%] %m'
         }
       },
       out: {
@@ -41,6 +43,14 @@ export const createLogger = (
       default: { appenders: ['out', 'console'], level: logLevel }
     }
   })
+
+  const logger = log4js.getLogger('default')
+
+  logger.mark(`${pkg.name} 启动中...`)
+  logger.info(`当前版本: v${pkg.version}`)
+  logger.info('https://github.com/karinjs/puppeteer')
+
+  return logger
 }
 
 /**
@@ -54,7 +64,7 @@ export const logScreenshotTime = (
   options: ScreenshotOptions,
   time: number
 ) => {
-  count.count++
+  getCount.count.count++
   let length = 0
 
   if (Array.isArray(result.data)) {
@@ -72,5 +82,5 @@ export const logScreenshotTime = (
   const kb = (length / 1024).toFixed(2) + 'KB'
 
   const name = getFilename(options)
-  logger.mark(`[图片生成][${name}][${count.count}次] ${kb} ${Date.now() - time}ms`)
+  logger.mark(`[图片生成][${name}][${getCount.count.count}次] ${kb} ${Date.now() - time}ms`)
 }

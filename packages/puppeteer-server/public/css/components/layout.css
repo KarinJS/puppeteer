@@ -1,0 +1,29 @@
+/* 左侧面板样式调整 */
+.left-panel {
+  background: linear-gradient(135deg, #38bdf8 0%, #0ea5e9 100%);
+  clip-path: polygon(0 0, 100% 0, 88% 100%, 0% 100%);
+}
+
+.dark .left-panel {
+  background: linear-gradient(135deg, #0284c7 0%, #082f49 100%);
+}
+
+/* 右侧磨砂玻璃效果 */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(7px);
+  -webkit-backdrop-filter: blur(7px);
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
+}
+
+.dark .glass-panel {
+  background: rgba(15, 23, 42, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+}
+
+/* 移除过渡动画，简化设计 */
+.animate-fadeIn {
+  animation: none !important;
+}

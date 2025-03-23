@@ -1,0 +1,238 @@
+/* 配置管理页面样式 */
+@import 'base.css';
+@import 'animations.css';
+
+/* 导入自定义样式（低优先级） */
+@import 'styles.css';
+
+/* 导入组件样式（高优先级，会覆盖之前的样式） */
+@import 'components/buttons.css';
+@import 'components/layout.css';
+@import 'components/forms.css';
+
+/* 导入样式覆盖（最高优先级） */
+@import 'overrides.css';
+
+/* 强化主题切换过渡效果 */
+:root {
+  --theme-transition-duration: 0.3s;
+}
+
+html,
+body {
+  transition: background-color var(--theme-transition-duration) ease,
+    color var(--theme-transition-duration) ease;
+}
+
+.card,
+button,
+input,
+select,
+textarea,
+.form-control,
+.card-header {
+  transition: background-color var(--theme-transition-duration) ease,
+    color var(--theme-transition-duration) ease,
+    border-color var(--theme-transition-duration) ease,
+    box-shadow var(--theme-transition-duration) ease,
+    transform 0.2s ease;
+}
+
+/* 修复文本选择问题 */
+body {
+  -webkit-user-select: text;
+  user-select: text;
+}
+
+/* 增强夜间模式文本可见性 */
+.dark h1.text-gray-900 {
+  color: #ffffff !important;
+}
+
+.dark p.text-gray-600 {
+  color: #d1d5db !important;
+}
+
+/* 强制应用夜间模式样式 - 优先级提高 */
+.dark .label-text {
+  color: #d1d5db !important;
+}
+
+.dark .label-text-alt {
+  color: #9ca3af !important;
+}
+
+.dark .text-gray-800 {
+  color: #f3f4f6 !important;
+}
+
+.dark .text-gray-700 {
+  color: #e5e7eb !important;
+}
+
+/* 增强主题切换按钮和登出按钮的可见性 */
+.dark .theme-btn svg,
+.dark #logout-button svg {
+  color: #e5e7eb !important;
+}
+
+.dark .theme-btn:hover svg,
+.dark #logout-button:hover svg {
+  color: #ffffff !important;
+}
+
+/* 增强文字和按钮可见性 */
+.dark #logout-button span {
+  color: #e5e7eb !important;
+}
+
+.dark #logout-button:hover span {
+  color: #ffffff !important;
+}
+
+/* 增强背景对比度 */
+.dark .bg-gray-100 {
+  background-color: #1f2937 !important;
+}
+
+/* 主题色彩增强 */
+.card {
+  border-left: 4px solid var(--p);
+  transition: all 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+/* Tab按钮样式增强 */
+.tab-btn.active {
+  @apply border-primary-500 text-primary-600 dark:text-primary-400;
+  border-bottom-width: 3px;
+}
+
+.tab-btn {
+  @apply transition-all duration-200;
+  position: relative;
+  overflow: hidden;
+}
+
+.tab-btn:after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 0;
+  height: 3px;
+  background-color: var(--p);
+  transition: all 0.3s ease;
+  transform: translateX(-50%);
+}
+
+.tab-btn:hover:after {
+  width: 80%;
+}
+
+/* 表单元素样式美化 */
+.input:focus,
+.select:focus,
+.textarea:focus {
+  border-color: var(--p);
+  box-shadow: 0 0 0 2px rgba(var(--p-rgb), 0.2);
+}
+
+/* 优化表单间距 */
+.label {
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
+  min-height: 2rem;
+  /* 确保所有标签高度一致 */
+  display: flex;
+  align-items: center;
+}
+
+.form-control+.form-control {
+  margin-top: 0.5rem;
+}
+
+/* 优化表单标签间距 */
+.label-text-alt {
+  margin-top: 0.125rem;
+}
+
+/* 修复表单对齐问题 */
+.form-control {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  height: 100%;
+}
+
+.label-text {
+  height: 1.5rem;
+  display: flex;
+  align-items: center;
+}
+
+/* 图标按钮样式 */
+.icon-btn {
+  @apply flex items-center gap-2 px-3 py-2 rounded-md transition-all duration-200 hover:bg-gray-100 dark:hover:bg-gray-700;
+  border-left: 3px solid transparent;
+}
+
+.icon-btn:hover {
+  border-left-color: var(--p);
+}
+
+/* 卡片头部样式 */
+.card-header {
+  border-bottom: 1px solid rgba(var(--p-rgb), 0.2);
+  padding-bottom: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+/* 修复第一行输入框对齐问题 */
+.grid.grid-cols-1.md\:grid-cols-2 {
+  align-items: stretch;
+  display: grid !important;
+}
+
+/* 为输入框组添加统一的最小高度 */
+.md\:grid-cols-2>.form-control {
+  min-height: 6.5rem;
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+/* 确保标签高度一致 */
+.form-control .label:first-child {
+  min-height: 2.5rem;
+  height: 2.5rem;
+}
+
+/* 确保所有表单组件垂直间距一致 */
+.form-control-compact {
+  --spacing-y: 0.625rem;
+}
+
+.form-control-compact .label {
+  padding-top: var(--spacing-y);
+  padding-bottom: var(--spacing-y);
+}
+
+/* 确保每一对输入框的对齐 */
+.grid.grid-cols-1.md\:grid-cols-2>.form-control:nth-child(2n-1),
+.grid.grid-cols-1.md\:grid-cols-2>.form-control:nth-child(2n) {
+  display: flex;
+  flex-direction: column;
+}
+
+/* 强制对齐选择器和输入框 */
+.form-control .select,
+.form-control .input,
+.form-control .textarea {
+  margin-top: 0.25rem;
+  margin-bottom: 0.25rem;
+  height: 3rem;
+}

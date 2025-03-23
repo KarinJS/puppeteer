@@ -1,8 +1,9 @@
 import WebSocket from 'ws'
-import { sha256 } from '@/utils/hash'
-import { puppeteer } from '@/puppeteer'
-import { logScreenshotTime } from '@/utils'
-import { renderTemplate } from '@/server/utils/template'
+import { sha256 } from '../utils/hash'
+import { puppeteer } from '../puppeteer'
+import { logScreenshotTime, pkg } from '../utils'
+import { renderTemplate } from '../server/utils/template'
+import { getCount } from '../cache/count'
 import {
   Status,
   WsAction,
@@ -10,8 +11,8 @@ import {
   createWsScreenshotFailedResponse,
   createWsScreenshotSuccessResponse,
   createWsServerErrorResponse,
-} from '@/server/utils/webSocket'
-import type { CreateWebSocketOptions } from '@/types/client'
+} from '../server/utils/webSocket'
+import type { CreateWebSocketOptions } from '../types/client'
 
 /**
  * 创建ws客户端
@@ -25,13 +26,33 @@ export const createWebSocket = (options: CreateWebSocketOptions) => {
 
   const { url, heartbeatTime, reconnectionTime, authorization } = options
 
-  const client = authorization
-    ? new WebSocket(url, {
-      headers: {
-        authorization: sha256(authorization)
-      }
-    })
-    : new WebSocket(url)
+  if (!url) {
+    logger.fatal('[WebSocket][client] 连接地址不能为空')
+    return
+  }
+
+  if (!heartbeatTime) {
+    logger.fatal('[WebSocket][client] 心跳时间不能为空')
+    return
+  }
+
+  if (!reconnectionTime) {
+    logger.fatal('[WebSocket][client] 重连时间不能为空')
+    return
+  }
+
+  const clientOptions: WebSocket.ClientOptions = {
+    headers: {
+      'x-client-name': pkg.name,
+      'x-client-version': pkg.version
+    }
+  }
+
+  if (authorization) {
+    clientOptions.headers!.authorization = sha256(authorization)
+  }
+
+  const client = new WebSocket(url, clientOptions)
 
   client.on('open', () => {
     init = true
@@ -89,6 +110,7 @@ const handleMessage = async (
   socket: WebSocket,
   rawData: WebSocket.RawData
 ) => {
+  getCount.count.ws_client++
   const rawString = rawData.toString()
   const options = JSON.parse(rawString) || {}
 

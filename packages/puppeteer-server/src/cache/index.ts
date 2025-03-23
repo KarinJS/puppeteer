@@ -1,6 +1,6 @@
 import fs from 'node:fs'
-import path from 'node:path'
 import { CacheQueueManager } from './queue'
+import { cacheDirName, cacheFile } from '../utils/dir'
 
 export interface CacheItem {
   /** 资源url */
@@ -30,16 +30,6 @@ export interface CacheItem {
    */
   path: string
 }
-
-/** 缓存目录名称 */
-export const cacheDirName = '.cache'
-/** 缓存文件列表名称 */
-export const cacheFileName = 'cache.json'
-
-/** 缓存目录 */
-export const cacheDir = path.join(process.cwd(), cacheDirName)
-/** 缓存文件列表 */
-export const cacheFile = path.join(cacheDir, cacheFileName)
 
 /** 缓存队列管理器实例 */
 const cacheQueueManager = new CacheQueueManager(cacheFile)

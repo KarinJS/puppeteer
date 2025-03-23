@@ -2,19 +2,16 @@ import fs from 'node:fs'
 import path from 'node:path'
 import crypto from 'node:crypto'
 import multer from 'multer'
+import { newCacheFile } from '../../cache'
+import { cacheDir } from '../../utils/dir'
+import { getConfig } from '../../utils/config'
 import { Status } from '../utils/webSocket'
 import { uploadFileMap } from '../utils/map'
-import { eventEmitter } from '@/utils/event'
-import { cacheDir, newCacheFile } from '@/cache'
+import { eventEmitter } from '../../utils/event'
 import { createUploadFileEventKey } from '../utils/key'
 import { createSuccessResponse, createBadRequestResponse } from '../utils/response'
 
 import type { RequestHandler } from 'express'
-
-/**
- * 文件大小限制
- */
-export const fileSize = 10 * 1024 * 1024
 
 /**
  * 上传文件中间件
@@ -45,7 +42,7 @@ export const upload = multer({
     callback(null, true)
   },
   limits: {
-    fileSize
+    fileSize: getConfig().http.upload
   }
 })
 

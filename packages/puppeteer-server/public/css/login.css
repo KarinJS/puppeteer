@@ -1,0 +1,43 @@
+/* 登录页面样式 */
+@import 'base.css';
+@import 'animations.css';
+
+/* 导入自定义样式（低优先级） */
+@import 'styles.css';
+
+/* 导入组件样式（高优先级，会覆盖之前的样式） */
+@import 'components/buttons.css';
+@import 'components/layout.css';
+@import 'components/forms.css';
+
+/* 导入样式覆盖（最高优先级） */
+@import 'overrides.css';
+
+/* 登录页面特有样式 */
+body.dark {
+  background-color: #0f172a;
+}
+
+/* 主题切换按钮 */
+.theme-btn {
+  transition: all 0.2s ease;
+}
+
+.theme-btn:hover {
+  transform: rotate(15deg);
+}
+
+/* 登录按钮 */
+.login-btn {
+  background: linear-gradient(90deg, #0ea5e9 0%, #0284c7 100%);
+  transition: all 0.3s ease;
+}
+
+.login-btn:hover {
+  box-shadow: 0 4px 12px rgba(14, 165, 233, 0.3);
+}
+
+/* 适配深色模式下的登录面板 */
+html.dark .lg\:w-\[55\%\] {
+  background-color: #1e293b !important;
+}

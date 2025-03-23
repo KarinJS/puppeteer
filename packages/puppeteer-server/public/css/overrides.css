@@ -1,0 +1,43 @@
+/**
+ * 覆盖DaisyUI样式
+ * 最高优先级样式，确保UI组件行为符合预期
+ */
+
+/* 覆盖按钮所有可能的状态 */
+.btn-primary,
+.btn-primary:hover,
+.btn-primary:focus,
+.btn-primary:active,
+.btn-primary:focus-visible,
+.btn-primary.btn-active,
+.btn-primary.btn-focus,
+.btn-primary.btn-hover,
+.btn-primary.focus,
+.btn-primary.active,
+.btn-primary:focus-within {
+  background-color: transparent !important;
+  background-image: linear-gradient(to right, var(--tw-gradient-stops)) !important;
+  --tw-gradient-from: #0ea5e9 !important;
+  --tw-gradient-to: #0284c7 !important;
+  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to) !important;
+  color: white !important;
+}
+
+.dark .btn-primary,
+.dark .btn-primary:hover,
+.dark .btn-primary:focus,
+.dark .btn-primary:active,
+.dark .btn-primary:focus-visible,
+.dark .btn-primary.btn-active,
+.dark .btn-primary.btn-focus,
+.dark .btn-primary.btn-hover,
+.dark .btn-primary.focus,
+.dark .btn-primary.active,
+.dark .btn-primary:focus-within {
+  background-color: transparent !important;
+  background-image: linear-gradient(to right, var(--tw-gradient-stops)) !important;
+  --tw-gradient-from: #0284c7 !important;
+  --tw-gradient-to: #0369a1 !important;
+  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to) !important;
+  color: white !important;
+}

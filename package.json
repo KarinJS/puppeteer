@@ -7,7 +7,8 @@
     "build:minify": "pnpm -r build -- --false",
     "dev": "pnpm -r dev",
     "pub": "pnpm -r pub",
-    "test": "pnpm -r test"
+    "test": "pnpm -r test",
+    "web": "tsx packages/puppeteer-server/src/index.ts"
   },
   "devDependencies": {
     "@types/decompress": "^4.2.7",

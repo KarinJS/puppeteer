@@ -1,0 +1,108 @@
+/* 波浪动画背景 */
+.wave-bg {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(180deg, #f0f9ff 0%, #e0f2fe 100%);
+  left: 0;
+  top: 0;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.dark .wave-bg {
+  background: linear-gradient(180deg, #0f172a 0%, #1e293b 100%);
+}
+
+.wave {
+  position: absolute;
+  left: 0;
+  width: 200%;
+  height: 100px;
+  background-repeat: repeat-no-repeat;
+  background-position: 0 bottom;
+  transform-origin: center bottom;
+}
+
+.wave1 {
+  background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none"><path d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z" opacity=".1" fill="%230EA5E9" /></svg>');
+  background-size: 50% 90px;
+  animation: wave-animation 30s linear infinite;
+  bottom: 0;
+}
+
+.wave2 {
+  background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none"><path d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z" opacity=".15" fill="%230284C7" /></svg>');
+  background-size: 50% 110px;
+  animation: wave-animation 20s linear infinite;
+  bottom: 40px;
+}
+
+.wave3 {
+  background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none"><path d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z" fill="%237DD3FC" opacity=".08" /></svg>');
+  background-size: 50% 60px;
+  animation: wave-animation 15s linear infinite;
+  bottom: 80px;
+}
+
+@keyframes wave-animation {
+  0% {
+    transform: translateX(0);
+  }
+
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+/* 暗色模式波浪 */
+.dark .wave1 {
+  background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none"><path d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z" opacity=".1" fill="%23075985" /></svg>');
+}
+
+.dark .wave2 {
+  background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none"><path d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z" opacity=".2" fill="%230369A1" /></svg>');
+}
+
+.dark .wave3 {
+  background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none"><path d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z" fill="%230C4A6E" opacity=".15" /></svg>');
+}
+
+/* 粒子效果 */
+.particles {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.particle {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(14, 165, 233, 0.2);
+  animation: particle-animation var(--animation-duration) infinite ease-in-out;
+}
+
+.dark .particle {
+  background: rgba(3, 105, 161, 0.2);
+}
+
+@keyframes particle-animation {
+  0% {
+    transform: translateY(0) translateX(0);
+    opacity: 0;
+  }
+
+  50% {
+    opacity: 0.5;
+  }
+
+  100% {
+    transform: translateY(var(--y-direction)) translateX(var(--x-direction));
+    opacity: 0;
+  }
+}

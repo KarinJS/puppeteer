@@ -1,5 +1,5 @@
-import { puppeteer } from '@/puppeteer'
-import { logScreenshotTime } from '@/utils'
+import { puppeteer } from '../../puppeteer'
+import { getConfig, logScreenshotTime } from '../../utils'
 import { renderTemplate } from '../utils/template'
 import {
   createSuccessResponse,
@@ -19,6 +19,12 @@ export type RenderOptions = ScreenshotOptions & { data?: Record<string, any> }
 export const render: RequestHandler = async (req, res) => {
   logger.info(`[render][http][${req.ip}] ${JSON.stringify(req.body)}`)
   try {
+    const config = getConfig()
+    if (!config.http.screenshot) {
+      createServerErrorResponse(res, '截图功能已关闭')
+      return
+    }
+
     const time = Date.now()
     const options = (req.method === 'POST' ? req.body : req.query) || {}
     const data: RenderOptions = {

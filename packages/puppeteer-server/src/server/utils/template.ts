@@ -1,7 +1,7 @@
 import fs from 'node:fs'
 import path from 'node:path'
 import template from 'art-template'
-import { vueToHtml } from '@/component/vue3'
+import { vueToHtml } from '../../component/vue3'
 import type { RenderOptions } from '../router/render'
 
 /**

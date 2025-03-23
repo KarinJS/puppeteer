@@ -1,13 +1,14 @@
 import fs from 'node:fs'
 import path from 'node:path'
 import * as mime from 'mime-types'
-import { server } from '../express'
+import { server } from '../../server/app'
 import { WebSocketServer } from 'ws'
-import { getCache } from '@/cache'
-import { sha256 } from '@/utils/hash'
-import { puppeteer } from '@/puppeteer'
-import { logScreenshotTime } from '@/utils'
-import { eventEmitter } from '@/utils/event'
+import { getCache } from '../../cache'
+import { sha256 } from '../../utils/hash'
+import { puppeteer } from '../../puppeteer'
+import { getCount } from '../../cache/count'
+import { logScreenshotTime } from '../../utils'
+import { eventEmitter } from '../../utils/event'
 import { renderTemplate } from '../utils/template'
 import { createUploadFileEventKey } from '../utils/key'
 import {
@@ -21,17 +22,18 @@ import {
 
 import type WebSocket from 'ws'
 import type { ScreenshotOptions } from '@karinjs/puppeteer'
+import type { UploadFileRequestParams } from '../../types/client'
 
 /**
  * 创建WebSocket服务端
- * @param token - 密钥
  * @param router - 路由
  * @param timeout - 超时时间
+ * @param token - 密钥
  */
-export const createWebSocket = (
-  token: string,
-  router: string,
-  timeout: number
+export const createWebSocketServer = (
+  router: string = '/',
+  timeout: number = 30 * 1000,
+  token?: string
 ) => {
   /**
    * WebSocketServer实例
@@ -49,7 +51,7 @@ export const createWebSocket = (
      * - Bearer sha256
      */
     const { authorization } = request.headers
-    if (`Bearer ${token}` !== authorization && sha256(token) !== authorization) {
+    if (token && `Bearer ${token}` !== authorization && sha256(token) !== authorization) {
       return createWsAuthErrorRequest(socket, 'auth failed')
     }
 
@@ -76,8 +78,20 @@ const handleMessage = async (
   rawData: WebSocket.RawData,
   timeout: number
 ) => {
+  getCount.count.ws_server++
   const rawString = rawData.toString()
   const raw = JSON.parse(rawString) || {}
+
+  /** 响应 */
+  if (raw.type === RequestType.Response) {
+    const { action, echo, status, data } = raw
+    if (action === WsAction.UploadFile) {
+      eventEmitter.emit(echo, { status, data })
+      return
+    }
+
+    logger.error(`[WebSocket][client] 未知响应: ${rawString}`)
+  }
 
   if (raw.type !== RequestType.Request) {
     logger.warn(`[WebSocket][client] 未知请求: ${rawString}`)
@@ -106,6 +120,7 @@ const handleMessage = async (
   /** 设置请求拦截 */
   setRequestInterception(socket, data, raw.echo, timeout)
 
+  /** 截图 */
   const result = await puppeteer.screenshot(data)
   if (result.status) {
     createWsScreenshotSuccessResponse(socket, raw.echo, result)
@@ -114,19 +129,6 @@ const handleMessage = async (
 
   return createWsScreenshotFailedResponse(socket, raw.echo, result.data.message || '未知错误')
 }
-
-// /** 客户端返回响应 */
-// if (raw.type === RequestType.Response) {
-//   if (raw.action === WsAction.UploadFile) {
-//     const { echo, hash } = raw.params || {}
-//     const key = createUploadFileEventKey(echo)
-//     raw.emit(key, hash)
-//   }
-
-//   if (raw.status === Status.Failed) {
-//     logger.fatal(`[WebSocket][client][请求失败]: ${rawString}`)
-//   }
-// }
 
 /**
  * 统一截图参数
@@ -232,20 +234,61 @@ const getFileFromClient = (socket: WebSocket, options: {
   /** 监听上传完成 */
   const key = createUploadFileEventKey(options.echo)
   return new Promise((resolve, reject) => {
-    eventEmitter.once(key, (filePath: string) => {
-      resolve(filePath)
-    })
-
-    /** 超时 */
-    setTimeout(() => {
+    /** 超时处理器 */
+    let timeoutHandler: NodeJS.Timeout | null = setTimeout(() => {
+      timeoutHandler = null
+      eventEmitter.removeListener(key, filePathHandler)
       reject(new Error('get file from client timeout'))
     }, options.timeout)
 
-    /** 发送ws请求 */
-    createWsUploadFileRequestRequest(socket, {
+    /** 文件路径处理器 */
+    const filePathHandler = (filePath: string) => {
+      resolve(filePath)
+      if (timeoutHandler) {
+        clearTimeout(timeoutHandler)
+        timeoutHandler = null
+      }
+    }
+
+    eventEmitter.once(key, filePathHandler)
+
+    sendRequest(socket, {
       echo: options.echo,
       type: options.contentType,
       path: options.url
     })
+      .then(response => {
+        if (response.status === Status.Failed) {
+          if (timeoutHandler) {
+            clearTimeout(timeoutHandler)
+            timeoutHandler = null
+          }
+          eventEmitter.removeListener(key, filePathHandler)
+          reject(new Error(response.data || '从客户端获取文件失败'))
+        }
+      })
+  })
+}
+
+/**
+ * 发送ws请求
+ * - 此接口要求后端无论如何都需要返回一个响应
+ * - status: 是否成功
+ * - data: 失败时填写失败原因 成功为空字符串
+ */
+const sendRequest = (
+  socket: WebSocket,
+  params: UploadFileRequestParams
+): Promise<{ status: Status, data: string }> => {
+  return new Promise((resolve) => {
+    eventEmitter.once(params.echo, (options) => resolve(options))
+
+    setTimeout(() => {
+      const options = { status: Status.Failed, data: 'send request timeout' }
+      eventEmitter.emit(params.echo, options)
+    }, 3 * 1000)
+
+    /** 发送ws请求 */
+    createWsUploadFileRequestRequest(socket, params)
   })
 }
