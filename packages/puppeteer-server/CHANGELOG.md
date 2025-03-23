@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.1](https://github.com/KarinJS/puppeteer/compare/@karinjs/puppeteer-server-v1.0.0...@karinjs/puppeteer-server-v1.0.1) (2025-03-23)
+
+
+### 🐛 Bug Fixes
+
+* public ([97127d6](https://github.com/KarinJS/puppeteer/commit/97127d677877aee217c9e33915a77bcb4c03be3c))
+
 ## 1.0.0 (2025-03-23)
 
 

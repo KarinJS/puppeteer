@@ -1,11 +1,11 @@
 {
-  ".": "2.0.0",
-  "packages/puppeteer": "2.0.0",
+  ".": "2.0.1",
+  "packages/puppeteer": "2.0.1",
   "packages/puppeteer-core": "2.0.0",
   "@karinjs/plugin-puppeteer": "0.0.1",
   "@karinjs/puppeteer-server": "0.0.1",
   "@karinjs/create-puppeteer": "0.0.1",
-  "packages/karin-plugin-puppeteer": "1.0.0",
-  "packages/puppeteer-server": "1.0.0",
-  "packages/create-puppeteer": "1.0.0"
+  "packages/karin-plugin-puppeteer": "1.0.1",
+  "packages/puppeteer-server": "1.0.1",
+  "packages/create-puppeteer": "1.0.1"
 }

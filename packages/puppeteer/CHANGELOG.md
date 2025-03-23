@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.0.1](https://github.com/KarinJS/puppeteer/compare/puppeteer-v2.0.0...puppeteer-v2.0.1) (2025-03-23)
+
+
+### 🎡 Continuous Integration
+
+* sync ([c6a13ea](https://github.com/KarinJS/puppeteer/commit/c6a13ea3fc439468a816e4d623fdb3752d3385c4))
+
 ## [2.0.0](https://github.com/KarinJS/puppeteer/compare/puppeteer-v1.6.1...puppeteer-v2.0.0) (2025-03-23)
 
 
