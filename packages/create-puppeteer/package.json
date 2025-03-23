@@ -9,7 +9,8 @@
   "scripts": {
     "build": "tsc && tsup",
     "dev": "tsx src/index.ts",
-    "dev:test": "node dist/index.js"
+    "dev:test": "node dist/index.js",
+    "pub": "pnpm publish --access public"
   },
   "keywords": [
     "puppeteer",
