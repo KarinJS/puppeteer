@@ -44,9 +44,9 @@
     "pub": "pnpm publish --access public",
     "sort": "npx sort-package-json",
     "sync": "curl -X PUT \"https://registry-direct.npmmirror.com/-/package/@karinjs/puppeteer-core/syncs\"",
-    "test": "cross-env NODE_ENV=development node ./dist/index.test.js",
-    "test:dev": "cross-env NODE_ENV=development tsx ./src/index.test.ts",
-    "test:auto": "cross-env NODE_ENV=development tsx ./src/index.test.ts --auto"
+    "test": "cross-env NODE_ENV=development tsx ./src/index.test.ts --auto",
+    "test:prod": "cross-env NODE_ENV=development node ./dist/index.test.js",
+    "test:dev": "cross-env NODE_ENV=development tsx ./src/index.test.ts"
   },
   "dependencies": {
     "@karinjs/puppeteer-core": "workspace:*"

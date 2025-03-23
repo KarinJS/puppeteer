@@ -34,7 +34,7 @@
   },
   "scripts": {
     "build": "tsup",
-    "pub": "npm publish --access public",
+    "pub": "pnpm publish --access public",
     "sort": "npx sort-package-json",
     "sync": "curl -X PUT \"https://registry-direct.npmmirror.com/-/package/@karinjs/puppeteer-core/syncs\""
   }

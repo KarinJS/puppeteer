@@ -4,6 +4,63 @@
   "include-component-in-tag": true,
   "pull-request-title-pattern": "chore(release): ${component} ${version} [skip-ci]",
   "pull-request-header": "Please run the release_notes action before releasing to generate release highlights",
+  "changelog-sections": [
+    {
+      "type": "feat",
+      "section": "✨ Features",
+      "hidden": false
+    },
+    {
+      "type": "fix",
+      "section": "🐛 Bug Fixes",
+      "hidden": false
+    },
+    {
+      "type": "perf",
+      "section": "⚡️ Performance",
+      "hidden": false
+    },
+    {
+      "type": "revert",
+      "section": "⏪️ Reverts",
+      "hidden": false
+    },
+    {
+      "type": "docs",
+      "section": "📝 Documentation",
+      "hidden": false
+    },
+    {
+      "type": "style",
+      "section": "💄 Styles",
+      "hidden": false
+    },
+    {
+      "type": "chore",
+      "section": "🎫 Chores",
+      "hidden": false
+    },
+    {
+      "type": "refactor",
+      "section": "♻️ Code Refactoring",
+      "hidden": false
+    },
+    {
+      "type": "test",
+      "section": "✅ Tests",
+      "hidden": false
+    },
+    {
+      "type": "build",
+      "section": "📦️ Build System",
+      "hidden": false
+    },
+    {
+      "type": "ci",
+      "section": "🎡 Continuous Integration",
+      "hidden": false
+    }
+  ],
   "packages": {
     ".": {
       "release-type": "node",
@@ -18,6 +75,16 @@
       "release-type": "node",
       "package-name": "@karinjs/puppeteer-core",
       "component": "puppeteer-core"
+    },
+    "packages/karin-plugin-puppeteer": {
+      "release-type": "node",
+      "package-name": "@karinjs/plugin-puppeteer",
+      "component": "@karinjs/plugin-puppeteer"
+    },
+    "packages/puppeteer-server": {
+      "release-type": "node",
+      "package-name": "@karinjs/puppeteer-server",
+      "component": "@karinjs/puppeteer-server"
     }
   }
 }
