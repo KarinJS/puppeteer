@@ -1,7 +1,7 @@
 {
   "name": "@karinjs/plugin-puppeteer",
   "version": "1.0.0",
-  "description": "",
+  "description": "karin的 puppeteer截图、渲染插件",
   "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -12,8 +12,8 @@
   ],
   "scripts": {
     "dev": "tsx src/index.ts",
-    "build": "tsup",
-    "karin": "karin"
+    "dev:test": "node dist/index.js",
+    "build": "tsup"
   },
   "keywords": [
     "karin",
@@ -23,7 +23,7 @@
     "browser",
     "headless"
   ],
-  "author": "shijin",
+  "author": "sj817",
   "license": "MIT",
   "dependencies": {
     "@karinjs/puppeteer": "workspace:*"

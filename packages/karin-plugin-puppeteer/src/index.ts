@@ -1,11 +1,12 @@
 import path from 'node:path'
-import { launch } from '@karinjs/puppeteer'
-import { logger, registerRender, renderTpl } from 'node-karin'
-import { pluginName, pluginVersion, getConfig } from './config'
+import { launch, type LaunchOptions } from '@karinjs/puppeteer'
+import { logger, registerRender, renderTpl, karin } from 'node-karin'
+import { pluginName, pluginVersion, getConfig, HMR_KEY } from './config'
 
 const main = async () => {
   const config = getConfig()
   const browser = await launch(config)
+  karin.on(HMR_KEY, (cfg: LaunchOptions) => browser.hmrConfig(cfg))
 
   const name = '@karinjs/plugin-puppeteer'
   registerRender(name, async (options) => {

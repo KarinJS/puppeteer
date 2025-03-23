@@ -1,14 +1,21 @@
 import fs from 'node:fs'
 import path from 'node:path'
+import { karin } from 'node-karin'
 import pkg from '../../package.json'
 import { basePath } from 'node-karin/root'
 import type { LaunchOptions } from '@karinjs/puppeteer'
+
+/**
+ * 热更新key
+ */
+export const HMR_KEY = 'karin-plugin-puppeteer-hmr'
 
 /**
  * 默认配置
  */
 const defaultConfig: LaunchOptions = {
   downloadBrowser: 'chrome',
+  protocol: 'cdp',
   headless: true,
   debug: false,
   maxPages: 10,
@@ -60,5 +67,16 @@ export const getConfig = (): LaunchOptions => {
   const data = JSON.parse(fs.readFileSync(configPath, 'utf-8'))
   return { ...defaultConfig, ...data }
 }
+
+/**
+ * 保存配置
+ * @param config 配置
+ */
+export const saveConfig = (config: LaunchOptions) => {
+  fs.writeFileSync(configPath, JSON.stringify(config, null, 2))
+  karin.emit(HMR_KEY, config)
+}
+
+export { pkg }
 
 init()
