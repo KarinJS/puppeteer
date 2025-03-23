@@ -9,6 +9,8 @@
     "allowSyntheticDefaultImports": true,
     "forceConsistentCasingInFileNames": true,
     "baseUrl": ".",
+    "noEmit": true,
+    "skipLibCheck": true,
     "paths": {
       "@/*": [
         "src/*"
@@ -21,10 +23,6 @@
     "declaration": true,
     "noImplicitAny": true,
     "strict": true
-  },
-  "tsc-alias": {
-    "resolveFullPaths": true,
-    "resolveFullExtension": ".js"
   },
   "include": [
     "src/**/*"

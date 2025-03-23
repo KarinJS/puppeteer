@@ -74,3 +74,11 @@ jobs:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
         working-directory: packages/puppeteer-server
         run: pnpm run pub
+
+      # 发布 create-puppeteer 包
+      - name: 发布 create-puppeteer 包
+        if: ${{ steps.release.outputs['packages/create-puppeteer--release_created'] }}
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+        working-directory: packages/create-puppeteer
+        run: pnpm run pub

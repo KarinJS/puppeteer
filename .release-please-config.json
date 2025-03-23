@@ -85,6 +85,11 @@
       "release-type": "node",
       "package-name": "@karinjs/puppeteer-server",
       "component": "@karinjs/puppeteer-server"
+    },
+    "packages/create-puppeteer": {
+      "release-type": "node",
+      "package-name": "@karinjs/create-puppeteer",
+      "component": "@karinjs/create-puppeteer"
     }
   }
 }

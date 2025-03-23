@@ -13,7 +13,7 @@
   "scripts": {
     "dev": "tsx src/index.ts",
     "dev:test": "node dist/index.js",
-    "build": "tsup"
+    "build": "tsc && tsup"
   },
   "keywords": [
     "karin",

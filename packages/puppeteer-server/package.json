@@ -28,7 +28,7 @@
     "package.json"
   ],
   "scripts": {
-    "build": "tsup",
+    "build": "tsc && tsup",
     "pub": "pnpm publish --access public",
     "sort": "sort-package-json",
     "sync": "curl -X PUT \"https://registry-direct.npmmirror.com/-/package/@karinjs/puppeteer-server/syncs\"",
