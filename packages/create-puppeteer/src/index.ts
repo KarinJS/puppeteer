@@ -78,13 +78,14 @@ async function main () {
   // 1. 询问项目名称
   let projectName = ''
   let validProjectName = false
+  const defaultProjectName = 'karin-puppeteer'
 
   while (!validProjectName) {
-    projectName = await question('请输入项目名称: ')
+    projectName = await question(`请输入项目名称 (默认: ${defaultProjectName}): `)
 
+    // 如果用户直接按回车，使用默认名称
     if (!projectName.trim()) {
-      console.error('❌ 项目名称不能为空')
-      continue
+      projectName = defaultProjectName
     }
 
     const projectPath = path.resolve(process.cwd(), projectName)
