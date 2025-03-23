@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.0.3](https://github.com/KarinJS/puppeteer/compare/root-v2.0.2...root-v2.0.3) (2025-03-23)
+
+
+### 🐛 Bug Fixes
+
+* webui ([4f89f79](https://github.com/KarinJS/puppeteer/commit/4f89f79210bb5d7a270ade7e405bb9f7d820b724))
+
 ## [2.0.2](https://github.com/KarinJS/puppeteer/compare/root-v2.0.1...root-v2.0.2) (2025-03-23)
 
 
