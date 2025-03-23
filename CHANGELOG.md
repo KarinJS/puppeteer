@@ -1,5 +1,19 @@
 # Changelog
 
+## [2.0.1](https://github.com/KarinJS/puppeteer/compare/root-v2.0.0...root-v2.0.1) (2025-03-23)
+
+
+### 🐛 Bug Fixes
+
+* public ([97127d6](https://github.com/KarinJS/puppeteer/commit/97127d677877aee217c9e33915a77bcb4c03be3c))
+
+
+### 🎡 Continuous Integration
+
+* add `up-version` ([9abd63f](https://github.com/KarinJS/puppeteer/commit/9abd63fc83cdee16a08fedbb5739916519b0dc92))
+* pub ([70fada3](https://github.com/KarinJS/puppeteer/commit/70fada357492e18122a7b05c27f881cbdd27a989))
+* sync ([c6a13ea](https://github.com/KarinJS/puppeteer/commit/c6a13ea3fc439468a816e4d623fdb3752d3385c4))
+
 ## [2.0.0](https://github.com/KarinJS/puppeteer/compare/root-v1.6.1...root-v2.0.0) (2025-03-23)
 
 

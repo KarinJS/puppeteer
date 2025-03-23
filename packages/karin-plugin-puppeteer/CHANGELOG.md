@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.0.1](https://github.com/KarinJS/puppeteer/compare/@karinjs/plugin-puppeteer-v1.0.0...@karinjs/plugin-puppeteer-v1.0.1) (2025-03-23)
+
+
+### 🎡 Continuous Integration
+
+* pub ([70fada3](https://github.com/KarinJS/puppeteer/commit/70fada357492e18122a7b05c27f881cbdd27a989))
+* sync ([c6a13ea](https://github.com/KarinJS/puppeteer/commit/c6a13ea3fc439468a816e4d623fdb3752d3385c4))
+
 ## 1.0.0 (2025-03-23)
 
 
