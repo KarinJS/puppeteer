@@ -25,3 +25,4 @@ render-ws (1).js
 正向渲染.js
 **/dist/**
 **/@karinjs/**
+packages/puppeteer-server/pkg-build

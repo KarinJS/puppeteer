@@ -1,0 +1,17 @@
+{
+  "name": "puppeteer-server",
+  "bin": "dist/index.js",
+  "pkg": {
+    "targets": [
+      "node18-linux-x64",
+      "node18-macos-x64",
+      "node18-win-x64"
+    ],
+    "assets": [
+      "dist/**/*",
+      "public/**/*"
+    ],
+    "outputPath": "pkg-build",
+    "compress": "Brotli"
+  }
+}
