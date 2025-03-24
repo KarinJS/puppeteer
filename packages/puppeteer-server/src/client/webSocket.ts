@@ -137,7 +137,7 @@ const handleMessage = async (
 
       const result = await puppeteer.screenshot(data)
       if (result.status) {
-        createWsScreenshotSuccessResponse(socket, options.echo, result)
+        createWsScreenshotSuccessResponse(socket, options.echo, result.data)
         return logScreenshotTime(result, options.params, time)
       }
 

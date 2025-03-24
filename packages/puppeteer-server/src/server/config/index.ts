@@ -20,6 +20,7 @@ export const setConfigRouter: RequestHandler = (req, res) => {
     ...req.body,
     env: {}
   }
+
   req.body?.env.forEach((item: { key: string, value: string }) => {
     if (item.value === 'null') {
       newConfig.env[item.key] = null

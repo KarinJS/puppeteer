@@ -123,7 +123,7 @@ const handleMessage = async (
   /** 截图 */
   const result = await puppeteer.screenshot(data)
   if (result.status) {
-    createWsScreenshotSuccessResponse(socket, raw.echo, result)
+    createWsScreenshotSuccessResponse(socket, raw.echo, result.data)
     return logScreenshotTime(result, raw.params, time)
   }
 
