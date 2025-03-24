@@ -114,24 +114,33 @@ const handleMessage = async (
     return
   }
 
-  const time = Date.now()
-  /** 获取截图参数 */
-  const data = await getScreenshotOptions(raw)
-  /** 设置请求拦截 */
-  setRequestInterception(socket, data, raw.echo, timeout)
+  try {
+    const time = Date.now()
+    /** 获取截图参数 */
+    const data = await getScreenshotOptions(raw)
+    /** 设置请求拦截 */
+    setRequestInterception(socket, data, raw.echo, timeout)
 
-  /** 截图 */
-  const result = await puppeteer.screenshot(data)
-  if (result.status) {
-    createWsScreenshotSuccessResponse(socket, raw.echo, result.data)
-    return logScreenshotTime(result, raw.params, time)
+    /** 截图 */
+    const result = await puppeteer.screenshot(data)
+    if (result.status) {
+      createWsScreenshotSuccessResponse(socket, raw.echo, result.data)
+      // 防止raw.params为undefined导致的错误
+      if (raw.params) {
+        return logScreenshotTime(result, raw.params, time)
+      }
+      return
+    }
+
+    return createWsScreenshotFailedResponse(socket, raw.echo, result.data.message || '未知错误')
+  } catch (error) {
+    logger.error(error)
+    return createWsServerErrorResponse(socket, raw.echo, (error as Error).message || '未知错误')
   }
-
-  return createWsScreenshotFailedResponse(socket, raw.echo, result.data.message || '未知错误')
 }
 
 /**
- * 统一截图参数
+ * 获取截图参数
  * @param action - 请求类型
  * @param params - 截图参数
  * @returns 截图参数
