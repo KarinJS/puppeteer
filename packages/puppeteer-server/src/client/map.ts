@@ -21,7 +21,8 @@ export const initWebSocket = async (client: Config['ws_client']) => {
  */
 export const closeWebSocket = (url: string) => {
   WebSocketMap.forEach((_, key) => {
-    if (key.url === url) {
+    if (key.url === url || key.url === `${url}/`) {
+      key.emit('activeDisconnect')
       key.close()
     }
   })
@@ -32,6 +33,7 @@ export const closeWebSocket = (url: string) => {
  * @param options 配置
  */
 export const addWebSocket = (options: Config['ws_client'][number]) => {
+  if (!options.enable) return
   const result = createWebSocket({
     url: options.url,
     heartbeatTime: options.heartbeatTime || 30 * 1000,

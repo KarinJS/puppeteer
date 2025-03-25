@@ -78,12 +78,22 @@ export const createWebSocket = (options: CreateWebSocketOptions) => {
   })
 
   client.on('close', () => {
-    setTimeout(() => {
-      if (!isReconnect) return
-      logger.warn(`[WebSocket][client][连接关闭]: ${reconnectionTime / 1000}秒后将进行重连 ${url}`)
+    if (!isReconnect) {
       client.removeAllListeners()
+      logger.warn(`[WebSocket][client][连接关闭]: ${url} 重连已关闭`)
+      return
+    }
+
+    logger.warn(`[WebSocket][client][连接关闭]: ${reconnectionTime / 1000}秒后将进行重连 ${url}`)
+    client.removeAllListeners()
+
+    setTimeout(() => {
       createWebSocket({ url, heartbeatTime, reconnectionTime, authorization })
     }, reconnectionTime)
+  })
+
+  client.once('activeDisconnect', (data) => {
+    isReconnect = false
   })
 
   /**
