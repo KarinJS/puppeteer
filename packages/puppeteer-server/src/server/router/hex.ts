@@ -3,7 +3,7 @@ import { createServerErrorResponse, createSuccessResponse } from '../utils/respo
 import type { RequestHandler } from 'express'
 
 /**
- * 生成md5
+ * 生成sha256
  */
 export const hex: RequestHandler = (req, res) => {
   const token = req.params?.token
@@ -11,6 +11,6 @@ export const hex: RequestHandler = (req, res) => {
     return createServerErrorResponse(res, 'token is required')
   }
 
-  const bearer = crypto.createHash('md5').update(`Bearer ${token}`).digest('hex')
+  const bearer = 'Bearer ' + crypto.createHash('sha256').update(token).digest('hex')
   createSuccessResponse(res, bearer)
 }

@@ -1,4 +1,4 @@
-import crypto from 'node:crypto'
+import { sha256 } from '../../utils/hash'
 import { getConfig } from '../../utils/config'
 import { createUnauthorizedResponse } from '../utils/response'
 import type { RequestHandler } from 'express'
@@ -24,13 +24,9 @@ export const authMiddleware: RequestHandler = async (req, res, next) => {
     return
   }
 
-  const getMd5 = (token: string) => {
-    return crypto.createHash('md5').update(token).digest('hex')
-  }
-
-  const md5 = 'Bearer ' + getMd5(getMd5(config.http.token))
+  const hash = sha256(config.http.token)
   if (
-    token !== md5 &&
+    token !== hash &&
     token !== `Bearer ${config.http.token}`
   ) {
     createUnauthorizedResponse(res, 'token 不正确')

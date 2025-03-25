@@ -35,8 +35,9 @@ document.addEventListener('DOMContentLoaded', () => {
       return
     }
 
-    /** 两次md5加密 */
-    const token = 'Bearer ' + MD5(MD5(password))
+    /** sha256加密 */
+    const token = 'Bearer ' + sha256(password)
+    console.log('token:', token)
 
     // 显示加载状态
     loginButton.classList.add('loading')
