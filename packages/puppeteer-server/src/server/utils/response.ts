@@ -181,3 +181,26 @@ export const createMethodNotAllowedResponse = (res: Response, message = '方法�
 export const createForbiddenResponse = (res: Response, message = '禁止访问') => {
   return createResponse(res, HTTPStatusCode.Forbidden, null, message)
 }
+
+/**
+ * 创建截图成功响应
+ * @description 用于GET请求 直接返回图片
+ * @param res 响应
+ * @param isMulti 是否为分片截图
+ * @param data 数据
+ * @returns 响应
+ * @example createScreenshotSuccessResponse(res, data)
+ */
+export const createScreenshotSuccessResponse = <T> (
+  res: Response,
+  isMulti: boolean,
+  data: T
+) => {
+  if (!isMulti && data instanceof Uint8Array) {
+    res.setHeader('Content-Type', 'image/png')
+    res.send(Buffer.from(data))
+    return
+  }
+
+  res.send(data)
+}

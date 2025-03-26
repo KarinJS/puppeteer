@@ -2,11 +2,12 @@ import { puppeteer } from '../../puppeteer'
 import { getConfig, logScreenshotTime } from '../../utils'
 import { renderTemplate } from '../utils/template'
 import {
-  createSuccessResponse,
-  createServerErrorResponse
+  createScreenshotSuccessResponse,
+  createServerErrorResponse,
+  createSuccessResponse
 } from '../utils/response'
-import type { RequestHandler } from 'express'
 import type { ScreenshotOptions } from '@karinjs/puppeteer'
+import type { RequestHandler, Request, Response } from 'express'
 
 /**
  * 渲染模板类型
@@ -16,25 +17,55 @@ export type RenderOptions = ScreenshotOptions & { data?: Record<string, any> }
 /**
  * 渲染模板并截图
  */
-export const render: RequestHandler = async (req, res) => {
-  logger.info(`[render][http][${req.ip}] ${JSON.stringify(req.body)}`)
+export const renderRouter: RequestHandler = async (req, res) => {
+  screenshot('render', req, res)
+}
+
+/**
+ * 截图
+ */
+export const screenshotRouter: RequestHandler = async (req, res) => {
+  screenshot('screenshot', req, res)
+}
+
+/**
+ * 截图
+ * @param type 类型
+ * @param req 请求
+ * @param res 响应
+ */
+const screenshot = async (
+  type: 'render' | 'screenshot',
+  req: Request,
+  res: Response
+) => {
+  const config = getConfig()
+  if (!config.http.screenshot) {
+    createServerErrorResponse(res, '截图功能已关闭')
+    return
+  }
+
   try {
-    const config = getConfig()
-    if (!config.http.screenshot) {
-      createServerErrorResponse(res, '截图功能已关闭')
-      return
-    }
-
     const time = Date.now()
-    const options = (req.method === 'POST' ? req.body : req.query) || {}
-    const data: RenderOptions = {
-      ...options,
-      file: await renderTemplate(options)
+
+    /**
+     * 参数归一化
+     */
+    let options = (req.method === 'POST' ? req.body : req.query) || {}
+    if (type === 'render') {
+      options = {
+        ...options,
+        file: await renderTemplate(options)
+      }
     }
 
-    const result = await puppeteer.screenshot(data)
+    const result = await puppeteer.screenshot(options)
     if (result.status) {
-      createSuccessResponse(res, result)
+      if (req.method === 'GET') {
+        return createScreenshotSuccessResponse(res, options.multiPage, result.data)
+      } else {
+        createSuccessResponse(res, result.data)
+      }
       return logScreenshotTime(result, options, time)
     }
 

@@ -10,6 +10,7 @@ import type { RequestHandler } from 'express'
  * @param next 下一个中间件
  */
 export const authMiddleware: RequestHandler = async (req, res, next) => {
+  logger.info(`${req.method} ${req.ip} ${req.url} ${JSON.stringify(req.body).slice(0, 150)}...`)
   const token = req?.headers?.authorization || req?.query?.token as string
 
   if (typeof token !== 'string') {
