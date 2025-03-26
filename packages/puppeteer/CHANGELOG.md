@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.0.3](https://github.com/KarinJS/puppeteer/compare/puppeteer-v2.0.2...puppeteer-v2.0.3) (2025-03-26)
+
+
+### 🐛 Bug Fixes
+
+* puppeteer.connect ([f1aecee](https://github.com/KarinJS/puppeteer/commit/f1aecee86676f413533e5b70858c663cd27d43de))
+
 ## [2.0.2](https://github.com/KarinJS/puppeteer/compare/puppeteer-v2.0.1...puppeteer-v2.0.2) (2025-03-23)
 
 

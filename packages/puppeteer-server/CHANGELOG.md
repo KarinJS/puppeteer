@@ -1,5 +1,21 @@
 # Changelog
 
+## [1.0.5](https://github.com/KarinJS/puppeteer/compare/@karinjs/puppeteer-server-v1.0.4...@karinjs/puppeteer-server-v1.0.5) (2025-03-26)
+
+
+### 🐛 Bug Fixes
+
+* `puppeteer-server`返回结果错误 ([9c2343c](https://github.com/KarinJS/puppeteer/commit/9c2343c8f4483aadc51a442beb382866f0ff8e09))
+* 统一使用sha256加密 ([1bbd993](https://github.com/KarinJS/puppeteer/commit/1bbd9939a51dc8b5e5db0c0d1361050a4e726086))
+* 重连错误 ([911aa10](https://github.com/KarinJS/puppeteer/commit/911aa1086083db0f0a2733ad734420694d8387c8))
+
+
+### ✅ Tests
+
+* feat ws-server demo ([b4bb62d](https://github.com/KarinJS/puppeteer/commit/b4bb62d5853228ea199cb3abfd82ebb7afefb304))
+* http demo ([ac911f7](https://github.com/KarinJS/puppeteer/commit/ac911f73cc05be290c72dc104a2d91eacafd8290))
+* 单元测试 ([0187fdf](https://github.com/KarinJS/puppeteer/commit/0187fdfaee7c4be598dec70fbb7e6dfa892582a0))
+
 ## [1.0.4](https://github.com/KarinJS/puppeteer/compare/@karinjs/puppeteer-server-v1.0.3...@karinjs/puppeteer-server-v1.0.4) (2025-03-23)
 
 
