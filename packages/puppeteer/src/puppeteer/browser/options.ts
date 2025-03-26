@@ -57,6 +57,10 @@ export const browserOptions = async (options: LaunchOptions): Promise<LaunchOpti
    * 获取浏览器可执行文件路径
    */
   const executablePath = async () => {
+    if (options.browserWSEndpoint) {
+      return undefined
+    }
+
     /** 如果用户配置了可执行文件路径 */
     if (options.executablePath) {
       if (!fs.existsSync(options.executablePath)) {

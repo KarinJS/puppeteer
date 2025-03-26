@@ -4,7 +4,7 @@ import { browserOptions } from './options'
 import { createPage } from '../page/page'
 import { createContext, PuppeteerContext, setupBrowserMonitoring } from '../utils'
 
-import type { Page } from '@karinjs/puppeteer-core'
+import type { Browser, Page } from '@karinjs/puppeteer-core'
 import type { LaunchOptions, ScreenshotOptions } from '../../types'
 
 /**
@@ -66,8 +66,14 @@ export const updateConfig = async (
 export const initBrowser = async (
   options: LaunchOptions = {}
 ) => {
+  let browser: Browser
   const config = await browserOptions(options)
-  const browser = await pupp.launch(config)
+
+  if (config.browserWSEndpoint) {
+    browser = await pupp.connect(config)
+  } else {
+    browser = await pupp.launch(config)
+  }
 
   /**
    * 关闭浏览器
