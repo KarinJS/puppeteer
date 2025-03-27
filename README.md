@@ -1,29 +1,5 @@
-# KarinJS Puppeteer
-
-这是一个 monorepo 项目，包含以下包：
-
-## 包
-
-### [@karinjs/puppeteer](./packages/puppeteer/README.md)
-
-Puppeteer 的主包，提供了http、ws等api
-
-### [@karinjs/puppeteer-core](./packages/puppeteer-core/README.md)
-
-Puppeteer 的核心包，封装截图、下载等功能
-
-## 开发
-
-请使用`pnpm`
-
-### 安装依赖
-
-```bash
-pnpm install
-```
-
-### 编译
-
-```bash
-pnpm build
-```
+> [!IMPORTANT]  
+> Snapka 由 **“Snap”**（截图）和日式语感的 **“-ka”** 组合而成，整体读起来轻快顺口，带有日系风格，同时符合技术标准的命名需求。
+> 
+> - **Snap**：代表截图（Snapshot / Screenshot），突出核心功能。
+> - **ka（カ）**：灵感来自日语中常见的词尾，如「メカ（Mecha，机械）」或「ガチャ（Gacha，扭蛋）」。

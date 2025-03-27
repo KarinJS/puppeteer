@@ -1,10 +1,8 @@
 import fs from 'node:fs'
 import path from 'node:path'
 import crypto from 'node:crypto'
-import multer from 'multer'
 import { newCacheFile } from '../../cache'
 import { cacheDir } from '../../utils/dir'
-import { getConfig } from '../../utils/config'
 import { Status } from '../utils/webSocket'
 import { uploadFileMap } from '../utils/map'
 import { eventEmitter } from '../../utils/event'
@@ -14,66 +12,62 @@ import { createSuccessResponse, createBadRequestResponse } from '../utils/respon
 import type { RequestHandler } from 'express'
 
 /**
- * 上传文件中间件
+ * 计算文件MD5
+ * @param filePath 文件路径
+ * @returns MD5哈希值
  */
-export const upload = multer({
-  storage: multer.diskStorage({
-    destination: (_req, _file, cb) => {
-      fs.mkdirSync(cacheDir, { recursive: true })
-      cb(null, cacheDir)
-    },
-    filename: (_req, file, cb) => {
-      cb(null, Date.now() + path.extname(file.originalname || ''))
-    }
-  }),
-  fileFilter: (req, _file, callback) => {
-    const echo = req.headers.echo as string
-    if (!echo) {
-      callback(new Error('缺少echo参数'))
-      return
-    }
+const calculateFileMd5 = (filePath: string): Promise<string> => {
+  return new Promise((resolve, reject) => {
+    const hash = crypto.createHash('md5')
+    const stream = fs.createReadStream(filePath)
 
-    const map = uploadFileMap.get(echo)
-    if (!map) {
-      callback(new Error('非法请求'))
-      return
-    }
-
-    callback(null, true)
-  },
-  limits: {
-    fileSize: getConfig().http.upload
-  }
-})
+    stream.on('error', err => reject(err))
+    stream.on('data', chunk => hash.update(chunk))
+    stream.on('end', () => resolve(hash.digest('hex')))
+  })
+}
 
 /**
  * 上传静态资源
  */
-export const uploadHandler: RequestHandler = async (req, res, next) => {
+export const uploadHandler: RequestHandler = async (req, res) => {
+  const { file, echo, file_name: fileName } = req.body
+
   try {
-    if (!req.file) {
+    if (!file || !echo || !file.startsWith('base64://')) {
       createBadRequestResponse(res, '未上传文件或上传失败')
       return
     }
 
-    const { path: filePath, size, mimetype } = req.file
+    /** 获取上传配置 */
+    const options = uploadFileMap.get(echo)
+    if (!options) {
+      createBadRequestResponse(res, '无效的请求标识')
+      return
+    }
 
-    // 计算文件MD5值
-    const md5 = await calculateFileMd5(filePath)
-    const echo = req.headers.echo as string
-    const options = uploadFileMap.get(echo)!
-    /** 文件名称 */
+    /** 保存临时文件 */
+    const tempFilePath = path.join(cacheDir, `${Date.now()}-${echo}-${fileName || 'upload'}`)
+    fs.writeFileSync(tempFilePath, Buffer.from(file.replace('base64://', ''), 'base64'))
+
+    /** 计算MD5并重命名 */
+    const md5 = await calculateFileMd5(tempFilePath)
     const filename = `${md5}.${options.contentType}`
-    /** 重命名文件 */
     const newFilePath = path.join(cacheDir, filename)
-    fs.renameSync(filePath, newFilePath)
 
-    /** 传递上传文件成功 */
+    /** 如果文件已存在，直接使用 */
+    if (fs.existsSync(newFilePath)) {
+      fs.unlinkSync(tempFilePath)
+    } else {
+      fs.renameSync(tempFilePath, newFilePath)
+    }
+
+    /** 发送上传成功事件 */
     const key = createUploadFileEventKey(echo)
     eventEmitter.emit(key, newFilePath)
 
-    /** 返回成功 */
-    createSuccessResponse(res, { status: Status.OK, md5, size, mimetype }, '成功')
+    /** 返回成功响应 */
+    createSuccessResponse(res, { status: Status.OK, md5 }, '成功')
 
     /** 更新缓存 */
     newCacheFile({
@@ -87,20 +81,4 @@ export const uploadHandler: RequestHandler = async (req, res, next) => {
     const errorMessage = error instanceof Error ? error.message : String(error)
     createBadRequestResponse(res, `上传失败: ${errorMessage}`)
   }
-}
-
-/**
- * 计算文件MD5
- * @param filePath 文件路径
- * @returns MD5哈希值
- */
-function calculateFileMd5 (filePath: string): Promise<string> {
-  return new Promise((resolve, reject) => {
-    const hash = crypto.createHash('md5')
-    const stream = fs.createReadStream(filePath)
-
-    stream.on('error', err => reject(err))
-    stream.on('data', chunk => hash.update(chunk))
-    stream.on('end', () => resolve(hash.digest('hex')))
-  })
 }

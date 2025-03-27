@@ -70,6 +70,7 @@ async function run (port: number, host: string) {
  * // 头部参数 这部分固定的
  * ```json
  *{
+ *  "x-client-id": "snapka",
  *  "x-client-name": "puppeteer-server",
  *  "x-client-version": "1.0.0",
  *  "authorization": `Bearer token`

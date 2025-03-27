@@ -20,7 +20,7 @@ export const createLogger = (
         type: 'console',
         layout: {
           type: 'pattern',
-          pattern: '%[[karin-puppeteer][%d{hh:mm:ss.SSS}][%4.4p]%] %m'
+          pattern: '%[[snapka-puppeteer][%d{hh:mm:ss.SSS}][%4.4p]%] %m'
         }
       },
       out: {

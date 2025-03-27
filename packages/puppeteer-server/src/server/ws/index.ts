@@ -1,28 +1,17 @@
-import fs from 'node:fs'
-import path from 'node:path'
-import * as mime from 'mime-types'
 import { server } from '../../server/app'
 import { WebSocketServer } from 'ws'
-import { getCache } from '../../cache'
 import { sha256 } from '../../utils/hash'
-import { puppeteer } from '../../puppeteer'
 import { getCount } from '../../cache/count'
-import { logScreenshotTime } from '../../utils'
 import { eventEmitter } from '../../utils/event'
-import { renderTemplate } from '../utils/template'
-import { createUploadFileEventKey } from '../utils/key'
+import { handleScreenshotRequest } from './screenshot-handler'
 import {
+  WsAction,
+  RequestType,
   createWsAuthErrorRequest,
-  createWsScreenshotFailedResponse,
-  createWsScreenshotSuccessResponse,
   createWsServerErrorResponse,
-  createWsUploadFileRequestRequest,
-  RequestType, Status, WsAction
 } from '../utils/webSocket'
 
 import type WebSocket from 'ws'
-import type { ScreenshotOptions } from '@karinjs/puppeteer'
-import type { UploadFileRequestParams } from '../../types/client'
 
 /**
  * 创建WebSocket服务端
@@ -41,20 +30,19 @@ export const createWebSocketServer = (
   const wss = new WebSocketServer({ server })
 
   wss.on('connection', (socket, request) => {
+    logger.info(`[WebSocket][client] 连接: ${request.url}`)
+
+    /** 验证路径 */
     if (request.url !== router) {
       return createWsAuthErrorRequest(socket, 'path is not valid')
     }
 
-    /**
-     * 鉴权支持两种方法
-     * - Bearer 明文密钥
-     * - Bearer sha256
-     */
-    const { authorization } = request.headers
-    if (token && `Bearer ${token}` !== authorization && sha256(token) !== authorization) {
+    /** 验证令牌 */
+    if (!validateToken(request.headers.authorization, token)) {
       return createWsAuthErrorRequest(socket, 'auth failed')
     }
 
+    /** 处理消息 */
     socket.on('message', (raw) => {
       try {
         handleMessage(socket, raw, timeout)
@@ -64,7 +52,23 @@ export const createWebSocketServer = (
         createWsServerErrorResponse(socket, echo, (error as Error).message || '未知错误')
       }
     })
+
+    /** 处理关闭 */
+    socket.on('close', () => {
+      logger.info('[WebSocket][client] 断开连接')
+    })
   })
+}
+
+/**
+ * 验证令牌
+ * @param authorization 认证头
+ * @param token 配置的令牌
+ * @returns 是否有效
+ */
+const validateToken = (authorization: string | undefined, token?: string): boolean => {
+  if (!token) return true
+  return `Bearer ${token}` === authorization || `Bearer ${sha256(token)}` === authorization
 }
 
 /**
@@ -80,224 +84,82 @@ const handleMessage = async (
 ) => {
   getCount.count.ws_server++
   const rawString = rawData.toString()
-  const raw = JSON.parse(rawString) || {}
-
-  /** 响应 */
-  if (raw.type === RequestType.Response) {
-    const { action, echo, status, data } = raw
-    if (action === WsAction.UploadFile) {
-      eventEmitter.emit(echo, { status, data })
-      return
-    }
-
-    logger.error(`[WebSocket][client] 未知响应: ${rawString}`)
-  }
-
-  if (raw.type !== RequestType.Request) {
-    logger.warn(`[WebSocket][client] 未知请求: ${rawString}`)
-    return
-  }
-
-  /** 客户端主动请求 */
-  if (raw.action === WsAction.Auth) {
-    if (raw.params.status === Status.Failed) {
-      logger.fatal(`[WebSocket][client][鉴权失败]: ${raw.params.message}`)
-      return
-    }
-
-    logger.warn(`[WebSocket][client] 未知请求: ${rawString}`)
-  }
-
-  /** 截图、渲染 */
-  if (raw.action !== WsAction.Screenshot && raw.action !== WsAction.Render) {
-    logger.warn(`[WebSocket][client] 未知请求: ${rawString}`)
-    return
-  }
 
   try {
-    const time = Date.now()
-    /** 获取截图参数 */
-    const data = await getScreenshotOptions(raw)
-    /** 设置请求拦截 */
-    setRequestInterception(socket, data, raw.echo, timeout)
+    const raw = JSON.parse(rawString) || {}
+    const { type } = raw
 
-    /** 截图 */
-    const result = await puppeteer.screenshot(data)
-    if (result.status) {
-      createWsScreenshotSuccessResponse(socket, raw.echo, result.data)
-      // 防止raw.params为undefined导致的错误
-      if (raw.params) {
-        return logScreenshotTime(result, raw.params, time)
-      }
+    /** 处理客户端响应 */
+    if (type === RequestType.Response) {
+      handleClientResponse(socket, raw, rawString)
       return
     }
 
-    return createWsScreenshotFailedResponse(socket, raw.echo, result.data.message || '未知错误')
+    /** 处理请求 */
+    if (type === RequestType.Request) {
+      await handleClientRequest(socket, raw, timeout)
+      return
+    }
+
+    logger.warn(`[WebSocket][client] 未知消息类型: ${rawString}`)
   } catch (error) {
-    logger.error(error)
-    return createWsServerErrorResponse(socket, raw.echo, (error as Error).message || '未知错误')
+    logger.error(`[WebSocket] 处理消息失败: ${error}`)
+    try {
+      const { echo } = JSON.parse(rawString) || {}
+      createWsServerErrorResponse(socket, echo, (error as Error).message || '消息处理失败')
+    } catch {
+      logger.error(`[WebSocket] 无法发送错误响应: ${error}`)
+    }
   }
 }
 
 /**
- * 获取截图参数
- * @param action - 请求类型
- * @param params - 截图参数
- * @returns 截图参数
+ * 处理客户端响应
+ * @param socket WebSocket连接
+ * @param raw 响应数据
+ * @param rawString 原始消息
  */
-const getScreenshotOptions = async (raw: any): Promise<ScreenshotOptions> => {
-  const options: ScreenshotOptions = raw.params || {}
-  /** 兼容 */
-  if (!options.pageGotoParams) options.pageGotoParams = {}
-  /** 强制等待网络空闲 */
-  options.pageGotoParams.waitUntil = 'networkidle0'
-  /** 只支持htmlString */
-  options.file_type = 'htmlString'
-
-  if (raw.action === WsAction.Screenshot) {
-    return options
-  }
-
-  const file = await renderTemplate(options)
-  return { ...options, file }
-}
-
-/**
- * 设置请求拦截
- * @param socket - WebSocket实例
- * @param options - 截图参数
- * @param echo - 请求echo
- * @param timeout - 超时时间
- */
-const setRequestInterception = (
+const handleClientResponse = (
   socket: WebSocket,
-  options: ScreenshotOptions,
-  echo: string,
+  raw: any,
+  rawString: string
+) => {
+  if (raw.action === WsAction.UploadFile) {
+    eventEmitter.emit(raw.echo, { status: raw.status, data: raw.data })
+    return
+  }
+
+  logger.warn(`[WebSocket][client] 未知响应: ${rawString}`)
+}
+
+/**
+ * 处理客户端请求
+ * @param socket WebSocket连接
+ * @param raw 请求数据
+ * @param timeout 超时时间
+ */
+const handleClientRequest = async (
+  socket: WebSocket,
+  raw: any,
   timeout: number
 ) => {
-  options.setRequestInterception = async (request) => {
-    try {
-      /** 资源类型 */
-      const type = request.resourceType()
-      /** 白名单 */
-      const list = ['image', 'font', 'stylesheet', 'document', 'script']
-      if (!list.includes(type)) {
-        return request.continue()
-      }
+  const { action, echo } = raw
 
-      /** 请求的url */
-      const url = request.url()
-      /** 资源 */
-      const cache = getCache(url, type)
-      /** 资源类型 */
-      const contentType = mime.contentType(path.extname(url)) || 'application/octet-stream'
-      if (cache) {
-        return request.respond({
-          status: 200,
-          headers: {
-            'Content-Type': contentType
-          },
-          body: fs.readFileSync(cache)
-        })
-      }
-
-      /** 没命中缓存 找客户端要 */
-      const filePath = await getFileFromClient(socket, {
-        echo,
-        contentType,
-        url,
-        timeout
-      })
-
-      /** 返回文件 */
-      return request.respond({
-        status: 200,
-        headers: {
-          'Content-Type': contentType
-        },
-        body: fs.readFileSync(filePath)
-      })
-    } catch (error) {
-      return request.respond({
-        status: 404,
-        contentType: 'text/plain',
-        body: (error as Error).message
-      })
+  try {
+    switch (action) {
+      case WsAction.Auth:
+        logger.info(`[WebSocket][client] 鉴权请求: ${JSON.stringify(raw.params)}`)
+        return
+      case WsAction.Screenshot:
+      case WsAction.Render:
+        await handleScreenshotRequest(socket, raw, timeout)
+        return
+      default:
+        logger.warn(`[WebSocket][client] 未知请求类型: ${action}`)
+        createWsServerErrorResponse(socket, echo, `不支持的请求类型: ${action}`)
     }
+  } catch (error) {
+    logger.error(`[WebSocket] 处理请求失败: ${error}`)
+    createWsServerErrorResponse(socket, echo, (error as Error).message || '请求处理失败')
   }
-}
-
-/**
- * 找客户端要文件
- * 1. 发ws请求让客户端上传
- * 2. 客户端上传文件
- * 3. http接口收到文件 发布事件
- * 4. 收到事件后 返回文件路径
- */
-const getFileFromClient = (socket: WebSocket, options: {
-  echo: string
-  contentType: string
-  url: string,
-  timeout: number
-}): Promise<string> => {
-  /** 监听上传完成 */
-  const key = createUploadFileEventKey(options.echo)
-  return new Promise((resolve, reject) => {
-    /** 超时处理器 */
-    let timeoutHandler: NodeJS.Timeout | null = setTimeout(() => {
-      timeoutHandler = null
-      eventEmitter.removeListener(key, filePathHandler)
-      reject(new Error('get file from client timeout'))
-    }, options.timeout)
-
-    /** 文件路径处理器 */
-    const filePathHandler = (filePath: string) => {
-      resolve(filePath)
-      if (timeoutHandler) {
-        clearTimeout(timeoutHandler)
-        timeoutHandler = null
-      }
-    }
-
-    eventEmitter.once(key, filePathHandler)
-
-    sendRequest(socket, {
-      echo: options.echo,
-      type: options.contentType,
-      path: options.url
-    })
-      .then(response => {
-        if (response.status === Status.Failed) {
-          if (timeoutHandler) {
-            clearTimeout(timeoutHandler)
-            timeoutHandler = null
-          }
-          eventEmitter.removeListener(key, filePathHandler)
-          reject(new Error(response.data || '从客户端获取文件失败'))
-        }
-      })
-  })
-}
-
-/**
- * 发送ws请求
- * - 此接口要求后端无论如何都需要返回一个响应
- * - status: 是否成功
- * - data: 失败时填写失败原因 成功为空字符串
- */
-const sendRequest = (
-  socket: WebSocket,
-  params: UploadFileRequestParams
-): Promise<{ status: Status, data: string }> => {
-  return new Promise((resolve) => {
-    eventEmitter.once(params.echo, (options) => resolve(options))
-
-    setTimeout(() => {
-      const options = { status: Status.Failed, data: 'send request timeout' }
-      eventEmitter.emit(params.echo, options)
-    }, 3 * 1000)
-
-    /** 发送ws请求 */
-    createWsUploadFileRequestRequest(socket, params)
-  })
 }

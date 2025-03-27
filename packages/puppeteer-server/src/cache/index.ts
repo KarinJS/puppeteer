@@ -1,6 +1,7 @@
 import fs from 'node:fs'
+import crypto from 'node:crypto'
 import { CacheQueueManager } from './queue'
-import { cacheDirName, cacheFile } from '../utils/dir'
+import { cacheDir, cacheDirName, cacheFile } from '../utils/dir'
 
 export interface CacheItem {
   /** 资源url */
@@ -39,6 +40,8 @@ const cacheQueueManager = new CacheQueueManager(cacheFile)
  * 使用队列机制避免高并发下的文件写入冲突
  */
 export const newCacheFile = (value: CacheItem): Promise<void> => {
+  const md5 = crypto.createHash('md5').update(value.url).digest('hex')
+  value.url = md5
   value.path = `${cacheDirName}/${value.name}`
   return cacheQueueManager.add(value)
 }
@@ -47,6 +50,11 @@ export const newCacheFile = (value: CacheItem): Promise<void> => {
  * 获取缓存文件列表
  */
 const getCacheList = (): Record<string, CacheItem> => {
+  if (!fs.existsSync(cacheFile)) {
+    fs.mkdirSync(cacheDir, { recursive: true })
+    fs.writeFileSync(cacheFile, '{}')
+    return {}
+  }
   return JSON.parse(fs.readFileSync(cacheFile, 'utf-8'))
 }
 
@@ -58,7 +66,8 @@ const getCacheList = (): Record<string, CacheItem> => {
  */
 export const getCache = (url: string, type: string) => {
   const list = getCacheList()
-  const cache = list[url]
+  const md5 = crypto.createHash('md5').update(url).digest('hex')
+  const cache = list[md5]
   if (!cache) return null
   if (cache.type !== type) return null
   if (fs.existsSync(cache.path)) {

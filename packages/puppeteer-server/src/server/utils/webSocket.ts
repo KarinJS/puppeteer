@@ -1,8 +1,6 @@
 import type WebSocket from 'ws'
 import type { UploadFileRequestParams } from '../../types/client'
 
-let echo = 0
-
 /**
  * 请求类型
  */
@@ -70,10 +68,13 @@ export enum WsAction {
 export const createWsRequest = (
   socket: WebSocket,
   action: string,
-  params: unknown = {}
+  params: any = {}
 ) => {
   const type = RequestType.Request
-  const string = JSON.stringify({ type, action, params, echo: ++echo })
+  const echo = params.echo
+  delete params.echo
+
+  const string = JSON.stringify({ type, action, params, echo })
   socket.send(string)
 }
 
@@ -103,7 +104,9 @@ export const createWsResponse = (
  * @param message - 错误信息
  */
 export const createWsAuthErrorRequest = (socket: WebSocket, message: string) => {
+  logger.error(`[WebSocket][client] 鉴权失败: ${message}`)
   createWsRequest(socket, WsAction.Auth, { status: Status.Failed, message })
+  socket.close()
 }
 
 /**

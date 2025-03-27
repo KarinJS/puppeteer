@@ -22,6 +22,8 @@ export interface UploadFileRequestParams {
   path: string,
   /** 请求唯一标识符 */
   echo: string
+  /** 上传路径 */
+  uploadPath: string
 }
 
 /**

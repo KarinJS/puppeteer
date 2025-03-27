@@ -3,7 +3,7 @@ import { router } from '../app'
 import { hex } from './hex'
 import { ping } from './ping'
 import { renderRouter, screenshotRouter } from './render'
-import { upload, uploadHandler } from './upload'
+import { uploadHandler } from './upload'
 import { authMiddleware } from '../auth/middleware'
 import { getConfigRouter, setConfigRouter } from '../config'
 import { login } from '../web'
@@ -22,7 +22,7 @@ export const initRouter = (limit: string) => {
   router.post('/render', renderRouter)
   router.get('/screenshot', screenshotRouter)
   router.post('/screenshot', screenshotRouter)
-  router.post('/upload', upload.single('file'), uploadHandler)
+  router.post('/upload', uploadHandler)
 
   router.get('/config/get', getConfigRouter)
   router.post('/config/set', setConfigRouter)

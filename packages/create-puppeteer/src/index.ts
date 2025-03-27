@@ -78,7 +78,7 @@ async function main () {
   // 1. 询问项目名称
   let projectName = ''
   let validProjectName = false
-  const defaultProjectName = 'karin-puppeteer'
+  const defaultProjectName = 'snapka-puppeteer'
 
   while (!validProjectName) {
     projectName = await question(`请输入项目名称 (默认: ${defaultProjectName}): `)

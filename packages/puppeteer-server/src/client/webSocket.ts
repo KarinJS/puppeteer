@@ -43,6 +43,7 @@ export const createWebSocket = (options: CreateWebSocketOptions) => {
 
   const clientOptions: WebSocket.ClientOptions = {
     headers: {
+      'x-client-id': 'snapka',
       'x-client-name': pkg.name,
       'x-client-version': pkg.version
     }
