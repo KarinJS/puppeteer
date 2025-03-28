@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.9](https://github.com/KarinJS/puppeteer/compare/@karinjs/puppeteer-server-v1.0.8...@karinjs/puppeteer-server-v1.0.9) (2025-03-28)
+
+
+### 🐛 Bug Fixes
+
+* 添加 userDataDir 配置项 ([20f3cd4](https://github.com/KarinJS/puppeteer/commit/20f3cd43b7987c144f915cdcfb093ae98ff9283a))
+
 ## [1.0.8](https://github.com/KarinJS/puppeteer/compare/@karinjs/puppeteer-server-v1.0.7...@karinjs/puppeteer-server-v1.0.8) (2025-03-28)
 
 
