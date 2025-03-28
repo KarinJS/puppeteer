@@ -2,6 +2,16 @@
   "name": "@karinjs/plugin-puppeteer",
   "version": "1.0.3",
   "description": "karin的 puppeteer截图、渲染插件",
+  "keywords": [
+    "karin",
+    "node-karin",
+    "karin-plugin",
+    "puppeteer",
+    "browser",
+    "headless"
+  ],
+  "license": "MIT",
+  "author": "sj817",
   "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -11,23 +21,13 @@
     "!README.md"
   ],
   "scripts": {
+    "build": "tsc && tsup",
     "dev": "tsx src/index.ts",
     "dev:test": "node dist/index.js",
-    "build": "tsc && tsup",
     "pub": "pnpm publish --access public",
-    "sync": "curl -X PUT \"https://registry-direct.npmmirror.com/-/package/@karinjs/plugin-puppeteer/syncs\"",
-    "rm": "node -e \"require('fs').rmSync('dist', { recursive: true, force: true })\""
+    "rm": "node -e \"require('fs').rmSync('dist', { recursive: true, force: true })\"",
+    "sync": "curl -X PUT \"https://registry-direct.npmmirror.com/-/package/@karinjs/plugin-puppeteer/syncs\""
   },
-  "keywords": [
-    "karin",
-    "node-karin",
-    "karin-plugin",
-    "puppeteer",
-    "browser",
-    "headless"
-  ],
-  "author": "sj817",
-  "license": "MIT",
   "dependencies": {
     "@karinjs/puppeteer": "workspace:*"
   },

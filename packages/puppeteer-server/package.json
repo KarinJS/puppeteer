@@ -30,16 +30,15 @@
   ],
   "scripts": {
     "build": "tsc && tsup",
-    "pub": "pnpm publish --access public",
-    "sort": "sort-package-json",
-    "sync": "curl -X PUT \"https://registry-direct.npmmirror.com/-/package/@karinjs/puppeteer-server/syncs\"",
-    "test": "vitest run",
-    "test:watch": "vitest",
-    "test:coverage": "vitest run --coverage",
     "pkg": "pkg pkg.config.json --compress Brotli",
     "pkg:all": "pnpm build && pnpm run pkg",
     "pkg:debug": "pkg pkg.config.json --compress Brotli --debug",
-    "rm": "node -e \"require('fs').rmSync('dist', { recursive: true, force: true })\""
+    "pub": "pnpm publish --access public",
+    "rm": "node -e \"require('fs').rmSync('dist', { recursive: true, force: true })\"",
+    "sync": "curl -X PUT \"https://registry-direct.npmmirror.com/-/package/@karinjs/puppeteer-server/syncs\"",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "test:watch": "vitest"
   },
   "devDependencies": {
     "@karinjs/puppeteer": "workspace:*",

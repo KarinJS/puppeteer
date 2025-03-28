@@ -2,26 +2,30 @@
   "name": "@karinjs/create-puppeteer",
   "version": "1.0.6",
   "description": "创建基于@karinjs/puppeteer-server的项目脚手架",
-  "main": "dist/index.js",
-  "bin": {
-    "create-puppeteer": "dist/index.js"
-  },
-  "scripts": {
-    "build": "tsc && tsup",
-    "dev": "tsx src/index.ts",
-    "dev:test": "node dist/index.js",
-    "pub": "pnpm publish --access public",
-    "sync": "curl -X PUT \"https://registry-direct.npmmirror.com/-/package/@karinjs/create-puppeteer/syncs\"",
-    "rm": "node -e \"require('fs').rmSync('dist', { recursive: true, force: true })\""
-  },
   "keywords": [
     "puppeteer",
     "automation",
     "cli",
     "scaffold"
   ],
-  "author": "",
   "license": "ISC",
+  "author": "",
+  "main": "dist/index.js",
+  "bin": {
+    "create-puppeteer": "dist/index.js"
+  },
+  "files": [
+    "dist",
+    "template"
+  ],
+  "scripts": {
+    "build": "tsc && tsup",
+    "dev": "tsx src/index.ts",
+    "dev:test": "node dist/index.js",
+    "pub": "pnpm publish --access public",
+    "rm": "node -e \"require('fs').rmSync('dist', { recursive: true, force: true })\"",
+    "sync": "curl -X PUT \"https://registry-direct.npmmirror.com/-/package/@karinjs/create-puppeteer/syncs\""
+  },
   "devDependencies": {
     "@types/commander": "^2.12.5",
     "commander": "^13.1.0",
@@ -30,9 +34,5 @@
   "engines": {
     "node": ">=18.0.0"
   },
-  "files": [
-    "dist",
-    "template"
-  ],
   "timestamp": "2025-03-28T05:06:34.521Z"
 }

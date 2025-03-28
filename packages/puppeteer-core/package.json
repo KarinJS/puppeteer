@@ -16,14 +16,6 @@
   },
   "license": "Apache-2.0",
   "author": "shijin",
-  "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
-  "files": [
-    "dist",
-    "package.json",
-    "!LICENSE",
-    "!README.md"
-  ],
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
@@ -32,12 +24,20 @@
       "default": "./dist/index.js"
     }
   },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist",
+    "package.json",
+    "!LICENSE",
+    "!README.md"
+  ],
   "scripts": {
     "build": "tsc && tsup",
     "pub": "pnpm publish --access public",
+    "rm": "node -e \"require('fs').rmSync('dist', { recursive: true, force: true })\"",
     "sort": "npx sort-package-json",
-    "sync": "curl -X PUT \"https://registry-direct.npmmirror.com/-/package/@karinjs/puppeteer-core/syncs\"",
-    "rm": "node -e \"require('fs').rmSync('dist', { recursive: true, force: true })\""
+    "sync": "curl -X PUT \"https://registry-direct.npmmirror.com/-/package/@karinjs/puppeteer-core/syncs\""
   },
   "timestamp": "2025-03-28T05:06:34.526Z"
 }

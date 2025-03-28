@@ -42,12 +42,12 @@
   "scripts": {
     "build": "tsc && tsup",
     "pub": "pnpm publish --access public",
+    "rm": "node -e \"require('fs').rmSync('dist', { recursive: true, force: true })\"",
     "sort": "npx sort-package-json",
     "sync": "curl -X PUT \"https://registry-direct.npmmirror.com/-/package/@karinjs/puppeteer/syncs\"",
     "test": "cross-env NODE_ENV=development tsx ./src/index.test.ts --auto",
-    "test:prod": "cross-env NODE_ENV=development node ./dist/index.test.js",
     "test:dev": "cross-env NODE_ENV=development tsx ./src/index.test.ts",
-    "rm": "node -e \"require('fs').rmSync('dist', { recursive: true, force: true })\""
+    "test:prod": "cross-env NODE_ENV=development node ./dist/index.test.js"
   },
   "dependencies": {
     "@karinjs/puppeteer-core": "workspace:*"
