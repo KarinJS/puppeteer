@@ -1,5 +1,17 @@
 # Changelog
 
+## [2.0.9](https://github.com/KarinJS/puppeteer/compare/root-v2.0.8...root-v2.0.9) (2025-03-28)
+
+
+### 🐛 Bug Fixes
+
+* userDataDir ([e15ad4a](https://github.com/KarinJS/puppeteer/commit/e15ad4a6f96784c44160216f1c22750c5d72632d))
+
+
+### 📝 Documentation
+
+* 更新HTTP端口说明和项目描述 ([4ae1539](https://github.com/KarinJS/puppeteer/commit/4ae15397cecc026621e2add7004b50feb5e41e83))
+
 ## [2.0.8](https://github.com/KarinJS/puppeteer/compare/root-v2.0.7...root-v2.0.8) (2025-03-28)
 
 
