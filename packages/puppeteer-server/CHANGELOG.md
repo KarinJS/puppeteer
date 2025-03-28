@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.6](https://github.com/KarinJS/puppeteer/compare/@karinjs/puppeteer-server-v1.0.5...@karinjs/puppeteer-server-v1.0.6) (2025-03-27)
+
+
+### ♻️ Code Refactoring
+
+* 重命名为 `Snapka` ([fde1928](https://github.com/KarinJS/puppeteer/commit/fde1928ff8cc791913953ae4c8df50f59a40e7d0))
+
 ## [1.0.5](https://github.com/KarinJS/puppeteer/compare/@karinjs/puppeteer-server-v1.0.4...@karinjs/puppeteer-server-v1.0.5) (2025-03-26)
 
 
