@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.0.2](https://github.com/KarinJS/puppeteer/compare/puppeteer-core-v2.0.1...puppeteer-core-v2.0.2) (2025-03-28)
+
+
+### 📦️ Build System
+
+* fix type ([a439d6a](https://github.com/KarinJS/puppeteer/commit/a439d6a3528530174f5c2ba30be35495a6d539e6))
+
 ## [2.0.1](https://github.com/KarinJS/puppeteer/compare/puppeteer-core-v2.0.0...puppeteer-core-v2.0.1) (2025-03-23)
 
 
