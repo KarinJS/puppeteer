@@ -18,6 +18,10 @@ export const setConfigRouter: RequestHandler = (req, res) => {
   const config = getConfig()
   const newConfig = {
     ...req.body,
+    browser: {
+      ...config.browser,
+      ...req.body.browser
+    },
     env: {}
   }
 

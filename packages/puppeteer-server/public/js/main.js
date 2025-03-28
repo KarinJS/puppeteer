@@ -177,6 +177,7 @@ function fillFormData (config) {
   document.getElementById('browser-hmr').value = config.browser.hmr.toString()
   document.getElementById('browser-headless').value = config.browser.headless.toString()
   document.getElementById('browser-executablePath').value = config.browser.executablePath || ''
+  document.getElementById('browser-userDataDir').value = config.browser.userDataDir || ''
   document.getElementById('browser-protocol').value = config.browser.protocol || 'cdp'
   document.getElementById('browser-args').value = (config.browser.args || []).join('\n')
 
@@ -356,6 +357,7 @@ function addEnvForm (key, value, isNew = false) {
 function getConfigFromForm () {
   // 浏览器配置
   const browser = {
+    ...currentConfig.browser,
     downloadBrowser: document.getElementById('browser-download').value,
     debug: document.getElementById('browser-debug').value === 'true',
     maxPages: parseInt(document.getElementById('browser-maxPages').value, 10),
@@ -363,6 +365,7 @@ function getConfigFromForm () {
     hmr: document.getElementById('browser-hmr').value === 'true',
     headless: document.getElementById('browser-headless').value === 'true',
     executablePath: document.getElementById('browser-executablePath').value || null,
+    userDataDir: document.getElementById('browser-userDataDir').value || '',
     protocol: document.getElementById('browser-protocol').value,
     args: document.getElementById('browser-args').value.split('\n').filter(line => line.trim() !== ''),
     defaultViewport: currentConfig.browser.defaultViewport // 保留原始值
