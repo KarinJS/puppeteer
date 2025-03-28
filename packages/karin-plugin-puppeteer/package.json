@@ -15,7 +15,8 @@
     "dev:test": "node dist/index.js",
     "build": "tsc && tsup",
     "pub": "pnpm publish --access public",
-    "sync": "curl -X PUT \"https://registry-direct.npmmirror.com/-/package/@karinjs/plugin-puppeteer/syncs\""
+    "sync": "curl -X PUT \"https://registry-direct.npmmirror.com/-/package/@karinjs/plugin-puppeteer/syncs\"",
+    "rm": "node -e \"require('fs').rmSync('dist', { recursive: true, force: true })\""
   },
   "keywords": [
     "karin",
@@ -31,7 +32,7 @@
     "@karinjs/puppeteer": "workspace:*"
   },
   "devDependencies": {
-    "node-karin": "^1.7.7"
+    "node-karin": "^1.7.12"
   },
   "karin": {
     "main": "src/index.ts",

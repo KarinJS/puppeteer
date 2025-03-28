@@ -38,7 +38,8 @@
     "test:coverage": "vitest run --coverage",
     "pkg": "pkg pkg.config.json --compress Brotli",
     "pkg:all": "pnpm build && pnpm run pkg",
-    "pkg:debug": "pkg pkg.config.json --compress Brotli --debug"
+    "pkg:debug": "pkg pkg.config.json --compress Brotli --debug",
+    "rm": "node -e \"require('fs').rmSync('dist', { recursive: true, force: true })\""
   },
   "devDependencies": {
     "@karinjs/puppeteer": "workspace:*",
@@ -53,8 +54,8 @@
     "log4js": "^6.9.1",
     "mime-types": "^3.0.0",
     "pkg": "^5.8.1",
-    "vue": "^3.5.13",
     "vitest": "^3.0.9",
+    "vue": "^3.5.13",
     "ws": "^8.18.0"
   },
   "timestamp": "2025-03-23T16:28:21.441Z"

@@ -1,6 +1,6 @@
 import path from 'node:path'
 import { launch, type LaunchOptions } from '@karinjs/puppeteer'
-import { logger, registerRender, renderTpl, karin } from 'node-karin'
+import { logger, registerRender, renderTpl, karin, type Snapka } from 'node-karin'
 import { pluginName, pluginVersion, getConfig, HMR_KEY } from './config'
 
 const main = async () => {
@@ -9,7 +9,7 @@ const main = async () => {
   karin.on(HMR_KEY, (cfg: LaunchOptions) => browser.hmrConfig(cfg))
 
   const name = '@karinjs/plugin-puppeteer'
-  registerRender(name, async (options) => {
+  registerRender(name, async (options: Snapka) => {
     options.encoding = 'base64'
     const data = renderTpl(options)
     const time = Date.now()

@@ -46,7 +46,8 @@
     "sync": "curl -X PUT \"https://registry-direct.npmmirror.com/-/package/@karinjs/puppeteer/syncs\"",
     "test": "cross-env NODE_ENV=development tsx ./src/index.test.ts --auto",
     "test:prod": "cross-env NODE_ENV=development node ./dist/index.test.js",
-    "test:dev": "cross-env NODE_ENV=development tsx ./src/index.test.ts"
+    "test:dev": "cross-env NODE_ENV=development tsx ./src/index.test.ts",
+    "rm": "node -e \"require('fs').rmSync('dist', { recursive: true, force: true })\""
   },
   "dependencies": {
     "@karinjs/puppeteer-core": "workspace:*"

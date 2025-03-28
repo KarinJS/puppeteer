@@ -11,6 +11,7 @@
     "test:watch": "pnpm -r test:watch",
     "test:coverage": "pnpm -r test:coverage",
     "web": "tsx packages/puppeteer-server/src/index.ts",
+    "rm": "pnpm -r run rm",
     "sync": "pnpm -r sync",
     "up-version": "node up-version.cjs"
   },
