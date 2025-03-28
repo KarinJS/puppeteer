@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.0.10](https://github.com/KarinJS/puppeteer/compare/root-v2.0.9...root-v2.0.10) (2025-03-28)
+
+
+### 🐛 Bug Fixes
+
+* 添加 userDataDir 配置项 ([20f3cd4](https://github.com/KarinJS/puppeteer/commit/20f3cd43b7987c144f915cdcfb093ae98ff9283a))
+
 ## [2.0.9](https://github.com/KarinJS/puppeteer/compare/root-v2.0.8...root-v2.0.9) (2025-03-28)
 
 
