@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.0.7](https://github.com/KarinJS/puppeteer/compare/root-v2.0.6...root-v2.0.7) (2025-03-28)
+
+
+### 📦️ Build System
+
+* fix type ([a439d6a](https://github.com/KarinJS/puppeteer/commit/a439d6a3528530174f5c2ba30be35495a6d539e6))
+
 ## [2.0.6](https://github.com/KarinJS/puppeteer/compare/root-v2.0.5...root-v2.0.6) (2025-03-27)
 
 
