@@ -20,6 +20,7 @@ export const defaultConfig: Config = {
     maxPages: 15,
     idleTime: 10,
     hmr: false,
+    userDataDir: 'data/userDataDir',
     args: [
       '--enable-gpu', // 启用 GPU 硬件加速
       '--no-sandbox', // 关闭 Chrome 的沙盒模式
