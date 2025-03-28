@@ -1,0 +1,41 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --font-sans: ui-sans-serif, system-ui, sans-serif;
+    --animate-duration: 0.3s;
+  }
+}
+
+@layer components {
+  .card-body-compact .form-control .label {
+    padding-top: 0.25rem;
+    padding-bottom: 0.25rem;
+  }
+
+  .tab-btn.active {
+    @apply border-primary-500 text-primary-600 dark:text-primary-400;
+  }
+
+  .tab-btn {
+    @apply transition-all duration-200;
+  }
+
+  .animate-fadeIn {
+    animation: fadeIn 0.5s ease-out forwards;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

@@ -30,6 +30,9 @@
   ],
   "scripts": {
     "build": "tsc && tsup",
+    "build:web": "cd webui && npm run build",
+    "dev": "tsx src/index.ts",
+    "dev:web": "cd webui && npm run dev",
     "pkg": "pkg pkg.config.json --compress Brotli",
     "pkg:all": "pnpm build && pnpm run pkg",
     "pkg:debug": "pkg pkg.config.json --compress Brotli --debug",
