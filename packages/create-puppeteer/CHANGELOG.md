@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.6](https://github.com/KarinJS/puppeteer/compare/@karinjs/create-puppeteer-v1.0.5...@karinjs/create-puppeteer-v1.0.6) (2025-03-28)
+
+
+### 🐛 Bug Fixes
+
+* add pm2.json ([22a6d52](https://github.com/KarinJS/puppeteer/commit/22a6d52f9ba8b46f3f41ab5138f8e0b980f8a4ac))
+
 ## [1.0.5](https://github.com/KarinJS/puppeteer/compare/@karinjs/create-puppeteer-v1.0.4...@karinjs/create-puppeteer-v1.0.5) (2025-03-28)
 
 

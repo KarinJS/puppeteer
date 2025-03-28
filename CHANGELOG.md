@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.0.8](https://github.com/KarinJS/puppeteer/compare/root-v2.0.7...root-v2.0.8) (2025-03-28)
+
+
+### 🐛 Bug Fixes
+
+* add pm2.json ([22a6d52](https://github.com/KarinJS/puppeteer/commit/22a6d52f9ba8b46f3f41ab5138f8e0b980f8a4ac))
+
 ## [2.0.7](https://github.com/KarinJS/puppeteer/compare/root-v2.0.6...root-v2.0.7) (2025-03-28)
 
 
