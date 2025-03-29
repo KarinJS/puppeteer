@@ -1,5 +1,17 @@
 # Changelog
 
+## [2.0.11](https://github.com/KarinJS/puppeteer/compare/root-v2.0.10...root-v2.0.11) (2025-03-29)
+
+
+### 🐛 Bug Fixes
+
+* `@karinjs/plugin-puppeteer`返回值 ([201479e](https://github.com/KarinJS/puppeteer/commit/201479e51267749b61f3783267e3388aecb07847))
+
+
+### 🎫 Chores
+
+* 更新各个包的 package.json，添加和调整脚本、关键词及文件配置 ([17402c2](https://github.com/KarinJS/puppeteer/commit/17402c2289f9e374097d4e9dd6ecac3243b62c1c))
+
 ## [2.0.10](https://github.com/KarinJS/puppeteer/compare/root-v2.0.9...root-v2.0.10) (2025-03-28)
 
 

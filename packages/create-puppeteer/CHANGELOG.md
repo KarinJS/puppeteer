@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.7](https://github.com/KarinJS/puppeteer/compare/@karinjs/create-puppeteer-v1.0.6...@karinjs/create-puppeteer-v1.0.7) (2025-03-29)
+
+
+### 🎫 Chores
+
+* 更新各个包的 package.json，添加和调整脚本、关键词及文件配置 ([17402c2](https://github.com/KarinJS/puppeteer/commit/17402c2289f9e374097d4e9dd6ecac3243b62c1c))
+
 ## [1.0.6](https://github.com/KarinJS/puppeteer/compare/@karinjs/create-puppeteer-v1.0.5...@karinjs/create-puppeteer-v1.0.6) (2025-03-28)
 
 
