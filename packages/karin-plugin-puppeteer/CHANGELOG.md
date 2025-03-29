@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.5](https://github.com/KarinJS/puppeteer/compare/@karinjs/plugin-puppeteer-v1.0.4...@karinjs/plugin-puppeteer-v1.0.5) (2025-03-29)
+
+
+### 🐛 Bug Fixes
+
+* fix: 优化截图返回值处理，支持返回数组格式 `(我不是故意的啦)` ([49c3fb8](https://github.com/KarinJS/puppeteer/commit/49c3fb8f8ef67bda7c971d497f01a648daf4f430))
+
 ## [1.0.4](https://github.com/KarinJS/puppeteer/compare/@karinjs/plugin-puppeteer-v1.0.3...@karinjs/plugin-puppeteer-v1.0.4) (2025-03-29)
 
 
