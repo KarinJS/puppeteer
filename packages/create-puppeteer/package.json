@@ -1,6 +1,6 @@
 {
   "name": "@karinjs/create-puppeteer",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "创建基于@karinjs/puppeteer-server的项目脚手架",
   "keywords": [
     "puppeteer",
