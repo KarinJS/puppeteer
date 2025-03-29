@@ -34,4 +34,13 @@ export interface LaunchOptions extends LaunchOptionsType {
    * @default false
    */
   hmr?: boolean
+  /**
+   * 下载浏览器时是否静默（不显示进度条和日志）
+   * @default false
+   */
+  silentDownload?: boolean
+  /**
+   * 日志回调
+   */
+  logger?: (level: 'debug' | 'info' | 'warn' | 'error', ...args: any[]) => void
 }

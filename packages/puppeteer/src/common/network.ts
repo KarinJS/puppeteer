@@ -1,9 +1,11 @@
 import fs from 'node:fs'
 import path from 'node:path'
-import https from 'node:https'
 import http from 'node:http'
-import { createLog } from './logger'
+import https from 'node:https'
 import { mkdirs } from './file'
+import { createLog } from './logger'
+import { spinnerValue } from './frames'
+import yocto, { type Spinner } from 'yocto-spinner'
 
 import type { DownloadOptions, DownloadResult } from '../types/download'
 
@@ -55,7 +57,7 @@ export const getRequestOptions = (
     ...options,
     host: proxyUrlObj.hostname,
     port: proxyUrlObj.port || '443',
-    path: url, // 完整URL作为路径
+    path: url,
     headers: {
       ...(options.headers || {}),
       Host: urlObj.host
@@ -164,10 +166,14 @@ export const download = async (
     timeout: 30000,
     overwrite: false,
     headers: {},
-    onProgress: undefined
+    onProgress: undefined,
+    silent: false
   }
 
   const opts = { ...defaultOptions, ...options }
+
+  /** 文件名，用于日志显示 */
+  const fileName = path.basename(savePath)
 
   /**
    * 准备保存目录
@@ -197,12 +203,12 @@ export const download = async (
       throw new Error(createLog('重定向缺少Location头'))
     }
 
-    // 处理相对URL
+    /** 处理相对URL */
     const finalRedirectUrl = redirectUrl.startsWith('http')
       ? redirectUrl
       : new URL(redirectUrl, url).toString()
 
-    // 递归下载重定向地址
+    /** 递归下载重定向地址 */
     return await download(finalRedirectUrl, savePath, opts)
   }
 
@@ -210,7 +216,7 @@ export const download = async (
    * 执行下载请求
    */
   const executeRequest = async (): Promise<DownloadResult> => {
-    // 创建请求选项
+    /** 创建请求选项 */
     const requestOptions = getRequestOptions(url, {
       method: 'GET',
       timeout: opts.timeout,
@@ -247,18 +253,39 @@ export const download = async (
         /** 获取内容长度 */
         const contentLength = parseInt(response.headers['content-length'] || '0', 10)
         let downloadedBytes = 0
+        const startTime = Date.now()
+
+        /** 创建yocto实例 */
+        let spinner: Spinner | undefined
+        if (!opts.silent && contentLength > 0) {
+          spinner = yocto({
+            color: 'yellow',
+            text: `准备下载: ${fileName} (${(contentLength / (1024 * 1024)).toFixed(2)} MB)`,
+            spinner: spinnerValue,
+          }).start()
+        }
 
         /** 创建文件写入流 */
         const fileStream = fs.createWriteStream(savePath)
 
         /** 设置错误处理 */
         fileStream.on('error', (err: Error) => {
+          if (spinner) {
+            spinner.error(`下载失败: ${err.message}`)
+          }
           reject(new Error(createLog(`写入文件失败: ${err.message}`)))
         })
 
         /** 监听下载完成 */
         fileStream.on('finish', () => {
           fileStream.close()
+
+          if (spinner) {
+            const duration = ((Date.now() - startTime) / 1000).toFixed(1)
+            // 耗时使用绿色突出显示
+            spinner.success(`下载完成: ${url} (用时 \u001b[32m${duration}s\u001b[0m)`)
+          }
+
           resolve({
             success: true,
             filePath: savePath,
@@ -270,8 +297,23 @@ export const download = async (
         /** 监听下载进度 */
         response.on('data', (chunk) => {
           downloadedBytes += chunk.length
-          if (opts.onProgress && contentLength > 0) {
-            opts.onProgress(downloadedBytes, contentLength)
+
+          /** 更新进度 */
+          if (contentLength > 0) {
+            const progress = (downloadedBytes / contentLength) * 100
+            const elapsed = (Date.now() - startTime) / 1000
+            const speed = downloadedBytes / elapsed / 1024 / 1024 // MB/s
+            const eta = elapsed * (contentLength / downloadedBytes - 1)
+
+            /** 自定义进度回调 */
+            if (opts.onProgress) {
+              opts.onProgress(downloadedBytes, contentLength)
+            }
+
+            /** 更新spinner文本 */
+            if (spinner) {
+              spinner.text = `下载进度: ${Math.min(100, progress).toFixed(1)}% | ${speed.toFixed(2)} MB/s | 剩余时间: ${Math.max(0, eta).toFixed(0)}s`
+            }
           }
         })
 

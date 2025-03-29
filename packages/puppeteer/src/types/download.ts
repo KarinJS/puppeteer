@@ -26,4 +26,6 @@ export interface DownloadOptions {
   headers?: Record<string, string>
   /** 进度回调函数 */
   onProgress?: (downloaded: number, total: number) => void
+  /** 是否静默下载（不输出日志） */
+  silent?: boolean
 }

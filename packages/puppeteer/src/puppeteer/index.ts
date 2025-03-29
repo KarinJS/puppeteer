@@ -1,5 +1,6 @@
 import { initBrowser } from './browser'
 import { screenshot } from './screenshot'
+import { createLogger } from '../common/logger'
 
 import type { LaunchOptions, ScreenshotOptions, Encoding, MultiPage } from '../types'
 
@@ -9,6 +10,7 @@ import type { LaunchOptions, ScreenshotOptions, Encoding, MultiPage } from '../t
  * @returns 浏览器实例
  */
 export const launch = async (options: LaunchOptions = {}) => {
+  if (options.logger) createLogger(options.logger)
   const { ctx } = await initBrowser(options)
 
   return {

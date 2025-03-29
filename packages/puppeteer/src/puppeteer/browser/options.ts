@@ -1,5 +1,7 @@
 import fs from 'node:fs'
+import yocto from 'yocto-spinner'
 import { downloadBrowser } from '../../init'
+import { spinnerValue } from '../../common/frames'
 import { puppeteerCache, isWindows, platform, createLog, ping, NPMMIRROR, GOOGLE } from '../../common'
 
 import type { LaunchOptions } from '../../types/LaunchOptions'
@@ -9,6 +11,7 @@ import type { LaunchOptions } from '../../types/LaunchOptions'
  * 浏览器初始化参数
  */
 export const browserOptions = async (options: LaunchOptions): Promise<LaunchOptions> => {
+  const time = Date.now()
   /**
    * 优先级: debug > downloadBrowser > headless
    */
@@ -54,6 +57,20 @@ export const browserOptions = async (options: LaunchOptions): Promise<LaunchOpti
   }
 
   /**
+   * 更新已安装浏览器的版本信息到version.json
+   * @param execPath - 可执行文件路径
+   */
+  const updateBrowserVersionInfo = async (execPath: string): Promise<void> => {
+    if (options.executablePath) return
+    const browser = options.downloadBrowser || 'chrome'
+    const cachePath = puppeteerCache.path(browser, platform())
+
+    if (execPath.includes(puppeteerCache.dir)) {
+      puppeteerCache.updateBrowserInfo(cachePath.unzipDir, process.cwd())
+    }
+  }
+
+  /**
    * 获取浏览器可执行文件路径
    */
   const executablePath = async () => {
@@ -75,6 +92,7 @@ export const browserOptions = async (options: LaunchOptions): Promise<LaunchOpti
     /** 如果缓存存在 则直接返回 */
     const cache = puppeteerCache.path(browser, platform())
     if (fs.existsSync(cache.executablePath)) {
+      await updateBrowserVersionInfo(cache.executablePath)
       return cache.executablePath
     }
 
@@ -85,9 +103,12 @@ export const browserOptions = async (options: LaunchOptions): Promise<LaunchOpti
       platform(),
       await host(),
       cache.archiveFile,
-      cache.unzipDir
+      cache.unzipDir,
+      cache.debianDepsPath,
+      options.silentDownload
     )
 
+    await updateBrowserVersionInfo(cache.executablePath)
     return cache.executablePath
   }
 
@@ -111,7 +132,7 @@ export const browserOptions = async (options: LaunchOptions): Promise<LaunchOpti
     return pages
   }
 
-  return {
+  const data: LaunchOptions = {
     ...options,
     idleTime: idleTime(),
     headless: headless(),
@@ -120,4 +141,13 @@ export const browserOptions = async (options: LaunchOptions): Promise<LaunchOpti
     args: args(),
     executablePath: await executablePath(),
   }
+
+  const spinner = yocto({
+    text: '初始化chrome...',
+    color: 'yellow',
+    spinner: spinnerValue,
+  }).start()
+
+  spinner.success(`初始化完成: 用时 ${((Date.now() - time) / 1000).toFixed(1)}s`)
+  return data
 }

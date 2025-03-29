@@ -7,5 +7,5 @@ import { options } from '../../tsup.base'
 export default defineConfig({
   ...options(['@karinjs/puppeteer-core']),
   noExternal: ['decompress'],
-  entry: ['src/index.ts', 'src/puppeteer-core.ts', 'src/index.test.ts'],
+  entry: ['src/index.ts', 'src/puppeteer-core.ts'],
 })

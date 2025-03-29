@@ -1,5 +1,6 @@
 import os from 'node:os'
 import path from 'node:path'
+import fs from 'node:fs'
 import { PUPPETEER_REVISIONS } from '@karinjs/puppeteer-core'
 
 /**
@@ -15,6 +16,16 @@ const CACHE_DIR = process.env.PUPPETEER_CACHE_DIR || path.join(os.homedir(), '.c
 const CACHE_VERSION_PATH = process.env.PUPPETEER_CACHE_VERSION || path.join(CACHE_DIR, 'version.json')
 
 /**
+ * 版本信息接口
+ */
+interface VersionInfo {
+  [timestamp: string]: {
+    unzipDir: string
+    installDir: string
+  }
+}
+
+/**
  * Puppeteer缓存配置和路径计算工具
  */
 export const puppeteerCache = {
@@ -27,6 +38,55 @@ export const puppeteerCache = {
    * 缓存版本文件路径
    */
   versionPath: CACHE_VERSION_PATH,
+
+  /**
+   * 读取版本信息文件
+   * @returns 版本信息对象
+   */
+  readVersionInfo: (): VersionInfo => {
+    try {
+      if (!fs.existsSync(CACHE_VERSION_PATH)) {
+        return {}
+      }
+      const data = fs.readFileSync(CACHE_VERSION_PATH, 'utf-8')
+      return JSON.parse(data) as VersionInfo
+    } catch (error) {
+      return {}
+    }
+  },
+
+  /**
+   * 写入版本信息到文件
+   * @param versionInfo - 版本信息对象
+   */
+  saveVersionInfo: (versionInfo: VersionInfo): void => {
+    try {
+      const dirPath = path.dirname(CACHE_VERSION_PATH)
+      if (!fs.existsSync(dirPath)) {
+        fs.mkdirSync(dirPath, { recursive: true })
+      }
+      fs.writeFileSync(CACHE_VERSION_PATH, JSON.stringify(versionInfo, null, 2), 'utf-8')
+    } catch (error) {
+      console.error('保存版本信息失败:', error)
+    }
+  },
+
+  /**
+   * 更新浏览器信息到版本文件
+   * @param unzipDir - 解压目录路径
+   * @param installDir - 安装程序根目录
+   */
+  updateBrowserInfo: (unzipDir: string, installDir: string): void => {
+    const timestamp = new Date().toISOString()
+    const versionInfo = puppeteerCache.readVersionInfo()
+
+    versionInfo[timestamp] = {
+      unzipDir,
+      installDir
+    }
+
+    puppeteerCache.saveVersionInfo(versionInfo)
+  },
 
   /**
    * 计算浏览器可执行文件及相关资源的路径

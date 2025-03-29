@@ -47,14 +47,16 @@
     "sync": "curl -X PUT \"https://registry-direct.npmmirror.com/-/package/@karinjs/puppeteer/syncs\"",
     "test": "cross-env NODE_ENV=development tsx ./src/index.test.ts --auto",
     "test:dev": "cross-env NODE_ENV=development tsx ./src/index.test.ts",
-    "test:prod": "cross-env NODE_ENV=development node ./dist/index.test.js"
+    "test:prod": "cross-env NODE_ENV=development node ./dist/index.test.js",
+    "test:demo": "tsx ./test/index.ts"
   },
   "dependencies": {
     "@karinjs/puppeteer-core": "workspace:*"
   },
   "devDependencies": {
-    "decompress": "^4.2.1",
+    "node-stream-zip": "^1.15.0",
+    "yocto-spinner": "^0.2.1",
     "p-limit": "6.2.0"
   },
-  "timestamp": "2025-03-28T05:06:34.524Z"
+  "timestamp": "2025-03-29T19:33:25.558Z"
 }
