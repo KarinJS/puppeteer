@@ -15,6 +15,10 @@ const main = async () => {
     const time = Date.now()
     const result = await browser.screenshot(data)
     logger.info(`[${name}][${path.basename(data.file)}] 截图完成 耗时: ${logger.green(Date.now() - time + '')} ms`)
+    if (Array.isArray(result.data)) {
+      return result.data
+    }
+
     return `base64://${result.data}` as any
   })
 
