@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.0.4](https://github.com/KarinJS/puppeteer/compare/puppeteer-core-v2.0.3...puppeteer-core-v2.0.4) (2025-03-29)
+
+
+### 🎫 Chores
+
+* 更新依赖和配置，添加静默下载功能及日志记录器支持 ([790964a](https://github.com/KarinJS/puppeteer/commit/790964a8c7e13a0a5f78aa56c6a08826825381fc))
+
 ## [2.0.3](https://github.com/KarinJS/puppeteer/compare/puppeteer-core-v2.0.2...puppeteer-core-v2.0.3) (2025-03-29)
 
 

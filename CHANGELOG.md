@@ -1,5 +1,17 @@
 # Changelog
 
+## [2.0.12](https://github.com/KarinJS/puppeteer/compare/root-v2.0.11...root-v2.0.12) (2025-03-29)
+
+
+### 🐛 Bug Fixes
+
+* fix: 优化截图返回值处理，支持返回数组格式 `(我不是故意的啦)` ([49c3fb8](https://github.com/KarinJS/puppeteer/commit/49c3fb8f8ef67bda7c971d497f01a648daf4f430))
+
+
+### 🎫 Chores
+
+* 更新依赖和配置，添加静默下载功能及日志记录器支持 ([790964a](https://github.com/KarinJS/puppeteer/commit/790964a8c7e13a0a5f78aa56c6a08826825381fc))
+
 ## [2.0.11](https://github.com/KarinJS/puppeteer/compare/root-v2.0.10...root-v2.0.11) (2025-03-29)
 
 
