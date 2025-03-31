@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.0.13](https://github.com/KarinJS/puppeteer/compare/root-v2.0.12...root-v2.0.13) (2025-03-31)
+
+
+### 🐛 Bug Fixes
+
+* cjs - esm ([f03a5b3](https://github.com/KarinJS/puppeteer/commit/f03a5b38f926eec28a2318e32619e58a2faf674d))
+
 ## [2.0.12](https://github.com/KarinJS/puppeteer/compare/root-v2.0.11...root-v2.0.12) (2025-03-29)
 
 

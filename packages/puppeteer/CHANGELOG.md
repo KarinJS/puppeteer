@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.0.7](https://github.com/KarinJS/puppeteer/compare/puppeteer-v2.0.6...puppeteer-v2.0.7) (2025-03-31)
+
+
+### 🐛 Bug Fixes
+
+* cjs - esm ([f03a5b3](https://github.com/KarinJS/puppeteer/commit/f03a5b38f926eec28a2318e32619e58a2faf674d))
+
 ## [2.0.6](https://github.com/KarinJS/puppeteer/compare/puppeteer-v2.0.5...puppeteer-v2.0.6) (2025-03-29)
 
 
