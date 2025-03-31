@@ -5,7 +5,7 @@ import { options } from '../../tsup.base'
  * @description `tsup` configuration options
  */
 export default defineConfig({
-  ...options(['@karinjs/puppeteer-core']),
+  ...options(),
   noExternal: ['decompress'],
   entry: ['src/index.ts', 'src/puppeteer-core.ts'],
 })

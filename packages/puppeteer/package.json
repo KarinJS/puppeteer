@@ -50,13 +50,11 @@
     "test:prod": "cross-env NODE_ENV=development node ./dist/index.test.js",
     "test:demo": "tsx ./test/index.ts"
   },
-  "dependencies": {
-    "@karinjs/puppeteer-core": "workspace:*"
-  },
   "devDependencies": {
+    "@karinjs/puppeteer-core": "workspace:*",
     "node-stream-zip": "^1.15.0",
     "yocto-spinner": "^0.2.1",
     "p-limit": "6.2.0"
   },
-  "timestamp": "2025-03-29T19:33:25.558Z"
+  "timestamp": "2025-03-31T11:29:22.180Z"
 }

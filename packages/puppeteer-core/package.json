@@ -39,5 +39,5 @@
     "sort": "npx sort-package-json",
     "sync": "curl -X PUT \"https://registry-direct.npmmirror.com/-/package/@karinjs/puppeteer-core/syncs\""
   },
-  "timestamp": "2025-03-29T19:33:25.559Z"
+  "timestamp": "2025-03-31T11:29:22.182Z"
 }
