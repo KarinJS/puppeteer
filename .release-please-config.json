@@ -89,6 +89,16 @@
       "release-type": "node",
       "package-name": "@karinjs/create-puppeteer",
       "component": "@karinjs/create-puppeteer"
+    },
+    "packages/puppeteer-types": {
+      "release-type": "node",
+      "package-name": "@karinjs/puppeteer-types",
+      "component": "puppeteer-types"
+    },
+    "packages/puppeteer-core-types": {
+      "release-type": "node",
+      "package-name": "@karinjs/puppeteer-core-types",
+      "component": "puppeteer-core-types"
     }
   }
 }

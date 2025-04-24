@@ -7,5 +7,7 @@
   "@karinjs/create-puppeteer": "0.0.1",
   "packages/karin-plugin-puppeteer": "1.0.7",
   "packages/puppeteer-server": "1.0.13",
-  "packages/create-puppeteer": "1.0.9"
+  "packages/create-puppeteer": "1.0.9",
+  "packages/puppeteer-types": "0.0.1",
+  "packages/puppeteer-core-types": "0.0.1"
 }
