@@ -1,4 +1,4 @@
-import type { LaunchOptions as LaunchOptionsType } from '@karinjs/puppeteer-core'
+import type { LaunchOptions as LaunchOptionsType } from 'puppeteer-core'
 
 /**
  * 浏览器初始化参数

@@ -1,4 +1,4 @@
-import type { Page } from '@karinjs/puppeteer-core'
+import type { Page } from 'puppeteer-core'
 
 /**
  * 设置视窗大小

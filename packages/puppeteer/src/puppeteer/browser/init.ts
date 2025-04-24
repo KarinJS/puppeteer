@@ -1,10 +1,10 @@
 import { debug } from '../../common'
-import pupp from '@karinjs/puppeteer-core'
+import pupp from 'puppeteer-core'
 import { browserOptions } from './options'
 import { createPage } from '../page/page'
 import { createContext, PuppeteerContext, setupBrowserMonitoring } from '../utils'
 
-import type { Browser, Page } from '@karinjs/puppeteer-core'
+import type { Browser, Page } from 'puppeteer-core'
 import type { LaunchOptions, ScreenshotOptions } from '../../types'
 
 /**

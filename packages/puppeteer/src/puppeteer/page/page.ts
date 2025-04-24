@@ -1,7 +1,7 @@
 import fs from 'node:fs'
 import path from 'node:path'
 import { createLog, debug } from '../../common'
-import type { Page } from '@karinjs/puppeteer-core'
+import type { Page } from 'puppeteer-core'
 import type { PuppeteerContext } from '../utils'
 import type { ScreenshotOptions } from '../../types/screenshot'
 

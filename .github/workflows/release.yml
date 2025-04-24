@@ -20,6 +20,8 @@ jobs:
       plugin_puppeteer_release: ${{ steps.release.outputs['packages/karin-plugin-puppeteer--release_created'] }}
       puppeteer_server_release: ${{ steps.release.outputs['packages/puppeteer-server--release_created'] }}
       create_puppeteer_release: ${{ steps.release.outputs['packages/create-puppeteer--release_created'] }}
+      puppeteer_release_types: ${{ steps.release.outputs['packages/puppeteer-types--release_created'] }}
+      puppeteer_core_release_types: ${{ steps.release.outputs['packages/puppeteer-core-types--release_created'] }}
     steps:
       # 使用 release-please-action 动作来自动创建发布 PR
       - uses: googleapis/release-please-action@v4
@@ -27,18 +29,6 @@ jobs:
         with:
           config-file: .release-please-config.json
           manifest-file: .release-please-manifest.json
-      
-      # 调试步骤 - 输出所有release-please-action的输出变量
-      - name: 输出发布状态
-        run: |
-          echo "release_created: ${{ steps.release.outputs.release_created }}"
-          echo "releases_created: ${{ steps.release.outputs.releases_created }}"
-          echo "puppeteer_release: ${{ steps.release.outputs['packages/puppeteer--release_created'] }}"
-          echo "puppeteer_core_release: ${{ steps.release.outputs['packages/puppeteer-core--release_created'] }}"
-          echo "plugin_puppeteer_release: ${{ steps.release.outputs['packages/karin-plugin-puppeteer--release_created'] }}"
-          echo "puppeteer_server_release: ${{ steps.release.outputs['packages/puppeteer-server--release_created'] }}"
-          echo "create_puppeteer_release: ${{ steps.release.outputs['packages/create-puppeteer--release_created'] }}"
-
   # 只有当实际创建了发布时才执行发布任务
   publish:
     needs: release-please
@@ -106,6 +96,22 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
         working-directory: packages/create-puppeteer
+        run: pnpm run pub
+      
+      # 发布 puppeteer-core-types 包
+      - name: 发布 puppeteer-core-types 包
+        if: ${{ needs.release-please.outputs.puppeteer_core_release_types == 'true' }}
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+        working-directory: packages/puppeteer-core-types
+        run: pnpm run pub
+
+        # 发布 puppeteer-types 包
+      - name: 发布 puppeteer-types 包
+        if: ${{ needs.release-please.outputs.puppeteer_release_types == 'true' }}
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+        working-directory: packages/puppeteer-types
         run: pnpm run pub
     
       # 同步所有包

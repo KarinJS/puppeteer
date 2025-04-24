@@ -10,7 +10,7 @@ import type {
   ElementHandle,
   Page,
   ScreenshotOptions as PuppeteerScreenshotOptions
-} from '@karinjs/puppeteer-core'
+} from 'puppeteer-core'
 import type {
   Encoding,
   MultiPage,

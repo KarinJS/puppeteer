@@ -1,5 +1,5 @@
 import fs from 'node:fs'
-import { exec } from 'node:child_process'
+import { exec, spawnSync } from 'node:child_process'
 import { promisify } from 'node:util'
 import { logger } from './logger'
 
@@ -354,19 +354,42 @@ async function installPackages (baseCmd: string, packages: string[], useSudo: bo
  * @returns 无需在意返回值，该函数不会阻止浏览器启动
  */
 export async function installLinuxDependencies (debDepsPath: string): Promise<boolean> {
-  logger.info('当前为Linux系统，开始安装依赖...')
-  // 检查操作系统是否为Linux
   if (process.platform !== 'linux') {
     return true
   }
+  logger.info('当前为Linux系统，开始安装依赖...')
 
   try {
-    // 检测Linux发行版类型
+    /** Linux发行版 */
     const distroType = await detectLinuxDistro()
 
     if (distroType === LinuxDistroType.UNKNOWN) {
       logger.warn('未知的Linux发行版，跳过依赖安装')
-      return true // 未知发行版，仍然尝试启动
+      return true
+    }
+
+    if (fs.existsSync(debDepsPath)) {
+      const data = fs.readFileSync(debDepsPath, 'utf-8').split('\n').join(',')
+      if (process.getuid?.() !== 0) {
+        throw new Error('安装系统依赖项需要 root 权限')
+      }
+      let result = spawnSync('apt-get', ['-v'])
+      if (result.status !== 0) {
+        throw new Error('无法安装系统依赖项：apt-get 似乎不可用')
+      }
+      result = spawnSync('apt-get', [
+        'satisfy',
+        '-y',
+        data,
+        '--no-install-recommends',
+      ])
+      if (result.status !== 0) {
+        throw new Error(
+          `无法安装系统依赖项：状态=${result.status},错误=${result.error},标准输出=${result.stdout.toString('utf8')},标准错误=${result.stderr.toString('utf8')}`
+        )
+      }
+
+      return true
     }
 
     // 读取deb.deps文件中的依赖列表(如果存在)

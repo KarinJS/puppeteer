@@ -2,7 +2,7 @@ import type {
   WaitForOptions,
   HTTPRequest,
   ScreenshotOptions as PuppeteerScreenshotOptions,
-} from '@karinjs/puppeteer-core'
+} from 'puppeteer-core'
 
 /**
  * 截图编码类型

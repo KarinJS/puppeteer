@@ -64,8 +64,8 @@ export const downloadBrowser = async (
     try {
       await installLinuxDependencies(debDepsPath)
       spinner.success('初始化依赖完成')
-    } catch {
-      spinner.error('初始化依赖失败')
+    } catch (error) {
+      spinner.error(`初始化依赖失败: ${(error as Error).message || '未知错误'}`)
     }
   }
 }

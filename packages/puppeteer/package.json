@@ -17,20 +17,8 @@
   },
   "license": "MIT",
   "author": "shijin",
-  "exports": {
-    ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.js",
-      "require": "./dist/index.js"
-    },
-    "./puppeteer-core": {
-      "types": "./dist/puppeteer-core.d.ts",
-      "import": "./dist/puppeteer-core.js",
-      "require": "./dist/puppeteer-core.js"
-    }
-  },
-  "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
+  "main": "./dist/index.mjs",
+  "type": "module",
   "files": [
     "!*.test.js",
     "!*.test.d.ts",
@@ -40,7 +28,7 @@
     "package.json"
   ],
   "scripts": {
-    "build": "tsc && tsup",
+    "build": "tsc && vite build && tsup",
     "pub": "pnpm publish --access public",
     "rm": "node -e \"require('fs').rmSync('dist', { recursive: true, force: true })\"",
     "sort": "npx sort-package-json",
@@ -51,10 +39,9 @@
     "test:demo": "tsx ./test/index.ts"
   },
   "devDependencies": {
-    "@karinjs/puppeteer-core": "workspace:*",
-    "node-stream-zip": "^1.15.0",
-    "yocto-spinner": "^0.2.1",
-    "p-limit": "6.2.0"
+    "extract-zip": "^2.0.1",
+    "p-limit": "6.2.0",
+    "yocto-spinner": "^0.2.1"
   },
   "timestamp": "2025-03-31T11:29:22.180Z"
 }

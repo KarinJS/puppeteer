@@ -1,8 +1,8 @@
 import pLimit from 'p-limit'
-import pupp from '@karinjs/puppeteer-core'
+import pupp from 'puppeteer-core'
 import { debug } from '../../common'
 
-import type { Browser } from '@karinjs/puppeteer-core'
+import type { Browser } from 'puppeteer-core'
 import type { LaunchOptions, TaskResult } from '../../types'
 
 /**

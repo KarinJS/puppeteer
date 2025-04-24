@@ -1,7 +1,7 @@
 import os from 'node:os'
 import path from 'node:path'
 import fs from 'node:fs'
-import { PUPPETEER_REVISIONS } from '@karinjs/puppeteer-core'
+import { PUPPETEER_REVISIONS } from 'puppeteer-core/internal/revisions.js'
 
 /**
  * Puppeteer缓存的默认根目录
@@ -77,9 +77,15 @@ export const puppeteerCache = {
    * @param installDir - 安装程序根目录
    */
   updateBrowserInfo: (unzipDir: string, installDir: string): void => {
-    const timestamp = new Date().toISOString()
     const versionInfo = puppeteerCache.readVersionInfo()
 
+    const alreadyExists = Object.values(versionInfo).some(
+      entry => entry.unzipDir === unzipDir && entry.installDir === installDir
+    )
+
+    if (alreadyExists) return
+
+    const timestamp = new Date().toISOString()
     versionInfo[timestamp] = {
       unzipDir,
       installDir
@@ -96,6 +102,11 @@ export const puppeteerCache = {
    * @returns 包含各种路径信息的对象
    */
   path: (browser: keyof typeof PUPPETEER_REVISIONS, platform: ReturnType<typeof import('../common').platform>) => {
+    /**
+     * 下载路径的平台
+     */
+    const downloadPlatform = platform.replace('linux64', 'linux')
+
     /**
      * 当前系统是否为Windows
      */
@@ -118,7 +129,7 @@ export const puppeteerCache = {
      * 版本和平台特定的目录名
      * @default .cache/puppeteer/chrome/win64-131.0.6778.204
      */
-    const versionPlatformDir = `${platform}-${version}`
+    const versionPlatformDir = `${downloadPlatform}-${version}`
 
     /**
      * 版本和平台特定的完整目录路径
@@ -130,13 +141,13 @@ export const puppeteerCache = {
      * 浏览器可执行文件的目录
      * @default .cache/puppeteer/chrome/win64-131.0.6778.204/chrome-win64
      */
-    const executableDir = path.join(versionSpecificDir, `${browser}-${platform}`)
+    const executableDir = path.join(versionSpecificDir, `${browser}-${downloadPlatform}`)
 
     /**
      * ZIP归档文件路径
      * @default .cache/puppeteer/chrome/win64-131.0.6778.204/chrome-win64.zip
      */
-    const archiveFilePath = path.join(versionSpecificDir, `${browser}-${platform}.zip`)
+    const archiveFilePath = path.join(versionSpecificDir, `${browser}-${downloadPlatform}.zip`)
 
     /**
      * ZIP解压目录
@@ -160,6 +171,8 @@ export const puppeteerCache = {
       version,
       /** 平台 */
       platform,
+      /** 下载路径的平台 */
+      downloadPlatform,
       /** 版本和平台特定的完整目录路径 */
       dir: versionSpecificDir,
       /** 浏览器可执行文件的目录 */

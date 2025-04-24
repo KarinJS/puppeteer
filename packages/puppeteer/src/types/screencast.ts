@@ -2,7 +2,7 @@ import type {
   WaitForOptions,
   HTTPRequest,
   ScreencastOptions as ScreencastOptionsCore,
-} from '@karinjs/puppeteer-core'
+} from 'puppeteer-core'
 
 /**
  * @public

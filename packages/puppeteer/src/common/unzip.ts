@@ -1,8 +1,7 @@
-/* eslint-disable new-cap */
 import fs from 'node:fs'
 import path from 'node:path'
 import yocto from 'yocto-spinner'
-import StreamZip from 'node-stream-zip'
+import extract from 'extract-zip'
 import { mkdirs } from './file'
 import { createLog } from './logger'
 import { spinnerValue } from './frames'
@@ -27,8 +26,7 @@ export const unzip = async (
     color: 'cyan',
     spinner: spinnerValue,
   }).start()
-  const zip = new StreamZip.async({ file: zipPath })
-  await zip.extract(null, extractPath)
-  await zip.close()
+
+  await extract(zipPath, { dir: extractPath })
   spinner.success(`解压完成: ${extractPath}`)
 }

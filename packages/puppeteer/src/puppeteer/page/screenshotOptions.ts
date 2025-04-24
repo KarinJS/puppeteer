@@ -1,5 +1,5 @@
 import type { ScreenshotOptions } from '../../types/screenshot'
-import type { ScreenshotOptions as ScreenshotOptionsCore } from '@karinjs/puppeteer-core'
+import type { ScreenshotOptions as ScreenshotOptionsCore } from 'puppeteer-core'
 
 /**
  * 标准化截图参数

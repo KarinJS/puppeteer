@@ -1,11 +1,17 @@
 import { defineConfig } from 'tsup'
-import { options } from '../../tsup.base'
+import { builtinModules } from 'node:module'
 
 /**
  * @description `tsup` configuration options
  */
 export default defineConfig({
-  ...options(),
-  noExternal: ['decompress'],
+  format: 'esm',
+  target: 'node18',
   entry: ['src/index.ts'],
+  outDir: '../puppeteer-core-types/dist',
+  dts: { resolve: true, only: true },
+  external: [
+    ...builtinModules,
+    ...builtinModules.map((node) => `node:${node}`),
+  ]
 })

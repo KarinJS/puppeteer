@@ -26,7 +26,7 @@ const defaultConfig: LaunchOptions = {
   userDataDir: '',
   args: [
     '--window-size=800,600', // 设置窗口大小
-    '--enable-gpu', // 启用 GPU 硬件加速
+    '--disable-gpu', // 禁用 GPU 硬件加速
     '--no-sandbox', // 关闭 Chrome 的沙盒模式
     '--disable-setuid-sandbox', // 进一步禁用 setuid 沙盒机制，通常和 --no-sandbox 配合使用，避免权限问题
     '--no-zygote', // 关闭 Chrome 的 zygote 进程，减少进程开销，优化资源使用

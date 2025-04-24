@@ -25,3 +25,4 @@ render-ws (1).js
 **/dist/**
 **/@karinjs/**
 packages/puppeteer-server/pkg-build
+/packages/test

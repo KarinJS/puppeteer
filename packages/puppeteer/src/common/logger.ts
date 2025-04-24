@@ -1,6 +1,6 @@
 import type { LaunchOptions } from '../types'
 
-const prefix = '[@karinjs/@karinjs/puppeteer-core]'
+const prefix = '[@karinjs/puppeteer-core]'
 
 /**
  * 构建日志

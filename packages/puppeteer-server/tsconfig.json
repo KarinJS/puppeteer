@@ -4,13 +4,10 @@
     "rootDir": "./src",
     "outDir": "./lib",
     "baseUrl": ".",
-    "paths": {}
+    "paths": {
+      "@karinjs/puppeteer": ["node_modules/@karinjs/puppeteer-types"]
+    }
   },
-  "include": [
-    "src/**/*"
-  ],
-  "exclude": [
-    "node_modules",
-    "lib"
-  ]
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "lib"]
 }
