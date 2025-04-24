@@ -1,6 +1,6 @@
 {
   "name": "@karinjs/puppeteer-core",
-  "version": "2.0.7",
+  "version": "2.0.8",
   "description": "Repackage puppeteer-core and compress the size",
   "keywords": [
     "puppeteer-core",

@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.9](https://github.com/KarinJS/puppeteer/compare/@karinjs/plugin-puppeteer-v1.0.8...@karinjs/plugin-puppeteer-v1.0.9) (2025-04-24)
+
+
+### 🐛 Bug Fixes
+
+* lock ([f7e97fd](https://github.com/KarinJS/puppeteer/commit/f7e97fd83908200d4057b8ecffb0169ebd51fec8))
+
 ## [1.0.8](https://github.com/KarinJS/puppeteer/compare/@karinjs/plugin-puppeteer-v1.0.7...@karinjs/plugin-puppeteer-v1.0.8) (2025-04-24)
 
 

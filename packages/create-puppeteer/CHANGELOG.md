@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.11](https://github.com/KarinJS/puppeteer/compare/@karinjs/create-puppeteer-v1.0.10...@karinjs/create-puppeteer-v1.0.11) (2025-04-24)
+
+
+### 🐛 Bug Fixes
+
+* lock ([f7e97fd](https://github.com/KarinJS/puppeteer/commit/f7e97fd83908200d4057b8ecffb0169ebd51fec8))
+
 ## [1.0.10](https://github.com/KarinJS/puppeteer/compare/@karinjs/create-puppeteer-v1.0.9...@karinjs/create-puppeteer-v1.0.10) (2025-04-24)
 
 
