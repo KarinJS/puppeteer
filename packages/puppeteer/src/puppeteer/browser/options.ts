@@ -148,6 +148,16 @@ export const browserOptions = async (options: LaunchOptions): Promise<LaunchOpti
     spinner: spinnerValue,
   }).start()
 
+  /** 检查二进制是否拥有权限 */
+  if (process.platform === 'linux') {
+    try {
+      fs.accessSync(data.executablePath!, fs.constants.X_OK)
+    } catch (error) {
+      /** 赋予权限 */
+      fs.chmodSync(data.executablePath!, 0o755)
+    }
+  }
+
   spinner.success(`初始化完成: 用时 ${((Date.now() - time) / 1000).toFixed(1)}s`)
   return data
 }
