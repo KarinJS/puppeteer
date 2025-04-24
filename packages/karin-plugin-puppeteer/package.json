@@ -32,6 +32,7 @@
     "@karinjs/puppeteer": "workspace:*"
   },
   "devDependencies": {
+    "@karinjs/puppeteer-types": "workspace:*",
     "node-karin": "^1.7.12"
   },
   "karin": {
@@ -70,5 +71,5 @@
       }
     ]
   },
-  "timestamp": "2025-03-31T11:29:22.179Z"
+  "timestamp": "2025-04-24T12:09:30.379Z"
 }
