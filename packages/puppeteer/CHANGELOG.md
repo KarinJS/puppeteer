@@ -1,5 +1,17 @@
 # Changelog
 
+## [2.0.9](https://github.com/KarinJS/puppeteer/compare/puppeteer-v2.0.8...puppeteer-v2.0.9) (2025-04-24)
+
+
+### 🐛 Bug Fixes
+
+* close [#49](https://github.com/KarinJS/puppeteer/issues/49) ([538bad6](https://github.com/KarinJS/puppeteer/commit/538bad62282e21d62eeaa493d941f96c57e8ac39))
+
+
+### 📦️ Build System
+
+* fix types error ([86c489a](https://github.com/KarinJS/puppeteer/commit/86c489a1bbb6eecfde850bb8d36260665873643b))
+
 ## [2.0.8](https://github.com/KarinJS/puppeteer/compare/puppeteer-v2.0.7...puppeteer-v2.0.8) (2025-04-24)
 
 
