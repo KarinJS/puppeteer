@@ -4,7 +4,6 @@ lib/
 config.json
 count.json
 yarn.lock
-pnpm-lock.yaml
 package-lock.json
 
 npm-debug.log*

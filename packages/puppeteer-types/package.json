@@ -13,5 +13,5 @@
     "sync": "curl -X PUT \"https://registry-direct.npmmirror.com/-/package/@karinjs/puppeteer-types/syncs\"",
     "pub": "pnpm publish --access public"
   },
-  "timestamp": "2025-04-24T12:09:30.385Z"
+  "timestamp": "2025-04-24T12:22:00.418Z"
 }
