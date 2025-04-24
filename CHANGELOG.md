@@ -1,5 +1,22 @@
 # Changelog
 
+## [2.1.0](https://github.com/KarinJS/puppeteer/compare/root-v2.0.14...root-v2.1.0) (2025-04-24)
+
+
+### ✨ Features
+
+* puppeteer-types ([350612c](https://github.com/KarinJS/puppeteer/commit/350612cd62b2d1c37d2f8429b1b9c4a7611caf8c))
+
+
+### 🐛 Bug Fixes
+
+* close [#49](https://github.com/KarinJS/puppeteer/issues/49) ([538bad6](https://github.com/KarinJS/puppeteer/commit/538bad62282e21d62eeaa493d941f96c57e8ac39))
+
+
+### 📦️ Build System
+
+* fix types error ([86c489a](https://github.com/KarinJS/puppeteer/commit/86c489a1bbb6eecfde850bb8d36260665873643b))
+
 ## [2.0.14](https://github.com/KarinJS/puppeteer/compare/root-v2.0.13...root-v2.0.14) (2025-04-24)
 
 
