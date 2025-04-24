@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.0.8](https://github.com/KarinJS/puppeteer/compare/puppeteer-v2.0.7...puppeteer-v2.0.8) (2025-04-24)
+
+
+### 🐛 Bug Fixes
+
+* 修复部分已知问题，更正在linux下缓存路径不一致的问题 ([b96f7b4](https://github.com/KarinJS/puppeteer/commit/b96f7b48c19902b16bca0b7d029e6e905e4a04d6))
+
 ## [2.0.7](https://github.com/KarinJS/puppeteer/compare/puppeteer-v2.0.6...puppeteer-v2.0.7) (2025-03-31)
 
 

@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.0.14](https://github.com/KarinJS/puppeteer/compare/root-v2.0.13...root-v2.0.14) (2025-04-24)
+
+
+### 🐛 Bug Fixes
+
+* 修复部分已知问题，更正在linux下缓存路径不一致的问题 ([b96f7b4](https://github.com/KarinJS/puppeteer/commit/b96f7b48c19902b16bca0b7d029e6e905e4a04d6))
+* 入口 ([92a7d4e](https://github.com/KarinJS/puppeteer/commit/92a7d4e8bf26439af1986e41af61fef444747b25))
+
 ## [2.0.13](https://github.com/KarinJS/puppeteer/compare/root-v2.0.12...root-v2.0.13) (2025-03-31)
 
 
