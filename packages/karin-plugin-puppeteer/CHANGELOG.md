@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.7](https://github.com/KarinJS/puppeteer/compare/@karinjs/plugin-puppeteer-v1.0.6...@karinjs/plugin-puppeteer-v1.0.7) (2025-04-24)
+
+
+### 🐛 Bug Fixes
+
+* 修复部分已知问题，更正在linux下缓存路径不一致的问题 ([b96f7b4](https://github.com/KarinJS/puppeteer/commit/b96f7b48c19902b16bca0b7d029e6e905e4a04d6))
+
 ## [1.0.6](https://github.com/KarinJS/puppeteer/compare/@karinjs/plugin-puppeteer-v1.0.5...@karinjs/plugin-puppeteer-v1.0.6) (2025-03-31)
 
 
