@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.14](https://github.com/KarinJS/puppeteer/compare/@karinjs/puppeteer-server-v1.0.13...@karinjs/puppeteer-server-v1.0.14) (2025-04-24)
+
+
+### 📦️ Build System
+
+* fix types error ([86c489a](https://github.com/KarinJS/puppeteer/commit/86c489a1bbb6eecfde850bb8d36260665873643b))
+
 ## [1.0.13](https://github.com/KarinJS/puppeteer/compare/@karinjs/puppeteer-server-v1.0.12...@karinjs/puppeteer-server-v1.0.13) (2025-04-24)
 
 
