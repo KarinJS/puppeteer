@@ -1,6 +1,6 @@
 {
-  ".": "2.1.1",
-  "packages/puppeteer": "2.0.10",
+  ".": "2.1.2",
+  "packages/puppeteer": "2.0.11",
   "packages/puppeteer-core": "2.0.8",
   "@karinjs/plugin-puppeteer": "0.0.1",
   "@karinjs/puppeteer-server": "0.0.1",
