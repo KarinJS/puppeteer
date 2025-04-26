@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.0.11](https://github.com/KarinJS/puppeteer/compare/puppeteer-v2.0.10...puppeteer-v2.0.11) (2025-04-26)
+
+
+### 🐛 Bug Fixes
+
+* 赋予可执行文件权限兼容性提升 ([77d366c](https://github.com/KarinJS/puppeteer/commit/77d366c38c0ebd960200f34f502a5958b606d081))
+
 ## [2.0.10](https://github.com/KarinJS/puppeteer/compare/puppeteer-v2.0.9...puppeteer-v2.0.10) (2025-04-24)
 
 
