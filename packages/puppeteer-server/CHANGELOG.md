@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.16](https://github.com/KarinJS/puppeteer/compare/@karinjs/puppeteer-server-v1.0.15...@karinjs/puppeteer-server-v1.0.16) (2025-04-26)
+
+
+### 🐛 Bug Fixes
+
+* 赋予可执行文件权限兼容性提升 ([395da27](https://github.com/KarinJS/puppeteer/commit/395da27faaf7180d37f0e5218f43c900b0553e8b))
+
 ## [1.0.15](https://github.com/KarinJS/puppeteer/compare/@karinjs/puppeteer-server-v1.0.14...@karinjs/puppeteer-server-v1.0.15) (2025-04-24)
 
 

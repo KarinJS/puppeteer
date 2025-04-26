@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.1.3](https://github.com/KarinJS/puppeteer/compare/root-v2.1.2...root-v2.1.3) (2025-04-26)
+
+
+### 🐛 Bug Fixes
+
+* 赋予可执行文件权限兼容性提升 ([395da27](https://github.com/KarinJS/puppeteer/commit/395da27faaf7180d37f0e5218f43c900b0553e8b))
+
 ## [2.1.2](https://github.com/KarinJS/puppeteer/compare/root-v2.1.1...root-v2.1.2) (2025-04-26)
 
 
