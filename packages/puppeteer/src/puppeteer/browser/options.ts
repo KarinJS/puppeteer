@@ -132,6 +132,15 @@ export const browserOptions = async (options: LaunchOptions): Promise<LaunchOpti
     return pages
   }
 
+  /**
+   * 赋予可执行文件执行权限
+   */
+  const chmod = (executablePath: string) => {
+    try {
+      fs.chmodSync(executablePath, 0o755)
+    } catch { }
+  }
+
   const data: LaunchOptions = {
     ...options,
     idleTime: idleTime(),
@@ -148,13 +157,21 @@ export const browserOptions = async (options: LaunchOptions): Promise<LaunchOpti
     spinner: spinnerValue,
   }).start()
 
-  /** 检查二进制是否拥有权限 */
-  if (process.platform === 'linux') {
+  /**
+   * 检查二进制是否拥有执行权限
+   * Windows系统不需要检查执行权限
+   * Linux和macOS系统需要确保有执行权限
+   */
+  if (process.platform !== 'win32' && data.executablePath) {
     try {
-      fs.accessSync(data.executablePath!, fs.constants.X_OK)
+      fs.accessSync(data.executablePath, fs.constants.X_OK)
     } catch (error) {
-      /** 赋予权限 */
-      fs.chmodSync(data.executablePath!, 0o755)
+      /** 只有在文件存在但没有执行权限时才赋予权限 */
+      if (error instanceof Error && 'code' in error && error.code === 'EACCES') {
+        chmod(data.executablePath)
+      } else {
+        console.error(error)
+      }
     }
   }
 
