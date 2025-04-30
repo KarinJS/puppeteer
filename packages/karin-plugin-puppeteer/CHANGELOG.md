@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.16](https://github.com/KarinJS/puppeteer/compare/@karinjs/plugin-puppeteer-v1.0.15...@karinjs/plugin-puppeteer-v1.0.16) (2025-04-30)
+
+
+### 🐛 Bug Fixes
+
+* 兄弟 nm爆炸了 ([9dce0c1](https://github.com/KarinJS/puppeteer/commit/9dce0c1ffe85941cdc76acf46b22f57701654fa2))
+
 ## [1.0.15](https://github.com/KarinJS/puppeteer/compare/@karinjs/plugin-puppeteer-v1.0.14...@karinjs/plugin-puppeteer-v1.0.15) (2025-04-30)
 
 

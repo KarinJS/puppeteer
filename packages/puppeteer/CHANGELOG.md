@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.2.3](https://github.com/KarinJS/puppeteer/compare/puppeteer-v2.2.2...puppeteer-v2.2.3) (2025-04-30)
+
+
+### 🐛 Bug Fixes
+
+* 兄弟 nm爆炸了 ([9dce0c1](https://github.com/KarinJS/puppeteer/commit/9dce0c1ffe85941cdc76acf46b22f57701654fa2))
+
 ## [2.2.2](https://github.com/KarinJS/puppeteer/compare/puppeteer-v2.2.1...puppeteer-v2.2.2) (2025-04-30)
 
 
