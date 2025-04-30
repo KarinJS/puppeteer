@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.2.2](https://github.com/KarinJS/puppeteer/compare/puppeteer-v2.2.1...puppeteer-v2.2.2) (2025-04-30)
+
+
+### 🐛 Bug Fixes
+
+* 烦死了。 ([319965b](https://github.com/KarinJS/puppeteer/commit/319965b8afe5a21065945d710ac1ec5668f7c0a3))
+
 ## [2.2.1](https://github.com/KarinJS/puppeteer/compare/puppeteer-v2.2.0...puppeteer-v2.2.1) (2025-04-30)
 
 
