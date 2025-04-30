@@ -8,7 +8,7 @@ const main = async () => {
     const main = './dist/index.mjs'
     const { browserOptions } = await import(main)
     console.log('正在初始化浏览器...')
-    const options = await browserOptions({})
+    const options = await browserOptions({}, true)
     console.log('浏览器初始化成功！')
     console.log('浏览器可执行路径:', options.executablePath)
   } catch (error) {
