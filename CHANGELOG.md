@@ -1,5 +1,17 @@
 # Changelog
 
+## [2.3.0](https://github.com/KarinJS/puppeteer/compare/root-v2.2.0...root-v2.3.0) (2025-04-30)
+
+
+### ✨ Features
+
+* 新增依赖初始化功能 ([4b1f7ff](https://github.com/KarinJS/puppeteer/commit/4b1f7ff5977c5353b322950c39dcc7683f903d9a))
+
+
+### 🐛 Bug Fixes
+
+* 闹呢？ ([873eb64](https://github.com/KarinJS/puppeteer/commit/873eb64afb6e580d0c17ffeadb23c38653f88201))
+
 ## [2.2.0](https://github.com/KarinJS/puppeteer/compare/root-v2.1.3...root-v2.2.0) (2025-04-30)
 
 
