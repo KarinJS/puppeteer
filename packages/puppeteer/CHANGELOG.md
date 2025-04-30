@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.2.0](https://github.com/KarinJS/puppeteer/compare/puppeteer-v2.1.0...puppeteer-v2.2.0) (2025-04-30)
+
+
+### ✨ Features
+
+* 新增依赖初始化功能 ([4b1f7ff](https://github.com/KarinJS/puppeteer/commit/4b1f7ff5977c5353b322950c39dcc7683f903d9a))
+
 ## [2.1.0](https://github.com/KarinJS/puppeteer/compare/puppeteer-v2.0.11...puppeteer-v2.1.0) (2025-04-30)
 
 
