@@ -19,6 +19,9 @@
   "author": "shijin",
   "main": "./dist/index.mjs",
   "type": "module",
+  "bin": {
+    "puppeteer": "./cli.js"
+  },
   "files": [
     "!*.test.js",
     "!*.test.d.ts",

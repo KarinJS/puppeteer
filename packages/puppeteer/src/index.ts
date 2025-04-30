@@ -26,6 +26,7 @@ export { launch } from './puppeteer'
 export { launch as default } from './puppeteer'
 export * from 'puppeteer-core/internal/puppeteer-core.js'
 export { PUPPETEER_REVISIONS } from 'puppeteer-core/internal/revisions.js'
+export { browserOptions } from './puppeteer/browser/options'
 
 export type { Protocol } from 'puppeteer-core'
 export type { LaunchOptions, ScreenshotOptions } from './types'
