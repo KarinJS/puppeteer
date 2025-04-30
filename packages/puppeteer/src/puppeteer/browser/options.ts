@@ -1,6 +1,6 @@
 import fs from 'node:fs'
 import yocto from 'yocto-spinner'
-import { downloadBrowser } from '../../init'
+import { downloadBrowser, initDependencies } from '../../init'
 import { spinnerValue } from '../../common/frames'
 import { puppeteerCache, isWindows, platform, createLog, ping, NPMMIRROR, GOOGLE } from '../../common'
 
@@ -9,8 +9,10 @@ import type { LaunchOptions } from '../../types/LaunchOptions'
 /**
  * @internal
  * 浏览器初始化参数
+ * @param options - 浏览器初始化参数
+ * @param isCli - 是否是cli模式
  */
-export const browserOptions = async (options: LaunchOptions): Promise<LaunchOptions> => {
+export const browserOptions = async (options: LaunchOptions, isCli = false): Promise<LaunchOptions> => {
   const time = Date.now()
   /**
    * 优先级: debug > downloadBrowser > headless
@@ -91,6 +93,11 @@ export const browserOptions = async (options: LaunchOptions): Promise<LaunchOpti
 
     /** 如果缓存存在 则直接返回 */
     const cache = puppeteerCache.path(browser, platform())
+
+    if (isCli) {
+      await initDependencies(cache.debianDepsPath)
+    }
+
     if (fs.existsSync(cache.executablePath)) {
       await updateBrowserVersionInfo(cache.executablePath)
       return cache.executablePath

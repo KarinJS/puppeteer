@@ -55,6 +55,14 @@ export const downloadBrowser = async (
 
   puppeteerCache.updateBrowserInfo(unzipPath, process.cwd())
 
+  initDependencies(debDepsPath)
+}
+
+/**
+ * 初始化依赖
+ * @param debDepsPath - Debian依赖文件路径
+ */
+export const initDependencies = async (debDepsPath: string) => {
   if (os.platform() === 'linux') {
     const spinner = yocto({
       text: '初始化依赖...',
