@@ -141,7 +141,7 @@ export const puppeteerCache = {
      * 浏览器可执行文件的目录
      * @default .cache/puppeteer/chrome/win64-131.0.6778.204/chrome-win64
      */
-    const executableDir = path.join(versionSpecificDir, `${browser}-${downloadPlatform}`)
+    const executableDir = path.join(versionSpecificDir, `${browser}-${platform}`)
 
     /**
      * ZIP归档文件路径
