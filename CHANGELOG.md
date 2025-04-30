@@ -1,5 +1,17 @@
 # Changelog
 
+## [2.2.0](https://github.com/KarinJS/puppeteer/compare/root-v2.1.3...root-v2.2.0) (2025-04-30)
+
+
+### ✨ Features
+
+* 新增 `npx puppeteer` ([1107122](https://github.com/KarinJS/puppeteer/commit/110712282d304d4197944d5bd814261e4a6d2c72))
+
+
+### 🐛 Bug Fixes
+
+* linux下 二进制路径错误 ([caa66a4](https://github.com/KarinJS/puppeteer/commit/caa66a4e948dd1ab98f341e122cf0a42c038d860))
+
 ## [2.1.3](https://github.com/KarinJS/puppeteer/compare/root-v2.1.2...root-v2.1.3) (2025-04-26)
 
 
