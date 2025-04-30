@@ -26,6 +26,7 @@
     "!*.test.js",
     "!*.test.d.ts",
     "dist",
+    "cli.js",
     "!LICENSE",
     "!README.md",
     "package.json"
@@ -46,5 +47,5 @@
     "p-limit": "6.2.0",
     "yocto-spinner": "^0.2.1"
   },
-  "timestamp": "2025-04-30T01:05:45.890Z"
+  "timestamp": "2025-04-24T12:22:00.413Z"
 }
