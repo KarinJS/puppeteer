@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.4](https://github.com/KarinJS/puppeteer/compare/puppeteer-types-v0.0.3...puppeteer-types-v0.0.4) (2025-04-30)
+
+
+### 🐛 Bug Fixes
+
+* linux下 二进制路径错误 ([caa66a4](https://github.com/KarinJS/puppeteer/commit/caa66a4e948dd1ab98f341e122cf0a42c038d860))
+
 ## [0.0.3](https://github.com/KarinJS/puppeteer/compare/puppeteer-types-v0.0.2...puppeteer-types-v0.0.3) (2025-04-24)
 
 
