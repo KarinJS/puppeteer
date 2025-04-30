@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.5](https://github.com/KarinJS/puppeteer/compare/puppeteer-types-v0.0.4...puppeteer-types-v0.0.5) (2025-04-30)
+
+
+### 🐛 Bug Fixes
+
+* ...... ([c4129fe](https://github.com/KarinJS/puppeteer/commit/c4129fe064a4081fe0d4e61bcf56a94d64567feb))
+
 ## [0.0.4](https://github.com/KarinJS/puppeteer/compare/puppeteer-types-v0.0.3...puppeteer-types-v0.0.4) (2025-04-30)
 
 
