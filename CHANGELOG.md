@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.3.1](https://github.com/KarinJS/puppeteer/compare/root-v2.3.0...root-v2.3.1) (2025-04-30)
+
+
+### 🐛 Bug Fixes
+
+* sb吧 ([482e995](https://github.com/KarinJS/puppeteer/commit/482e9959d8c4fe8d0f25e7b42801e76525ee0efb))
+
 ## [2.3.0](https://github.com/KarinJS/puppeteer/compare/root-v2.2.0...root-v2.3.0) (2025-04-30)
 
 

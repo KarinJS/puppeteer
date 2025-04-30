@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.19](https://github.com/KarinJS/puppeteer/compare/@karinjs/puppeteer-server-v1.0.18...@karinjs/puppeteer-server-v1.0.19) (2025-04-30)
+
+
+### 🐛 Bug Fixes
+
+* sb吧 ([482e995](https://github.com/KarinJS/puppeteer/commit/482e9959d8c4fe8d0f25e7b42801e76525ee0efb))
+
 ## [1.0.18](https://github.com/KarinJS/puppeteer/compare/@karinjs/puppeteer-server-v1.0.17...@karinjs/puppeteer-server-v1.0.18) (2025-04-30)
 
 

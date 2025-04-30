@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.13](https://github.com/KarinJS/puppeteer/compare/@karinjs/plugin-puppeteer-v1.0.12...@karinjs/plugin-puppeteer-v1.0.13) (2025-04-30)
+
+
+### 🐛 Bug Fixes
+
+* sb吧 ([482e995](https://github.com/KarinJS/puppeteer/commit/482e9959d8c4fe8d0f25e7b42801e76525ee0efb))
+
 ## [1.0.12](https://github.com/KarinJS/puppeteer/compare/@karinjs/plugin-puppeteer-v1.0.11...@karinjs/plugin-puppeteer-v1.0.12) (2025-04-30)
 
 
