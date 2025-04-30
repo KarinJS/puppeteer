@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.3.4](https://github.com/KarinJS/puppeteer/compare/root-v2.3.3...root-v2.3.4) (2025-04-30)
+
+
+### 🐛 Bug Fixes
+
+* 兄弟 nm爆炸了 ([9dce0c1](https://github.com/KarinJS/puppeteer/commit/9dce0c1ffe85941cdc76acf46b22f57701654fa2))
+
 ## [2.3.3](https://github.com/KarinJS/puppeteer/compare/root-v2.3.2...root-v2.3.3) (2025-04-30)
 
 
