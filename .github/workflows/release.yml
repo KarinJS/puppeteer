@@ -60,7 +60,7 @@ jobs:
 
       # 禁用 git 检查 司马了 啥也没改都会报这个错误
       - name: 禁用 git 检查
-        run: pnpm config set git-checks false
+        run: pnpm config set git-checks false && git status --porcelain
 
       # 发布 puppeteer 包
       - name: 发布 puppeteer 包
@@ -68,7 +68,7 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
         working-directory: packages/puppeteer
-        run: git status --porcelain && pnpm run pub
+        run: pnpm run pub
 
       # 发布 puppeteer-core 包
       - name: 发布 puppeteer-core 包
