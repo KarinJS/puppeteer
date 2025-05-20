@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.3.5](https://github.com/KarinJS/puppeteer/compare/root-v2.3.4...root-v2.3.5) (2025-05-20)
+
+
+### 🐛 Bug Fixes
+
+* **server:** 修复渲染错误 ([b86a461](https://github.com/KarinJS/puppeteer/commit/b86a46105c961b94b2e55c0f91b7132aaa08de2e))
+
 ## [2.3.4](https://github.com/KarinJS/puppeteer/compare/root-v2.3.3...root-v2.3.4) (2025-04-30)
 
 
