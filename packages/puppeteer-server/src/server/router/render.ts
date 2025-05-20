@@ -12,7 +12,7 @@ import type { RequestHandler, Request, Response } from 'express'
 /**
  * 渲染模板类型
  */
-export type RenderOptions = ScreenshotOptions & { data?: Record<string, any> }
+export type RenderOptions = ScreenshotOptions & { data?: Record<string, any>, returnImage?: boolean }
 
 /**
  * 渲染模板并截图
@@ -61,7 +61,7 @@ const screenshot = async (
 
     const result = await puppeteer.screenshot(options)
     if (result.status) {
-      if (req.method === 'GET') {
+      if (req.method === 'GET' || options.returnImage) {
         return createScreenshotSuccessResponse(res, options.multiPage, result.data)
       } else {
         createSuccessResponse(res, result.data)

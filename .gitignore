@@ -25,3 +25,4 @@ render-ws (1).js
 **/@karinjs/**
 packages/puppeteer-server/pkg-build
 /packages/test
+/packages/puppeteer-server/tmp_html
