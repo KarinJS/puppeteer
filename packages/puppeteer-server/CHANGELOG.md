@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.23](https://github.com/KarinJS/puppeteer/compare/@karinjs/puppeteer-server-v1.0.22...@karinjs/puppeteer-server-v1.0.23) (2025-05-20)
+
+
+### 🐛 Bug Fixes
+
+* **server:** 修复渲染错误 ([b86a461](https://github.com/KarinJS/puppeteer/commit/b86a46105c961b94b2e55c0f91b7132aaa08de2e))
+
 ## [1.0.22](https://github.com/KarinJS/puppeteer/compare/@karinjs/puppeteer-server-v1.0.21...@karinjs/puppeteer-server-v1.0.22) (2025-04-30)
 
 
