@@ -9,5 +9,6 @@
   "packages/puppeteer-server": "1.0.22",
   "packages/create-puppeteer": "1.0.11",
   "packages/puppeteer-types": "0.0.6",
-  "packages/puppeteer-core-types": "0.0.3"
+  "packages/puppeteer-core-types": "0.0.3",
+  "packages/browser-finder": "0.0.1"
 }

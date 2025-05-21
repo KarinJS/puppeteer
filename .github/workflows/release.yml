@@ -22,6 +22,7 @@ jobs:
       create_puppeteer_release: ${{ steps.release.outputs['packages/create-puppeteer--release_created'] }}
       puppeteer_release_types: ${{ steps.release.outputs['packages/puppeteer-types--release_created'] }}
       puppeteer_core_release_types: ${{ steps.release.outputs['packages/puppeteer-core-types--release_created'] }}
+      browser_finder_release: ${{ steps.release.outputs['packages/browser-finder--release_created'] }}
     steps:
       # 使用 release-please-action 动作来自动创建发布 PR
       - uses: googleapis/release-please-action@v4
@@ -43,7 +44,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          registry-url: 'https://registry.npmjs.org'
+          registry-url: "https://registry.npmjs.org"
 
       - name: 设置 pnpm
         uses: pnpm/action-setup@v2
@@ -101,7 +102,7 @@ jobs:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
         working-directory: packages/create-puppeteer
         run: pnpm run pub
-      
+
       # 发布 puppeteer-core-types 包
       - name: 发布 puppeteer-core-types 包
         if: ${{ needs.release-please.outputs.puppeteer_core_release_types == 'true' }}
@@ -117,7 +118,15 @@ jobs:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
         working-directory: packages/puppeteer-types
         run: pnpm run pub
-    
+
+      # 发布 browser-finder 包
+      - name: 发布 browser-finder 包
+        if: ${{ needs.release-please.outputs.browser_finder_release == 'true' }}
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+        working-directory: packages/browser-finder
+        run: pnpm run pub
+
       # 同步所有包
       - name: 同步所有包
         run: pnpm run sync

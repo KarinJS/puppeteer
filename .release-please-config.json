@@ -99,6 +99,11 @@
       "release-type": "node",
       "package-name": "@karinjs/puppeteer-core-types",
       "component": "puppeteer-core-types"
+    },
+    "packages/browser-finder": {
+      "release-type": "node",
+      "package-name": "@karinjs/browser-finder",
+      "component": "browser-finder"
     }
   }
 }

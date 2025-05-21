@@ -50,6 +50,8 @@ importers:
         specifier: ^6.3.2
         version: 6.3.2(@types/node@22.5.4)(jiti@2.4.2)(terser@5.39.0)(yaml@2.7.0)
 
+  packages/browser-finder: {}
+
   packages/create-puppeteer:
     devDependencies:
       '@types/commander':
