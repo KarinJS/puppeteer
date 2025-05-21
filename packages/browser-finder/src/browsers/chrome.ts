@@ -2,7 +2,7 @@ import * as path from 'path'
 import * as os from 'os'
 import * as fs from 'fs'
 import { execSync } from 'child_process'
-import { BrowserInfo, BrowserType, BrowserFinder, ReleaseChannel, ReleaseChannelValue, PlatformValue, BrowserSource } from '../types'
+import { BrowserInfo, BrowserType, BrowserSource, ReleaseChannel, ReleaseChannelValue, PlatformValue } from '../types'
 import { isExecutable, getBrowserVersion, isDirectory } from '../utils/file'
 import { getCurrentPlatform } from '../utils/platform'
 
@@ -272,99 +272,94 @@ export function findChromeFromPlaywright (): string[] {
 }
 
 /**
- * Chrome浏览器查找器
+ * 查找Chrome浏览器
+ * @returns Chrome浏览器信息数组
  */
-export class ChromeFinder implements BrowserFinder {
-  /**
-   * 查找Chrome浏览器
-   * @returns Chrome浏览器信息数组
-   */
-  find (): BrowserInfo[] {
-    const results: BrowserInfo[] = []
-    const platform = getCurrentPlatform()
+export function findChrome (): BrowserInfo[] {
+  const results: BrowserInfo[] = []
+  const platform = getCurrentPlatform()
 
-    // 从固定路径查找
-    const chromePaths = getChromePaths(platform)
-    for (const browserPath of chromePaths) {
-      if (isExecutable(browserPath)) {
-        // 确定渠道
-        let channel: ReleaseChannelValue = ReleaseChannel.STABLE
-        if (browserPath.includes('Beta')) {
-          channel = ReleaseChannel.BETA
-        } else if (browserPath.includes('Dev')) {
-          channel = ReleaseChannel.DEV
-        } else if (browserPath.includes('SxS') || browserPath.includes('Canary')) {
-          channel = ReleaseChannel.CANARY
-        }
-
-        results.push({
-          type: BrowserType.CHROME,
-          executablePath: browserPath,
-          version: getBrowserVersion(browserPath),
-          source: BrowserSource.DEFAULT_PATH,
-          channel,
-        })
+  // 从固定路径查找
+  const chromePaths = getChromePaths(platform)
+  for (const browserPath of chromePaths) {
+    if (isExecutable(browserPath)) {
+      // 确定渠道
+      let channel: ReleaseChannelValue = ReleaseChannel.STABLE
+      if (browserPath.includes('Beta')) {
+        channel = ReleaseChannel.BETA
+      } else if (browserPath.includes('Dev')) {
+        channel = ReleaseChannel.DEV
+      } else if (browserPath.includes('SxS') || browserPath.includes('Canary')) {
+        channel = ReleaseChannel.CANARY
       }
-    }
 
-    // 从注册表查找 (仅Windows)
-    if (os.platform() === 'win32') {
-      const registryPaths = findChromeFromRegistry()
-      for (const browserPath of registryPaths) {
-        if (isExecutable(browserPath) && !results.some(r => r.executablePath === browserPath)) {
-          results.push({
-            type: BrowserType.CHROME,
-            executablePath: browserPath,
-            version: getBrowserVersion(browserPath),
-            source: BrowserSource.REGISTRY,
-            channel: ReleaseChannel.STABLE,
-          })
-        }
-      }
+      results.push({
+        type: BrowserType.CHROME,
+        executablePath: browserPath,
+        version: getBrowserVersion(browserPath),
+        source: BrowserSource.DEFAULT_PATH,
+        channel,
+      })
     }
-
-    // 从环境变量PATH查找
-    const envPaths = findChromeFromPath()
-    for (const browserPath of envPaths) {
-      if (!results.some(r => r.executablePath === browserPath)) {
-        results.push({
-          type: BrowserType.CHROME,
-          executablePath: browserPath,
-          version: getBrowserVersion(browserPath),
-          source: BrowserSource.PATH_ENVIRONMENT,
-          channel: ReleaseChannel.STABLE,
-        })
-      }
-    }
-
-    // 从Puppeteer缓存查找
-    const puppeteerPaths = findChromeFromPuppeteer()
-    for (const browserPath of puppeteerPaths) {
-      if (!results.some(r => r.executablePath === browserPath)) {
-        results.push({
-          type: BrowserType.CHROMIUM,
-          executablePath: browserPath,
-          version: getBrowserVersion(browserPath),
-          source: BrowserSource.PUPPETEER_CACHE,
-          channel: ReleaseChannel.STABLE,
-        })
-      }
-    }
-
-    // 从Playwright缓存查找
-    const playwrightPaths = findChromeFromPlaywright()
-    for (const browserPath of playwrightPaths) {
-      if (!results.some(r => r.executablePath === browserPath)) {
-        results.push({
-          type: BrowserType.CHROMIUM,
-          executablePath: browserPath,
-          version: getBrowserVersion(browserPath),
-          source: BrowserSource.PLAYWRIGHT_CACHE,
-          channel: ReleaseChannel.STABLE,
-        })
-      }
-    }
-
-    return results
   }
+
+  // 从注册表查找 (仅Windows)
+  if (os.platform() === 'win32') {
+    const registryPaths = findChromeFromRegistry()
+    for (const browserPath of registryPaths) {
+      if (isExecutable(browserPath) && !results.some(r => r.executablePath === browserPath)) {
+        results.push({
+          type: BrowserType.CHROME,
+          executablePath: browserPath,
+          version: getBrowserVersion(browserPath),
+          source: BrowserSource.REGISTRY,
+          channel: ReleaseChannel.STABLE,
+        })
+      }
+    }
+  }
+
+  // 从环境变量PATH查找
+  const envPaths = findChromeFromPath()
+  for (const browserPath of envPaths) {
+    if (!results.some(r => r.executablePath === browserPath)) {
+      results.push({
+        type: BrowserType.CHROME,
+        executablePath: browserPath,
+        version: getBrowserVersion(browserPath),
+        source: BrowserSource.PATH_ENVIRONMENT,
+        channel: ReleaseChannel.STABLE,
+      })
+    }
+  }
+
+  // 从Puppeteer缓存查找
+  const puppeteerPaths = findChromeFromPuppeteer()
+  for (const browserPath of puppeteerPaths) {
+    if (!results.some(r => r.executablePath === browserPath)) {
+      results.push({
+        type: BrowserType.CHROMIUM,
+        executablePath: browserPath,
+        version: getBrowserVersion(browserPath),
+        source: BrowserSource.PUPPETEER_CACHE,
+        channel: ReleaseChannel.STABLE,
+      })
+    }
+  }
+
+  // 从Playwright缓存查找
+  const playwrightPaths = findChromeFromPlaywright()
+  for (const browserPath of playwrightPaths) {
+    if (!results.some(r => r.executablePath === browserPath)) {
+      results.push({
+        type: BrowserType.CHROMIUM,
+        executablePath: browserPath,
+        version: getBrowserVersion(browserPath),
+        source: BrowserSource.PLAYWRIGHT_CACHE,
+        channel: ReleaseChannel.STABLE,
+      })
+    }
+  }
+
+  return results
 }

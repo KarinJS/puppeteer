@@ -1,6 +1,6 @@
 import * as path from 'path'
 import * as os from 'os'
-import { BrowserInfo, BrowserType, BrowserFinder, ReleaseChannel, PlatformValue, BrowserSource } from '../types'
+import { BrowserInfo, BrowserType, BrowserSource, ReleaseChannel, PlatformValue } from '../types'
 import { isExecutable, getBrowserVersion } from '../utils/file'
 import { getCurrentPlatform } from '../utils/platform'
 
@@ -78,45 +78,40 @@ export function findBraveFromPath (): string[] {
 }
 
 /**
- * Brave浏览器查找器
+ * 查找Brave浏览器
+ * @returns Brave浏览器信息数组
  */
-export class BraveFinder implements BrowserFinder {
-  /**
-   * 查找Brave浏览器
-   * @returns Brave浏览器信息数组
-   */
-  find (): BrowserInfo[] {
-    const results: BrowserInfo[] = []
-    const platform = getCurrentPlatform()
+export function findBrave (): BrowserInfo[] {
+  const results: BrowserInfo[] = []
+  const platform = getCurrentPlatform()
 
-    // 从固定路径查找
-    const bravePaths = getBravePaths(platform)
-    for (const browserPath of bravePaths) {
-      if (isExecutable(browserPath)) {
-        results.push({
-          type: BrowserType.BRAVE,
-          executablePath: browserPath,
-          version: getBrowserVersion(browserPath),
-          source: BrowserSource.DEFAULT_PATH,
-          channel: ReleaseChannel.STABLE,
-        })
-      }
+  // 从固定路径查找
+  const bravePaths = getBravePaths(platform)
+  for (const browserPath of bravePaths) {
+    if (isExecutable(browserPath)) {
+      results.push({
+        type: BrowserType.BRAVE,
+        executablePath: browserPath,
+        version: getBrowserVersion(browserPath),
+        source: BrowserSource.DEFAULT_PATH,
+        channel: ReleaseChannel.STABLE,
+      })
     }
-
-    // 从环境变量PATH查找
-    const envPaths = findBraveFromPath()
-    for (const browserPath of envPaths) {
-      if (!results.some(r => r.executablePath === browserPath)) {
-        results.push({
-          type: BrowserType.BRAVE,
-          executablePath: browserPath,
-          version: getBrowserVersion(browserPath),
-          source: BrowserSource.PATH_ENVIRONMENT,
-          channel: ReleaseChannel.STABLE,
-        })
-      }
-    }
-
-    return results
   }
+
+  // 从环境变量PATH查找
+  const envPaths = findBraveFromPath()
+  for (const browserPath of envPaths) {
+    if (!results.some(r => r.executablePath === browserPath)) {
+      results.push({
+        type: BrowserType.BRAVE,
+        executablePath: browserPath,
+        version: getBrowserVersion(browserPath),
+        source: BrowserSource.PATH_ENVIRONMENT,
+        channel: ReleaseChannel.STABLE,
+      })
+    }
+  }
+
+  return results
 }

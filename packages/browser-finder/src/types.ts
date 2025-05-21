@@ -115,13 +115,3 @@ export interface FindBrowserOptions {
    */
   channel?: ReleaseChannelValue
 }
-
-/**
- * 浏览器查找器接口
- */
-export interface BrowserFinder {
-  /**
-   * 查找浏览器
-   */
-  find (): BrowserInfo[]
-}

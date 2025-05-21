@@ -1,8 +1,8 @@
 import { findInstalledBrowsers, findDefaultBrowser, findBrowser } from './index'
 import { BrowserType, ReleaseChannel } from './types'
-import { ChromeFinder } from './browsers/chrome'
-import { EdgeFinder } from './browsers/edge'
-import { BraveFinder } from './browsers/brave'
+import { findChrome } from './browsers/chrome'
+import { findEdge } from './browsers/edge'
+import { findBrave } from './browsers/brave'
 
 /**
  * 测试浏览器查找功能
@@ -32,20 +32,17 @@ async function main () {
   const braveBrowser = findBrowser(BrowserType.BRAVE)
   console.log(JSON.stringify(braveBrowser, null, 2))
 
-  console.log('\n直接使用浏览器查找器:')
-  console.log('Chrome查找器:')
-  const chromeFinder = new ChromeFinder()
-  const chromeResults = chromeFinder.find()
+  console.log('\n直接使用浏览器查找函数:')
+  console.log('Chrome查找函数:')
+  const chromeResults = findChrome()
   console.log(JSON.stringify(chromeResults, null, 2))
 
-  console.log('\nEdge查找器:')
-  const edgeFinder = new EdgeFinder()
-  const edgeResults = edgeFinder.find()
+  console.log('\nEdge查找函数:')
+  const edgeResults = findEdge()
   console.log(JSON.stringify(edgeResults, null, 2))
 
-  console.log('\nBrave查找器:')
-  const braveFinder = new BraveFinder()
-  const braveResults = braveFinder.find()
+  console.log('\nBrave查找函数:')
+  const braveResults = findBrave()
   console.log(JSON.stringify(braveResults, null, 2))
 }
 

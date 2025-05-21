@@ -1,7 +1,7 @@
 import { BrowserInfo, BrowserType, BrowserTypeValue, FindBrowserOptions, ReleaseChannelValue } from './types'
-import { ChromeFinder } from './browsers/chrome'
-import { EdgeFinder } from './browsers/edge'
-import { BraveFinder } from './browsers/brave'
+import { findChrome } from './browsers/chrome'
+import { findEdge } from './browsers/edge'
+import { findBrave } from './browsers/brave'
 
 /**
  * 比较版本号，用于排序
@@ -45,24 +45,22 @@ export function findInstalledBrowsers (options: FindBrowserOptions = {}): Browse
   const browserTypes = browserType ? [browserType] : [BrowserType.CHROME, BrowserType.CHROMIUM, BrowserType.EDGE, BrowserType.BRAVE]
 
   for (const type of browserTypes) {
-    let browserFinder
+    let browsers: BrowserInfo[] = []
 
     switch (type) {
       case BrowserType.CHROME:
       case BrowserType.CHROMIUM:
-        browserFinder = new ChromeFinder()
+        browsers = findChrome()
         break
       case BrowserType.EDGE:
-        browserFinder = new EdgeFinder()
+        browsers = findEdge()
         break
       case BrowserType.BRAVE:
-        browserFinder = new BraveFinder()
+        browsers = findBrave()
         break
       default:
         continue
     }
-
-    const browsers = browserFinder.find()
 
     // 如果指定了渠道，只返回该渠道的浏览器
     const filteredBrowsers = channel
@@ -115,9 +113,10 @@ export function findDefaultBrowser (): BrowserInfo | undefined {
   return undefined
 }
 
-export { BrowserType, BrowserTypeValue, BrowserInfo, FindBrowserOptions, ReleaseChannel, ReleaseChannelValue, BrowserSource, BrowserSourceValue } from './types'
+export { BrowserType, ReleaseChannel, BrowserSource } from './types'
 export { getCurrentPlatform } from './utils/platform'
 export { isExecutable, getBrowserVersion } from './utils/file'
-export { ChromeFinder } from './browsers/chrome'
-export { EdgeFinder } from './browsers/edge'
-export { BraveFinder } from './browsers/brave'
+export { findChrome } from './browsers/chrome'
+export { findEdge } from './browsers/edge'
+export { findBrave } from './browsers/brave'
+export type { BrowserTypeValue, BrowserInfo, FindBrowserOptions, BrowserSourceValue, ReleaseChannelValue } from './types'
