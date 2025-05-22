@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.17](https://github.com/KarinJS/puppeteer/compare/@karinjs/plugin-puppeteer-v1.0.16...@karinjs/plugin-puppeteer-v1.0.17) (2025-05-22)
+
+
+### 🐛 Bug Fixes
+
+* 修复返回多了个base64://的问题 ([79b53e7](https://github.com/KarinJS/puppeteer/commit/79b53e7e0c81accf6fc02c4ef63502a55b550b3c))
+
 ## [1.0.16](https://github.com/KarinJS/puppeteer/compare/@karinjs/plugin-puppeteer-v1.0.15...@karinjs/plugin-puppeteer-v1.0.16) (2025-04-30)
 
 

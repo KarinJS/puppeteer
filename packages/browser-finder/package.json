@@ -1,6 +1,6 @@
 {
   "name": "@karinjs/browser-finder",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "查找系统中安装的浏览器",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

@@ -1,5 +1,22 @@
 # Changelog
 
+## [2.4.0](https://github.com/KarinJS/puppeteer/compare/root-v2.3.5...root-v2.4.0) (2025-05-22)
+
+
+### ✨ Features
+
+* `@karinjs/browser-finder` ([87e791e](https://github.com/KarinJS/puppeteer/commit/87e791e69c1a143d53a555e76ca3ac2fabb91b2a))
+
+
+### 🐛 Bug Fixes
+
+* 修复返回多了个base64://的问题 ([79b53e7](https://github.com/KarinJS/puppeteer/commit/79b53e7e0c81accf6fc02c4ef63502a55b550b3c))
+
+
+### ⚡️ Performance
+
+* **browser-finder:** 将class替换为纯函数 ([b6b3c1a](https://github.com/KarinJS/puppeteer/commit/b6b3c1aa5335972eaf34780e62f5c5d3f8c057f7))
+
 ## [2.3.5](https://github.com/KarinJS/puppeteer/compare/root-v2.3.4...root-v2.3.5) (2025-05-20)
 
 
