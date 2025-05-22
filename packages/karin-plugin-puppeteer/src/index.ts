@@ -15,11 +15,10 @@ const main = async () => {
     const time = Date.now()
     const result = await browser.screenshot(data)
     logger.info(`[${name}][${path.basename(data.file)}] 截图完成 耗时: ${logger.green(Date.now() - time + '')} ms`)
-    if (Array.isArray(result.data)) {
-      return result.data
+    if (!result.status) {
+      throw new Error(result.data.message || '截图失败', { cause: result.data })
     }
-
-    return `base64://${result.data}` as any
+    return result.data as any
   })
 
   logger.info(`${logger.violet(`[插件:${pluginVersion}]`)} ${logger.green(pluginName)} 初始化完成~`)
