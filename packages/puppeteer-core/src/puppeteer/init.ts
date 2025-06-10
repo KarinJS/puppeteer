@@ -232,6 +232,10 @@ export class InitChrome {
     const platform = this.platform
     /** 是否为windows */
     const isWin = os.platform() === 'win32'
+    /** 判断是否为mac */
+    const isMac = os.platform() === 'darwin'
+    /** 判断是否为架构**/
+    const cpuArch = os.arch()
     /** 缓存目录 */
     const cache = path.join(os.homedir(), '.cache', 'puppeteer', this.browser)
     /** 版本 */
@@ -243,10 +247,18 @@ export class InitChrome {
     /** 解压路径 */
     const chromeDir = dir
     /** chrome二进制路径 */
-    const chrome = path.join(chromeDir, `${this.browser}-${platform}`, `${this.browser}${isWin ? '.exe' : ''}`)
+    let chrome;
     /** deb.deps路径 仅在linux下存在 */
-    const debDeps = path.join(chromeDir, `${this.browser}-${platform}`, 'deb.deps')
+    let debDeps = '';
 
+    if (isMac) {
+      // macOS 下 Chrome for Testing 的结构
+      chrome = path.join(chromeDir, `chrome-mac-${cpuArch}`, 'Google Chrome for Testing.app', 'Contents', 'MacOS', 'Google Chrome for Testing');
+    } else {
+      // Linux / Windows 路径构建方式
+      chrome = path.join(chromeDir, `${this.browser}-${platform}`, `${this.browser}${isWin ? '.exe' : ''}`);
+      debDeps = path.join(chromeDir, `${this.browser}-${platform}`, 'deb.deps');
+    }
     // tips: 压缩包解压后会带一个文件夹: ${this.browser}-${platform}
     return {
       isWin,
