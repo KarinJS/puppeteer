@@ -47,9 +47,10 @@ async function main () {
       execSync('npm pkg set type=module', { cwd, stdio: 'inherit' })
       console.log('⬇️ 安装 Puppeteer 依赖...')
       execSync('pnpm add puppeteer', { cwd, stdio: 'inherit' })
+      execSync('node ./node_modules/puppeteer/install.js', { cwd, stdio: 'inherit' })
       console.log('✅ 测试项目初始化完成')
     } catch (error) {
-      console.warn('⚠️ 测试项目初始化失败，但继续执行浏览器查找测试:', error.message)
+      console.warn('⚠️ 测试项目初始化失败，但继续执行浏览器查找测试:', (error as Error).message)
     }
 
     console.log('🔍 开始查找缓存的浏览器...')
@@ -103,6 +104,7 @@ async function main () {
       console.error('- 环境变量:', Object.keys(process.env).filter(key =>
         key.includes('PUPPETEER') || key.includes('CHROME') || key.includes('BROWSER')
       ).reduce((obj, key) => {
+        // @ts-ignore
         obj[key] = process.env[key]
         return obj
       }, {}))
