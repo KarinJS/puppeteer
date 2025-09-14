@@ -1,0 +1,256 @@
+name: CI Test - Browser Finder
+
+# 手动触发工作流
+on:
+  workflow_dispatch:
+    inputs:
+      test_environment:
+        description: "选择测试环境"
+        required: true
+        default: "all"
+        type: choice
+        options:
+          - all
+          - ubuntu-latest
+          - windows-latest
+          - macos-latest
+      node_version:
+        description: "Node.js 版本"
+        required: true
+        default: "20"
+        type: choice
+        options:
+          - "18"
+          - "20"
+          - "22"
+
+jobs:
+  # Linux 测试环境
+  test-linux:
+    if: ${{ github.event.inputs.test_environment == 'all' || github.event.inputs.test_environment == 'ubuntu-latest' }}
+    runs-on: ubuntu-latest
+    name: 测试 - Linux (Ubuntu)
+
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+
+      - name: 设置 Node.js ${{ github.event.inputs.node_version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ github.event.inputs.node_version }}
+
+      - name: 设置 pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 9
+
+      - name: 获取 pnpm store 目录
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+
+      - name: 缓存 pnpm store
+        uses: actions/cache@v3
+        with:
+          path: ${{ env.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      - name: 安装依赖
+        run: pnpm install --frozen-lockfile
+
+      - name: 构建项目
+        run: pnpm run build
+        working-directory: packages/browser-finder
+
+      - name: 运行 CI 测试
+        run: pnpm run test:puppeteer
+        working-directory: packages/browser-finder
+
+      - name: 上传测试结果 (Linux)
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: test-results-linux
+          path: |
+            packages/browser-finder/src/puppeteer/test/
+            packages/browser-finder/logs/
+          retention-days: 7
+
+  # Windows 测试环境
+  test-windows:
+    if: ${{ github.event.inputs.test_environment == 'all' || github.event.inputs.test_environment == 'windows-latest' }}
+    runs-on: windows-latest
+    name: 测试 - Windows
+
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+
+      - name: 设置 Node.js ${{ github.event.inputs.node_version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ github.event.inputs.node_version }}
+
+      - name: 设置 pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 9
+
+      - name: 获取 pnpm store 目录
+        shell: powershell
+        run: |
+          echo "STORE_PATH=$(pnpm store path --silent)" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+
+      - name: 缓存 pnpm store
+        uses: actions/cache@v3
+        with:
+          path: ${{ env.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      - name: 安装依赖
+        run: pnpm install --frozen-lockfile
+
+      - name: 构建项目
+        run: pnpm run build
+        working-directory: packages/browser-finder
+
+      - name: 运行 CI 测试
+        run: pnpm run test:puppeteer
+        working-directory: packages/browser-finder
+
+      - name: 上传测试结果 (Windows)
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: test-results-windows
+          path: |
+            packages/browser-finder/src/puppeteer/test/
+            packages/browser-finder/logs/
+          retention-days: 7
+
+  # macOS 测试环境
+  test-macos:
+    if: ${{ github.event.inputs.test_environment == 'all' || github.event.inputs.test_environment == 'macos-latest' }}
+    runs-on: macos-latest
+    name: 测试 - macOS
+
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+
+      - name: 设置 Node.js ${{ github.event.inputs.node_version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ github.event.inputs.node_version }}
+
+      - name: 设置 pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 9
+
+      - name: 获取 pnpm store 目录
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+
+      - name: 缓存 pnpm store
+        uses: actions/cache@v3
+        with:
+          path: ${{ env.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      - name: 安装依赖
+        run: pnpm install --frozen-lockfile
+
+      - name: 构建项目
+        run: pnpm run build
+        working-directory: packages/browser-finder
+
+      - name: 运行 CI 测试
+        run: pnpm run test:puppeteer
+        working-directory: packages/browser-finder
+
+      - name: 上传测试结果 (macOS)
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: test-results-macos
+          path: |
+            packages/browser-finder/src/puppeteer/test/
+            packages/browser-finder/logs/
+          retention-days: 7
+
+  # 汇总测试结果
+  test-summary:
+    if: always()
+    needs: [test-linux, test-windows, test-macos]
+    runs-on: ubuntu-latest
+    name: 测试结果汇总
+
+    steps:
+      - name: 下载所有测试结果
+        uses: actions/download-artifact@v3
+        with:
+          path: test-results
+
+      - name: 生成测试报告
+        run: |
+          echo "# 测试结果汇总" > test-summary.md
+          echo "" >> test-summary.md
+          echo "## 测试环境" >> test-summary.md
+          echo "- Node.js 版本: ${{ github.event.inputs.node_version }}" >> test-summary.md
+          echo "- 测试范围: ${{ github.event.inputs.test_environment }}" >> test-summary.md
+          echo "" >> test-summary.md
+
+          # 检查各平台测试状态
+          echo "## 测试状态" >> test-summary.md
+
+          if [ "${{ needs.test-linux.result }}" != "skipped" ]; then
+            if [ "${{ needs.test-linux.result }}" == "success" ]; then
+              echo "- ✅ Linux (Ubuntu): 通过" >> test-summary.md
+            else
+              echo "- ❌ Linux (Ubuntu): 失败" >> test-summary.md
+            fi
+          else
+            echo "- ⏭️ Linux (Ubuntu): 跳过" >> test-summary.md
+          fi
+
+          if [ "${{ needs.test-windows.result }}" != "skipped" ]; then
+            if [ "${{ needs.test-windows.result }}" == "success" ]; then
+              echo "- ✅ Windows: 通过" >> test-summary.md
+            else
+              echo "- ❌ Windows: 失败" >> test-summary.md
+            fi
+          else
+            echo "- ⏭️ Windows: 跳过" >> test-summary.md
+          fi
+
+          if [ "${{ needs.test-macos.result }}" != "skipped" ]; then
+            if [ "${{ needs.test-macos.result }}" == "success" ]; then
+              echo "- ✅ macOS: 通过" >> test-summary.md
+            else
+              echo "- ❌ macOS: 失败" >> test-summary.md
+            fi
+          else
+            echo "- ⏭️ macOS: 跳过" >> test-summary.md
+          fi
+
+          echo "" >> test-summary.md
+          echo "## 测试时间" >> test-summary.md
+          echo "测试完成时间: $(date)" >> test-summary.md
+
+          cat test-summary.md
+
+      - name: 上传测试汇总报告
+        uses: actions/upload-artifact@v3
+        with:
+          name: test-summary-report
+          path: test-summary.md
+          retention-days: 30

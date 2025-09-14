@@ -1,13 +1,14 @@
 {
   "name": "@karinjs/browser-finder",
   "version": "0.1.0",
-  "description": "查找系统中安装的浏览器",
+  "description": "A simple utility to find installed browsers on the system.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "type": "module",
   "scripts": {
     "build": "tsup",
-    "test": "tsx src/index.test.ts"
+    "test": "tsx src/index.test.ts",
+    "test:puppeteer": "tsx src/puppeteer/ci.github.test.ts"
   },
   "keywords": [
     "browser",
