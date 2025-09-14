@@ -162,14 +162,17 @@ function detectChromeChannel (version: string): string {
  * Chrome浏览器相关函数
  */
 function getChromeFolder (platform: BrowserPlatform): string {
+  // 这个函数返回的是用于缓存文件夹命名的平台标识符
+  // 必须与 BrowserPlatform 枚举值一致
   switch (platform) {
     case BrowserPlatform.LINUX_ARM:
+      return 'linux_arm'
     case BrowserPlatform.LINUX:
-      return 'linux64'
+      return 'linux'
     case BrowserPlatform.MAC_ARM:
-      return 'mac-arm64'
+      return 'mac_arm'
     case BrowserPlatform.MAC:
-      return 'mac-x64'
+      return 'mac'
     case BrowserPlatform.WIN32:
       return 'win32'
     case BrowserPlatform.WIN64:
@@ -178,31 +181,35 @@ function getChromeFolder (platform: BrowserPlatform): string {
 }
 
 function getChromeExecutablePath (platform: BrowserPlatform, browserType: string, version: string): string {
-  const folderName = getChromeFolder(platform)
-
+  // 基于 Puppeteer 官方 browsers 包的实际结构
   switch (platform) {
     case BrowserPlatform.MAC:
     case BrowserPlatform.MAC_ARM:
       if (browserType === Browser.CHROME) {
+        // 官方结构：chrome-mac-arm64/ 或 chrome-mac-x64/
+        const folderSuffix = platform === BrowserPlatform.MAC_ARM ? 'mac-arm64' : 'mac-x64'
         return path.join(
-          `chrome-${folderName}`,
+          `chrome-${folderSuffix}`,
           'Google Chrome for Testing.app',
           'Contents',
           'MacOS',
           'Google Chrome for Testing'
         )
       } else if (browserType === Browser.CHROMEHEADLESSSHELL) {
+        const folderSuffix = platform === BrowserPlatform.MAC_ARM ? 'mac-arm64' : 'mac-x64'
         return path.join(
-          `chrome-headless-shell-${folderName}`,
+          `chrome-headless-shell-${folderSuffix}`,
           'chrome-headless-shell'
         )
       } else if (browserType === Browser.CHROMEDRIVER) {
-        return path.join(`chromedriver-${folderName}`, 'chromedriver')
+        const folderSuffix = platform === BrowserPlatform.MAC_ARM ? 'mac-arm64' : 'mac-x64'
+        return path.join(`chromedriver-${folderSuffix}`, 'chromedriver')
       }
       break
     case BrowserPlatform.LINUX_ARM:
     case BrowserPlatform.LINUX:
       if (browserType === Browser.CHROME) {
+        // 官方结构：chrome-linux64/
         return path.join('chrome-linux64', 'chrome')
       } else if (browserType === Browser.CHROMEHEADLESSSHELL) {
         return path.join('chrome-headless-shell-linux64', 'chrome-headless-shell')
@@ -213,11 +220,14 @@ function getChromeExecutablePath (platform: BrowserPlatform, browserType: string
     case BrowserPlatform.WIN32:
     case BrowserPlatform.WIN64:
       if (browserType === Browser.CHROME) {
-        return path.join(`chrome-${folderName}`, 'chrome.exe')
+        const folderSuffix = platform === BrowserPlatform.WIN64 ? 'win64' : 'win32'
+        return path.join(`chrome-${folderSuffix}`, 'chrome.exe')
       } else if (browserType === Browser.CHROMEHEADLESSSHELL) {
-        return path.join(`chrome-headless-shell-${folderName}`, 'chrome-headless-shell.exe')
+        const folderSuffix = platform === BrowserPlatform.WIN64 ? 'win64' : 'win32'
+        return path.join(`chrome-headless-shell-${folderSuffix}`, 'chrome-headless-shell.exe')
       } else if (browserType === Browser.CHROMEDRIVER) {
-        return path.join(`chromedriver-${folderName}`, 'chromedriver.exe')
+        const folderSuffix = platform === BrowserPlatform.WIN64 ? 'win64' : 'win32'
+        return path.join(`chromedriver-${folderSuffix}`, 'chromedriver.exe')
       }
       break
   }
