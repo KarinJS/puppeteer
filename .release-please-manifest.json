@@ -1,5 +1,5 @@
 {
-  ".": "2.4.0",
+  ".": "2.4.1",
   "packages/puppeteer": "2.2.3",
   "packages/puppeteer-core": "2.0.8",
   "@karinjs/plugin-puppeteer": "0.0.1",
@@ -10,5 +10,5 @@
   "packages/create-puppeteer": "1.0.11",
   "packages/puppeteer-types": "0.0.6",
   "packages/puppeteer-core-types": "0.0.3",
-  "packages/browser-finder": "0.1.0"
+  "packages/browser-finder": "0.1.1"
 }
