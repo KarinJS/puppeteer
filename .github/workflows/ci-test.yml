@@ -71,7 +71,7 @@ jobs:
 
       - name: 上传测试结果 (Linux)
         if: always()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: test-results-linux
           path: |
@@ -125,7 +125,7 @@ jobs:
 
       - name: 上传测试结果 (Windows)
         if: always()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: test-results-windows
           path: |
@@ -179,7 +179,7 @@ jobs:
 
       - name: 上传测试结果 (macOS)
         if: always()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: test-results-macos
           path: |
@@ -196,7 +196,7 @@ jobs:
 
     steps:
       - name: 下载所有测试结果
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           path: test-results
 
@@ -249,7 +249,7 @@ jobs:
           cat test-summary.md
 
       - name: 上传测试汇总报告
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: test-summary-report
           path: test-summary.md
