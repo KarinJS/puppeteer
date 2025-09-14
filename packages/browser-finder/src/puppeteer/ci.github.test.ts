@@ -47,7 +47,8 @@ async function main () {
       execSync('npm pkg set type=module', { cwd, stdio: 'inherit' })
       console.log('⬇️ 安装 Puppeteer 依赖...')
       execSync('pnpm add puppeteer', { cwd, stdio: 'inherit' })
-      execSync('node ./node_modules/puppeteer/install.js', { cwd, stdio: 'inherit' })
+      console.log('⬇️ 安装 Puppeteer 依赖...')
+      execSync('node ./node_modules/puppeteer/install.mjs', { cwd, stdio: 'inherit' })
       console.log('✅ 测试项目初始化完成')
     } catch (error) {
       console.warn('⚠️ 测试项目初始化失败，但继续执行浏览器查找测试:', (error as Error).message)
