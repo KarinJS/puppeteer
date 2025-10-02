@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.2.4](https://github.com/KarinJS/puppeteer/compare/puppeteer-v2.2.3...puppeteer-v2.2.4) (2025-10-02)
+
+
+### 🐛 Bug Fixes
+
+* macOS binary path detection for Chrome for Testing and chrome-headless-shell with backward compatibility ([#66](https://github.com/KarinJS/puppeteer/issues/66)) ([e36ad97](https://github.com/KarinJS/puppeteer/commit/e36ad9782a32b0ba6b8adbbde806a4f5e104ff41))
+
 ## [2.2.3](https://github.com/KarinJS/puppeteer/compare/puppeteer-v2.2.2...puppeteer-v2.2.3) (2025-04-30)
 
 
