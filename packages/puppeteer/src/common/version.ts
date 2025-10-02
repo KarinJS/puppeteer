@@ -103,9 +103,12 @@ export const puppeteerCache = {
    */
   path: (browser: keyof typeof PUPPETEER_REVISIONS, platform: ReturnType<typeof import('../common').platform>) => {
     /**
-     * 下载路径的平台
+     * 下载路径的平台（新版本使用的命名）
      */
-    const downloadPlatform = platform.replace('linux64', 'linux')
+    const downloadPlatform = platform
+      .replace('linux64', 'linux')
+      .replace('mac-arm64', 'mac_arm')
+      .replace('mac-x64', 'mac')
 
     /**
      * 当前系统是否为Windows
@@ -126,31 +129,53 @@ export const puppeteerCache = {
     const browserCacheDir = path.join(CACHE_DIR, browser)
 
     /**
-     * 版本和平台特定的目录名
+     * 版本和平台特定的目录名（新版本）
      * @default .cache/puppeteer/chrome/win64-131.0.6778.204
      */
     const versionPlatformDir = `${downloadPlatform}-${version}`
 
     /**
-     * 版本和平台特定的完整目录路径
+     * 版本和平台特定的完整目录路径（新版本）
      * @default .cache/puppeteer/chrome/win64-131.0.6778.204
      */
     const versionSpecificDir = path.join(browserCacheDir, versionPlatformDir)
 
     /**
+     * 版本和平台特定的目录名（旧版本，用于向后兼容）
+     * @default .cache/puppeteer/chrome/linux64-131.0.6778.204
+     */
+    const legacyVersionPlatformDir = `${platform}-${version}`
+
+    /**
+     * 版本和平台特定的完整目录路径（旧版本，用于向后兼容）
+     */
+    const legacyVersionSpecificDir = path.join(browserCacheDir, legacyVersionPlatformDir)
+
+    /**
+     * 检查是否应该使用旧版本的路径（向后兼容）
+     * 如果新路径不存在但旧路径存在，则使用旧路径
+     */
+    const shouldUseLegacyPath = !fs.existsSync(versionSpecificDir) && fs.existsSync(legacyVersionSpecificDir)
+
+    /**
+     * 实际使用的版本特定目录
+     */
+    const actualVersionSpecificDir = shouldUseLegacyPath ? legacyVersionSpecificDir : versionSpecificDir
+
+    /**
      * 浏览器可执行文件的目录
      * @default .cache/puppeteer/chrome/win64-131.0.6778.204/chrome-win64
      */
-    const executableDir = path.join(versionSpecificDir, `${browser}-${platform}`)
+    const executableDir = path.join(actualVersionSpecificDir, `${browser}-${platform}`)
 
     /**
-     * ZIP归档文件路径
+     * ZIP归档文件路径（始终使用新版本命名用于下载）
      * @default .cache/puppeteer/chrome/win64-131.0.6778.204/chrome-win64.zip
      */
     const archiveFilePath = path.join(versionSpecificDir, `${browser}-${downloadPlatform}.zip`)
 
     /**
-     * ZIP解压目录
+     * ZIP解压目录（始终使用新版本目录用于下载）
      * @default .cache/puppeteer/chrome/win64-131.0.6778.204/chrome-win64
      */
     const unzipDir = versionSpecificDir
@@ -158,7 +183,23 @@ export const puppeteerCache = {
     /**
      * 可执行文件路径
      */
-    const executablePath = process.env.PUPPETEER_EXECUTABLE_PATH || path.join(executableDir, `${browser}${isWindows ? '.exe' : ''}`)
+    const executablePath = (() => {
+      if (process.env.PUPPETEER_EXECUTABLE_PATH) {
+        return process.env.PUPPETEER_EXECUTABLE_PATH
+      }
+
+      // macOS 平台需要特殊处理 .app 包结构
+      if (os.platform() === 'darwin') {
+        if (browser === 'chrome') {
+          return path.join(executableDir, 'Google Chrome for Testing.app', 'Contents', 'MacOS', 'Google Chrome for Testing')
+        } else if (browser === 'chrome-headless-shell') {
+          return path.join(executableDir, 'chrome-headless-shell')
+        }
+      }
+
+      // Windows 和 Linux 平台
+      return path.join(executableDir, `${browser}${isWindows ? '.exe' : ''}`)
+    })()
 
     /**
      * Debian依赖文件路径（用于Linux平台）
