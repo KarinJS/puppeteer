@@ -181,14 +181,18 @@ export function findChromeFromPath (): string[] {
 export function findChromeFromPuppeteer (): string[] {
   try {
     const paths: string[] = []
-    /** 浏览器名称 */
-    const browserName = (() => {
+    /** 浏览器可能的名称列表 */
+    const browserNames = (() => {
       if (os.platform() === 'win32') {
-        return 'chrome.exe'
+        return ['chrome.exe']
       } else if (os.platform() === 'darwin') {
-        return 'Chromium.app/Contents/MacOS/Chromium'
+        return [
+          'Google Chrome for Testing.app/Contents/MacOS/Google Chrome for Testing',
+          'Chromium.app/Contents/MacOS/Chromium',
+          'chrome-headless-shell'
+        ]
       } else {
-        return 'chrome'
+        return ['chrome', 'chrome-headless-shell']
       }
     })()
 
@@ -217,10 +221,13 @@ export function findChromeFromPuppeteer (): string[] {
           const platformPath = path.join(versionPath, platform)
           if (!isDirectory(platformPath)) continue
 
-          /** 浏览器路径 */
-          const browserPath = path.join(platformPath, browserName)
-          if (!isExecutable(browserPath)) continue
-          paths.push(browserPath)
+          /** 尝试每个可能的浏览器名称 */
+          for (const browserName of browserNames) {
+            const browserPath = path.join(platformPath, browserName)
+            if (isExecutable(browserPath) && !paths.includes(browserPath)) {
+              paths.push(browserPath)
+            }
+          }
         }
       }
     }
