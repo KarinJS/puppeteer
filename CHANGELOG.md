@@ -1,5 +1,23 @@
 # Changelog
 
+## [2.4.1](https://github.com/KarinJS/puppeteer/compare/root-v2.4.0...root-v2.4.1) (2025-10-02)
+
+
+### 🐛 Bug Fixes
+
+* macOS binary path detection for Chrome for Testing and chrome-headless-shell with backward compatibility ([#66](https://github.com/KarinJS/puppeteer/issues/66)) ([e36ad97](https://github.com/KarinJS/puppeteer/commit/e36ad9782a32b0ba6b8adbbde806a4f5e104ff41))
+* 同步打包 ([8f7d17f](https://github.com/KarinJS/puppeteer/commit/8f7d17fd77033a0c93e1cf68cfcb18d61cae3f87))
+
+
+### 🎡 Continuous Integration
+
+* `pnpm` `actions/upload-artifact` 版本 ([3b059f6](https://github.com/KarinJS/puppeteer/commit/3b059f620e7708f5c907950106501d7a68316810))
+* fix path ([68cdb3c](https://github.com/KarinJS/puppeteer/commit/68cdb3c59c5ceae29999ecdce6b62d30aa9fe2f7))
+* install ([2ce195f](https://github.com/KarinJS/puppeteer/commit/2ce195f2627aba8c017c867a13de45f9c8e8ddb4))
+* install.mjs ([35f0bcf](https://github.com/KarinJS/puppeteer/commit/35f0bcf50067da31d8db569d02ff9233903a676d))
+* 缺少tsx ([da5ad55](https://github.com/KarinJS/puppeteer/commit/da5ad555920700b7ae999ebbdb70ac8b01c0def5))
+* 通过github测试各个环境 ([eef23a3](https://github.com/KarinJS/puppeteer/commit/eef23a363dd7f1f521ceb8a429180213228d63f4))
+
 ## [2.4.0](https://github.com/KarinJS/puppeteer/compare/root-v2.3.5...root-v2.4.0) (2025-05-22)
 
 
