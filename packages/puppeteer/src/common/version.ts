@@ -105,7 +105,10 @@ export const puppeteerCache = {
     /**
      * 下载路径的平台
      */
-    const downloadPlatform = platform.replace('linux64', 'linux')
+    const downloadPlatform = platform
+      .replace('linux64', 'linux')
+      .replace('mac-arm64', 'mac_arm')
+      .replace('mac-x64', 'mac')
 
     /**
      * 当前系统是否为Windows
@@ -158,7 +161,23 @@ export const puppeteerCache = {
     /**
      * 可执行文件路径
      */
-    const executablePath = process.env.PUPPETEER_EXECUTABLE_PATH || path.join(executableDir, `${browser}${isWindows ? '.exe' : ''}`)
+    const executablePath = (() => {
+      if (process.env.PUPPETEER_EXECUTABLE_PATH) {
+        return process.env.PUPPETEER_EXECUTABLE_PATH
+      }
+
+      // macOS 平台需要特殊处理 .app 包结构
+      if (os.platform() === 'darwin') {
+        if (browser === 'chrome') {
+          return path.join(executableDir, 'Google Chrome for Testing.app', 'Contents', 'MacOS', 'Google Chrome for Testing')
+        } else if (browser === 'chrome-headless-shell') {
+          return path.join(executableDir, 'chrome-headless-shell')
+        }
+      }
+
+      // Windows 和 Linux 平台
+      return path.join(executableDir, `${browser}${isWindows ? '.exe' : ''}`)
+    })()
 
     /**
      * Debian依赖文件路径（用于Linux平台）
