@@ -26,7 +26,7 @@ export const options = (external: Options['external'] = []): Options => ({
   }, // 是否生成 .d.ts 文件
   outDir: 'dist', // 输出目录
   treeshake: true, // 树摇优化
-  minify: process.argv[2] !== '--false', // 压缩代码
+  minify: false, // 压缩代码
   removeNodeProtocol: false, // 是否删除 node: 协议
   ignoreWatch: [], // 忽略监视
   shims: true,
