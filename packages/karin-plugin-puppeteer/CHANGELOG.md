@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.0.20](https://github.com/KarinJS/puppeteer/compare/@karinjs/plugin-puppeteer-v1.0.19...@karinjs/plugin-puppeteer-v1.0.20) (2025-10-17)
+
+
+### 🐛 Bug Fixes
+
+* **karin-plugin-puppeteer:** 增强截图字节大小计算的健壮性 ([5ab9177](https://github.com/KarinJS/puppeteer/commit/5ab9177804a13f3f17c1b3b65547eb82e800692d))
+* 细节优化 ([4f902cb](https://github.com/KarinJS/puppeteer/commit/4f902cb187fd4da95b135e4c1fb65a89a2d474c0))
+
 ## [1.0.19](https://github.com/KarinJS/puppeteer/compare/@karinjs/plugin-puppeteer-v1.0.18...@karinjs/plugin-puppeteer-v1.0.19) (2025-10-17)
 
 
