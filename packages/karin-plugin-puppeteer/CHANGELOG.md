@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.19](https://github.com/KarinJS/puppeteer/compare/@karinjs/plugin-puppeteer-v1.0.18...@karinjs/plugin-puppeteer-v1.0.19) (2025-10-17)
+
+
+### 🐛 Bug Fixes
+
+* 添加截图完成后图片大小打印 ([7330ebc](https://github.com/KarinJS/puppeteer/commit/7330ebc34fd521646eae176eaf54ca3299d7b532))
+
 ## [1.0.18](https://github.com/KarinJS/puppeteer/compare/@karinjs/plugin-puppeteer-v1.0.17...@karinjs/plugin-puppeteer-v1.0.18) (2025-10-02)
 
 

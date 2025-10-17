@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.4.2](https://github.com/KarinJS/puppeteer/compare/root-v2.4.1...root-v2.4.2) (2025-10-17)
+
+
+### 🐛 Bug Fixes
+
+* 添加截图完成后图片大小打印 ([7330ebc](https://github.com/KarinJS/puppeteer/commit/7330ebc34fd521646eae176eaf54ca3299d7b532))
+* 移除代码压缩 ([37f877f](https://github.com/KarinJS/puppeteer/commit/37f877f2c0019957971fcc4bad65f0508555a03b))
+
 ## [2.4.1](https://github.com/KarinJS/puppeteer/compare/root-v2.4.0...root-v2.4.1) (2025-10-02)
 
 
