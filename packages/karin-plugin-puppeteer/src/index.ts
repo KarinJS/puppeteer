@@ -61,15 +61,22 @@ const main = async () => {
     const time = Date.now()
     const result = await browser.screenshot(data)
 
-    const sizeBytes = getScreenshotByteSize(result.data, options.encoding)
-    const sizeStr = sizeBytes != null ? `大小: ${logger.green(formatBytes(sizeBytes))} ` : ''
-    logger.info(
-      `[${name}][${path.basename(data.file)}] 截图完成 ${sizeStr}耗时: ${logger.green(Date.now() - time + '')} ms`
-    )
+    const fileName = typeof data?.file === 'string' ? path.basename(data.file) : 'unknown'
 
     if (!result.status) {
+      logger.info(
+        `[${name}][${fileName}] 截图失败 耗时: ${logger.green(Date.now() - time + '')} ms`
+      )
       throw new Error(result.data.message || '截图失败', { cause: result.data })
     }
+
+    const sizeBytes = getScreenshotByteSize(result.data, options.encoding)
+    const sizeStr = sizeBytes != null ? `大小: ${logger.green(formatBytes(sizeBytes))} ` : ''
+
+    logger.info(
+      `[${name}][${fileName}] 截图完成 ${sizeStr}耗时: ${logger.green(Date.now() - time + '')} ms`
+    )
+
     return result.data as any
   })
 
