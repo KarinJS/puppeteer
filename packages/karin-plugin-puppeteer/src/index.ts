@@ -13,18 +13,34 @@ const formatBytes = (bytes: number): string => {
 
 const getScreenshotByteSize = (payload: unknown, encoding?: string): number | undefined => {
   try {
-    if (!payload) return undefined
+    if (payload == null) return undefined
     const enc = (encoding || '').toLowerCase()
+
+    if (Array.isArray(payload)) {
+      let total = 0
+      for (const item of payload) {
+        const size = getScreenshotByteSize(item, enc)
+        if (typeof size === 'number') total += size
+      }
+      return total
+    }
+
     if (typeof payload === 'string') {
       return enc === 'base64' ? Buffer.from(payload, 'base64').length : Buffer.byteLength(payload)
     }
     if (Buffer.isBuffer(payload)) return payload.length
+    if (payload instanceof Uint8Array) return payload.byteLength
+    if (payload instanceof ArrayBuffer) return payload.byteLength
+
     const anyPayload = payload as any
     if (typeof anyPayload.data === 'string') {
       return enc === 'base64' ? Buffer.from(anyPayload.data, 'base64').length : Buffer.byteLength(anyPayload.data)
     }
     if (Buffer.isBuffer(anyPayload.buffer)) return anyPayload.buffer.length
+    if (anyPayload.buffer instanceof ArrayBuffer) return anyPayload.buffer.byteLength
     if (typeof anyPayload.byteLength === 'number') return anyPayload.byteLength
+    if (typeof anyPayload.length === 'number') return anyPayload.length
+
     return undefined
   } catch {
     return undefined
@@ -40,6 +56,8 @@ const main = async () => {
   registerRender(name, async (options: Snapka) => {
     options.encoding = 'base64'
     const data = renderTpl(options)
+    data.encoding = options.encoding
+
     const time = Date.now()
     const result = await browser.screenshot(data)
 
