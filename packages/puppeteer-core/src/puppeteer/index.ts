@@ -53,6 +53,11 @@ export interface RunConfig {
    * @default 15
    */
   maxPages?: number
+  /**
+  * 是否开启请求前js注入功能
+  * @default false
+  */
+  enableInjectJs?: false,
 }
 
 /**

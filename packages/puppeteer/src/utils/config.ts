@@ -15,6 +15,7 @@ if (!fs.existsSync(file)) {
     debug: false,
     browser: 'chrome',
     maxPages: 15,
+    enableInjectJs: false,
     http: {
       host: '0.0.0.0',
       port: 7005,
@@ -53,6 +54,8 @@ export const config = JSON.parse(fs.readFileSync(file, 'utf-8')) as {
   browser: 'chrome-headless-shell' | 'chrome'
   /** 同时可存在多少个标签页进行工作 */
   maxPages: number
+  /** 是否开启请求前js注入功能 */
+  enableInjectJs: boolean
   /** 服务配置 */
   http: {
     /** 监听地址 */

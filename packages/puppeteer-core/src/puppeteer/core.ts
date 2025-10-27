@@ -88,6 +88,8 @@ export interface screenshot extends ScreenshotOptions {
   waitForResponse?: string | string[]
   /** 请求拦截 */
   setRequestInterception?: (HTTPRequest: HTTPRequest, data: screenshot) => void
+  /** 请求前注入的js脚本 */
+  evaluateOnNewDocument?: string
 }
 
 /** 截图返回 */
@@ -232,6 +234,11 @@ export class Render {
   async page (data: screenshot) {
     /** 创建页面 */
     const page = await this.browser.newPage()
+    /** 请求前js脚本注入 */
+    if (this.config.enableInjectJs && data.evaluateOnNewDocument) {
+      const funcStr = data.evaluateOnNewDocument.toString()
+      await page.evaluateOnNewDocument(new Function(`return (${funcStr})`)())
+    }
     /** 打开页面数+1 */
     common.emit('newPage', this.id)
 
