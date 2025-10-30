@@ -85,4 +85,4 @@ const main = async () => {
 
 main()
 
-export { }
+export * from '@karinjs/puppeteer'
