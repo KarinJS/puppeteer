@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.4.4](https://github.com/KarinJS/puppeteer/compare/root-v2.4.3...root-v2.4.4) (2025-10-30)
+
+
+### 🐛 Bug Fixes
+
+* 导出'@karinjs/puppeteer' ([51ed5c4](https://github.com/KarinJS/puppeteer/commit/51ed5c4489acfb372b72e30cff0fd2b4ff7806cc))
+
 ## [2.4.3](https://github.com/KarinJS/puppeteer/compare/root-v2.4.2...root-v2.4.3) (2025-10-17)
 
 
