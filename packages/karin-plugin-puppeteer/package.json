@@ -27,7 +27,7 @@
     "sync": "curl -X PUT \"https://registry-direct.npmmirror.com/-/package/@karinjs/plugin-puppeteer/syncs\""
   },
   "dependencies": {
-    "@snapka/puppeteer": "0.1.3"
+    "@snapka/puppeteer": "0.1.5"
   },
   "devDependencies": {
     "node-karin": "^1.13.0"
