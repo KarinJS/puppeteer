@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.0](https://github.com/KarinJS/puppeteer/compare/@karinjs/plugin-puppeteer-v1.0.21...@karinjs/plugin-puppeteer-v1.1.0) (2025-12-03)
+
+
+### ✨ Features
+
+* 使用@snapka/puppeteer ([92d5858](https://github.com/KarinJS/puppeteer/commit/92d58580d0dc6244e79bb8977255436fb0030519))
+
 ## [1.0.21](https://github.com/KarinJS/puppeteer/compare/@karinjs/plugin-puppeteer-v1.0.20...@karinjs/plugin-puppeteer-v1.0.21) (2025-10-30)
 
 
