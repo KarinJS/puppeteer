@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.5.1](https://github.com/KarinJS/puppeteer/compare/root-v2.5.0...root-v2.5.1) (2025-12-03)
+
+
+### 🐛 Bug Fixes
+
+* 版本类型 ([071e1e7](https://github.com/KarinJS/puppeteer/commit/071e1e7b48c5ce51c58c3c08002a0bc397c455e5))
+
 ## [2.5.0](https://github.com/KarinJS/puppeteer/compare/root-v2.4.4...root-v2.5.0) (2025-12-03)
 
 
