@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.5.0](https://github.com/KarinJS/puppeteer/compare/root-v2.4.4...root-v2.5.0) (2025-12-03)
+
+
+### ✨ Features
+
+* 使用@snapka/puppeteer ([92d5858](https://github.com/KarinJS/puppeteer/commit/92d58580d0dc6244e79bb8977255436fb0030519))
+
 ## [2.4.4](https://github.com/KarinJS/puppeteer/compare/root-v2.4.3...root-v2.4.4) (2025-10-30)
 
 
