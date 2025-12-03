@@ -16,24 +16,21 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [
-    "dist",
-    "!LICENSE",
-    "!README.md"
+    "dist"
   ],
   "scripts": {
     "build": "tsc && tsup",
-    "dev": "tsx src/index.ts",
+    "dev": "tsx src/app.ts",
     "dev:test": "node dist/index.js",
     "pub": "pnpm publish --access public",
     "rm": "node -e \"require('fs').rmSync('dist', { recursive: true, force: true })\"",
     "sync": "curl -X PUT \"https://registry-direct.npmmirror.com/-/package/@karinjs/plugin-puppeteer/syncs\""
   },
   "dependencies": {
-    "@karinjs/puppeteer": "workspace:*"
+    "@snapka/puppeteer": "0.1.3"
   },
   "devDependencies": {
-    "@karinjs/puppeteer-types": "workspace:*",
-    "node-karin": "^1.7.12"
+    "node-karin": "^1.13.0"
   },
   "karin": {
     "main": "src/index.ts",
@@ -42,33 +39,6 @@
     "ts-web": "src/web.config.ts",
     "files": [
       "config"
-    ],
-    "env": [
-      {
-        "key": "PUPPETEER_CACHE_DIR",
-        "value": "",
-        "comment": "Puppeteer缓存的默认根目录"
-      },
-      {
-        "key": "PUPPETEER_CACHE_VERSION",
-        "value": "",
-        "comment": "记录puppeteer下载过的浏览器信息"
-      },
-      {
-        "key": "PUPPETEER_CHROME_HEADLESS_SHELL_VERSION",
-        "value": "",
-        "comment": "Puppeteer下载浏览器的版本"
-      },
-      {
-        "key": "PUPPETEER_EXECUTABLE_PATH",
-        "value": "",
-        "comment": "Puppeteer可执行文件路径 配置后将使用此路径的浏览器"
-      },
-      {
-        "key": "PUPPETEER_CHROME_HEADLESS_SHELL_DOWNLOAD_BASE_URL",
-        "value": "",
-        "comment": "Puppeteer浏览器host地址"
-      }
     ]
   },
   "timestamp": "2025-10-01T00:47:22.222Z"

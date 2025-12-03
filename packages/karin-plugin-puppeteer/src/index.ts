@@ -1,5 +1,5 @@
 import path from 'node:path'
-import { launch, type LaunchOptions } from '@karinjs/puppeteer'
+import { snapka } from '@snapka/puppeteer'
 import { logger, registerRender, renderTpl, karin, type Snapka } from 'node-karin'
 import { pluginName, pluginVersion, getConfig, HMR_KEY } from './config'
 
@@ -11,9 +11,9 @@ const formatBytes = (bytes: number): string => {
   return `${i === 0 ? Math.round(value) : value.toFixed(2)} ${units[i]}`
 }
 
-const getScreenshotByteSize = (payload: unknown, encoding?: string): number | undefined => {
+const getScreenshotByteSize = (payload: unknown, encoding?: string): number | null => {
   try {
-    if (payload == null) return undefined
+    if (payload == null) return null
     const enc = (encoding || '').toLowerCase()
 
     if (Array.isArray(payload)) {
@@ -41,16 +41,18 @@ const getScreenshotByteSize = (payload: unknown, encoding?: string): number | un
     if (typeof anyPayload.byteLength === 'number') return anyPayload.byteLength
     if (typeof anyPayload.length === 'number') return anyPayload.length
 
-    return undefined
+    return null
   } catch {
-    return undefined
+    return null
   }
 }
 
 const main = async () => {
   const config = getConfig()
-  const browser = await launch(config)
-  karin.on(HMR_KEY, (cfg: LaunchOptions) => browser.hmrConfig(cfg))
+  const browser = await snapka.launch(config)
+  karin.on(HMR_KEY, async () => {
+    await browser.restart()
+  })
 
   const name = '@karinjs/plugin-puppeteer'
   registerRender(name, async (options: Snapka) => {
@@ -59,25 +61,19 @@ const main = async () => {
     data.encoding = options.encoding
 
     const time = Date.now()
-    const result = await browser.screenshot(data)
+    const { run } = await browser.screenshot(data as any)
+    const result = await run()
 
     const fileName = typeof data?.file === 'string' ? path.basename(data.file) : 'unknown'
 
-    if (!result.status) {
-      logger.info(
-        `[${name}][${fileName}] 截图失败 耗时: ${logger.green(Date.now() - time + '')} ms`
-      )
-      throw new Error(result.data.message || '截图失败', { cause: result.data })
-    }
-
-    const sizeBytes = getScreenshotByteSize(result.data, options.encoding)
-    const sizeStr = sizeBytes != null ? `大小: ${logger.green(formatBytes(sizeBytes))} ` : ''
+    const sizeBytes = getScreenshotByteSize(result, options.encoding)
+    const sizeStr = typeof sizeBytes === 'number' ? `大小: ${logger.green(formatBytes(sizeBytes))} ` : ''
 
     logger.info(
       `[${name}][${fileName}] 截图完成 ${sizeStr}耗时: ${logger.green(Date.now() - time + '')} ms`
     )
 
-    return result.data as any
+    return result as any
   })
 
   logger.info(`${logger.violet(`[插件:${pluginVersion}]`)} ${logger.green(pluginName)} 初始化完成~`)
@@ -85,4 +81,4 @@ const main = async () => {
 
 main()
 
-export * from '@karinjs/puppeteer'
+export * from '@snapka/puppeteer'

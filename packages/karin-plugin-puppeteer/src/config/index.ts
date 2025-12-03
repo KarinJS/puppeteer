@@ -3,7 +3,7 @@ import path from 'node:path'
 import { karin } from 'node-karin'
 import pkg from '../../package.json'
 import { basePath } from 'node-karin/root'
-import type { LaunchOptions } from '@karinjs/puppeteer'
+import type { PuppeteerLaunchOptions } from '@snapka/puppeteer'
 
 /**
  * 热更新key
@@ -13,17 +13,25 @@ export const HMR_KEY = 'karin-plugin-puppeteer-hmr'
 /**
  * 默认配置
  */
-const defaultConfig: LaunchOptions = {
-  downloadBrowser: 'chrome',
+const defaultConfig: PuppeteerLaunchOptions = {
   protocol: 'cdp',
-  headless: true,
+  headless: 'shell',
   debug: false,
-  maxPages: 10,
-  idleTime: 500,
-  hmr: false,
-  executablePath: '',
-  pipe: false,
-  userDataDir: '',
+  findBrowser: true,
+  slowMo: 0,
+  maxOpenPages: 10,
+  pageMode: 'reuse',
+  pageIdleTimeout: 60000,
+  retries: 2,
+  defaultViewport: {
+    width: 800,
+    height: 600
+  },
+  download: {
+    enable: true,
+    browser: 'chrome-headless-shell',
+    version: 'latest'
+  },
   args: [
     '--window-size=800,600', // 设置窗口大小
     '--disable-gpu', // 禁用 GPU 硬件加速
@@ -63,7 +71,7 @@ const init = () => {
 /**
  * 获取配置
  */
-export const getConfig = (): LaunchOptions => {
+export const getConfig = (): PuppeteerLaunchOptions => {
   const data = JSON.parse(fs.readFileSync(configPath, 'utf-8'))
   return { ...defaultConfig, ...data }
 }
@@ -72,7 +80,7 @@ export const getConfig = (): LaunchOptions => {
  * 保存配置
  * @param config 配置
  */
-export const saveConfig = (config: LaunchOptions) => {
+export const saveConfig = (config: PuppeteerLaunchOptions) => {
   fs.writeFileSync(configPath, JSON.stringify(config, null, 2))
   karin.emit(HMR_KEY, config)
 }
