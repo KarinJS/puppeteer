@@ -137,13 +137,6 @@ const webConfig: {
         defaultSelected: config.findBrowser !== false,
         color: 'success',
       }),
-      // hmr
-      components.switch.create('hmr', {
-        label: '热更新',
-        description: '是否开启热更新，开启后，前端点击保存后会强制关闭所有正在进行的截图任务并重载配置',
-        defaultSelected: config.hmr,
-        color: 'success',
-      }),
       // pipe
       components.switch.create('pipe', {
         label: '管道模式',
@@ -210,20 +203,6 @@ const webConfig: {
             min: 0,
             max: 999999999,
             error: '页面空闲超时必须大于等于0'
-          }
-        ]
-      }),
-      // retries
-      components.input.number('retries', {
-        label: '重试次数',
-        description: '操作失败时的最大重试次数',
-        defaultValue: (config.retries || 2) + '',
-        className: 'inline-block p-2',
-        rules: [
-          {
-            min: 0,
-            max: 10,
-            error: '重试次数必须在0-10之间'
           }
         ]
       }),
@@ -339,7 +318,6 @@ const webConfig: {
       ...config,
       maxOpenPages: Number(config.maxOpenPages),
       pageIdleTimeout: Number(config.pageIdleTimeout),
-      retries: Number(config.retries),
       slowMo: Number(config.slowMo || 0),
     }
 
