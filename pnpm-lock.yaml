@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@snapka/puppeteer':
-        specifier: 0.2.1
-        version: 0.2.1
+        specifier: 0.2.2
+        version: 0.2.2
     devDependencies:
       '@types/node':
         specifier: ^22.5.4
@@ -790,16 +790,16 @@ packages:
   '@snapka/browser-finder@0.1.4':
     resolution: {integrity: sha512-PToJctMSQnnKCEsqyBIK4kHR/EGlm8CzgufqgM8xFjwWyDjTbx3pR5LNZSyzinmkMujx9dGXrmOJc9wl6e9iTg==}
 
-  '@snapka/browser-finder@0.1.7':
-    resolution: {integrity: sha512-84QfVF3UOLMeiZaFYoHU7n9LQoZ7Wx/QW9hDRsLfbtx7JJuZRLxs8E3rQQDq9mK4F2iG8YSXk8D6ps5Vc8OaNQ==}
+  '@snapka/browser-finder@0.1.8':
+    resolution: {integrity: sha512-5vYiMeqFt8rs/yCLn+1OQTeawth9xONRuJPbZtle8prMuvu+rHMnGcrtucbZG35AwKIsosKJYe8mDkLjJ2aCZQ==}
 
   '@snapka/browsers@0.1.3':
     resolution: {integrity: sha512-+GrqM5o7142dMU0p3aEMVoE9Tp/oI9o18dKPXcRLZ0w5fq1TAA7ZGvSxxOawrwhmk47Y6CEfAgqoP9wpiQm8jw==}
     engines: {node: '>=18'}
     hasBin: true
 
-  '@snapka/browsers@0.2.1':
-    resolution: {integrity: sha512-nD9RCLyvRW+eE7PSFQTzOj8Qb+vDqBksDfClOcXbk+2Bw+F9U05OYyDxsgUGZwys2qDt533Rd4PmNwQJoxaAKA==}
+  '@snapka/browsers@0.2.2':
+    resolution: {integrity: sha512-5rjF6yn2+Azy+qqtsO2lt9jb7XFiNjGRiQZi7rao8gcID3dk0MoqFTg7LgB2VkBXZ1UO8V3I9zsNpr4sZSYp7w==}
     engines: {node: '>=18'}
     hasBin: true
 
@@ -812,8 +812,8 @@ packages:
   '@snapka/puppeteer@0.1.5':
     resolution: {integrity: sha512-fGKTV1DiiA5/1U/UKKXKLulAJRe3svM3VHSND57d4d0nlkW0H7OKka0DsRSnThhtnf6d4hZ8ZyE4qcZGZirpTw==}
 
-  '@snapka/puppeteer@0.2.1':
-    resolution: {integrity: sha512-OimyfxsP21VhQWwNSGeG3xTcif4MRJI8lUXbdb0zbA2GWJfDzSP2+C2/5pebJPWO+2JCr30UaveKdwijYiH3eg==}
+  '@snapka/puppeteer@0.2.2':
+    resolution: {integrity: sha512-41xDHraR81A1npvJrqxe5/wE5ztvrMBNJTMJtmoSgVPES1/2B3G4OTqLwroXXkMjzJHEOxNe6laf7gG5A2EZGw==}
 
   '@snapka/types@0.1.2':
     resolution: {integrity: sha512-oXFFnciHooMXhuGoyEHO2JFheoLPRUuW3rGkDTi+qMsG4T16I3lBpEpjPVcQDla23oAO0I44+RQWT1jkXWrZMg==}
@@ -3355,13 +3355,13 @@ snapshots:
     dependencies:
       '@snapka/browsers': 0.1.3
 
-  '@snapka/browser-finder@0.1.7':
+  '@snapka/browser-finder@0.1.8':
     dependencies:
-      '@snapka/browsers': 0.2.1
+      '@snapka/browsers': 0.2.2
 
   '@snapka/browsers@0.1.3': {}
 
-  '@snapka/browsers@0.2.1': {}
+  '@snapka/browsers@0.2.2': {}
 
   '@snapka/puppeteer-core@0.1.3': {}
 
@@ -3375,10 +3375,10 @@ snapshots:
       '@snapka/types': 0.1.2
       p-limit: 7.2.0
 
-  '@snapka/puppeteer@0.2.1':
+  '@snapka/puppeteer@0.2.2':
     dependencies:
-      '@snapka/browser-finder': 0.1.7
-      '@snapka/browsers': 0.2.1
+      '@snapka/browser-finder': 0.1.8
+      '@snapka/browsers': 0.2.2
       '@snapka/puppeteer-core': 0.1.4
       '@snapka/types': 0.1.3
       p-limit: 7.2.0
