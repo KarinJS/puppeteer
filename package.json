@@ -31,15 +31,15 @@
     "sync": "curl -X PUT \"https://registry-direct.npmmirror.com/-/package/@karinjs/plugin-puppeteer/syncs\""
   },
   "dependencies": {
-    "@snapka/puppeteer": "0.1.5"
+    "@snapka/puppeteer": "0.2.1"
   },
   "devDependencies": {
     "@types/node": "^22.5.4",
-    "eslint": "latest",
-    "neostandard": "latest",
-    "node-karin": "^1.13.0",
-    "tsup": "^8.4.0",
-    "typescript": "5.4.5",
+    "eslint": "10.0.1",
+    "neostandard": "0.12.2",
+    "node-karin": "^1.14.3",
+    "tsup": "^8.5.1",
+    "typescript": "5.9.3",
     "vitest": "^3.0.0"
   },
   "karin": {
