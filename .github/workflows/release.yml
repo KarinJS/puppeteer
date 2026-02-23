@@ -2,9 +2,10 @@ name: release
 on:
   push:
     branches:
-      - main
+      - refactor/single-package
 
 permissions:
+  id-token: write
   contents: write
   pull-requests: write
 
@@ -25,33 +26,34 @@ jobs:
     if: ${{ needs.release-please.outputs.release_created == 'true' }}
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: 检出代码
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
+      - name: 设置 Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
           registry-url: "https://registry.npmjs.org"
 
-      - name: Setup pnpm
+      - name: 安装pnpm
         uses: pnpm/action-setup@v2
         with:
           version: 9
 
-      - name: Install dependencies
+      - name: 安装最新版本npm cli 用于OIDC提交
+        run: npm install -g npm@latest
+
+      - name: 安装开发依赖
         run: pnpm install
 
-      - name: Build
+      - name: 构建产物
         run: pnpm run build
 
-      - name: Disable git checks
+      - name: 禁用 git 检查
         run: pnpm config set git-checks false
 
-      - name: Publish
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: pnpm run pub
+      - name: 发布 npm 包
+        run: pnpm publish --access public
 
-      - name: Sync to npmmirror
+      - name: 同步到 npmmirror 镜像
         run: pnpm run sync
