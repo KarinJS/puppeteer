@@ -7,9 +7,7 @@ import { formatBytes, getScreenshotByteSize } from './utils'
 const main = async () => {
   const config = getConfig()
   const browser = await snapka.launch(config)
-  karin.on(HMR_KEY, async () => {
-    await browser.restart()
-  })
+  karin.on(HMR_KEY, async () => await browser.restart())
 
   const name = '@karinjs/plugin-puppeteer'
   registerRender(name, async (options: Snapka) => {
