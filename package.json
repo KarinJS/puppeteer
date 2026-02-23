@@ -1,34 +1,54 @@
 {
-  "name": "@karinjs/puppeteer-repo",
-  "version": "2.5.2",
+  "name": "@karinjs/plugin-puppeteer",
+  "version": "1.1.2",
+  "description": "karin 的 puppeteer 截图、渲染插件",
+  "keywords": [
+    "karin",
+    "node-karin",
+    "karin-plugin",
+    "puppeteer",
+    "browser",
+    "headless"
+  ],
+  "license": "MIT",
+  "author": "sj817",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
   "scripts": {
-    "build": "pnpm -r build",
-    "build:dev": "pnpm build:minify",
-    "build:minify": "pnpm -r build -- --false",
-    "dev": "pnpm -r dev",
-    "pub": "pnpm -r pub",
-    "rm": "pnpm -r run rm",
-    "sort": "sort-package-json && pnpm -r exec sort-package-json",
-    "sync": "pnpm -r sync",
-    "test": "pnpm -r test",
-    "test:coverage": "pnpm -r test:coverage",
-    "test:watch": "pnpm -r test:watch",
-    "up-version": "node up-version.cjs",
-    "web": "tsx packages/puppeteer-server/src/index.ts"
+    "build": "tsc && tsup",
+    "dev": "tsx src/app.ts",
+    "dev:test": "node dist/index.js",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "pub": "pnpm publish --access public",
+    "rm": "node -e \"require('fs').rmSync('dist', { recursive: true, force: true })\"",
+    "lint": "eslint src/",
+    "sync": "curl -X PUT \"https://registry-direct.npmmirror.com/-/package/@karinjs/plugin-puppeteer/syncs\""
+  },
+  "dependencies": {
+    "@snapka/puppeteer": "0.1.5"
   },
   "devDependencies": {
-    "@types/decompress": "^4.2.7",
     "@types/node": "^22.5.4",
-    "cross-env": "^7.0.3",
-    "devtools-protocol": "^0.0.1433962",
     "eslint": "latest",
     "neostandard": "latest",
-    "puppeteer-core": "^24.4.0",
-    "sort-package-json": "^3.0.0",
-    "terser": "^5.39.0",
+    "node-karin": "^1.13.0",
     "tsup": "^8.4.0",
-    "typed-query-selector": "^2.12.0",
     "typescript": "5.4.5",
-    "vite": "^6.3.2"
+    "vitest": "^3.0.0"
+  },
+  "karin": {
+    "main": "src/index.ts",
+    "apps": [],
+    "web": "dist/web.config.js",
+    "ts-web": "src/web.config.ts",
+    "files": [
+      "config"
+    ]
   }
 }

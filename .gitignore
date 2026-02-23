@@ -1,6 +1,7 @@
 node_modules/
 logs/
 lib/
+dist/
 config.json
 count.json
 yarn.lock
@@ -11,6 +12,7 @@ yarn-debug.log*
 yarn-error.log*
 lerna-debug.log*
 .pnpm-debug.log*
+
 test.js
 *.png
 data
@@ -18,11 +20,5 @@ data
 /pm2.json
 1.js
 2.js
-render-ws (1).js
-正向ws.js
-正向渲染.js
-**/dist/**
-**/@karinjs/**
-packages/puppeteer-server/pkg-build
-/packages/test
-/packages/puppeteer-server/tmp_html
+
+.env
