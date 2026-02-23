@@ -18,6 +18,10 @@
   "files": [
     "dist"
   ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KarinJS/puppeteer.git"
+  },
   "scripts": {
     "build": "tsc && tsup",
     "dev": "tsx src/app.ts",

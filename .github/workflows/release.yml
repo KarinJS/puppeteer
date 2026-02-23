@@ -2,7 +2,7 @@ name: release
 on:
   push:
     branches:
-      - refactor/single-package
+      - main
 
 permissions:
   id-token: write
