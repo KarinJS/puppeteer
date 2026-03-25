@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.1.0](https://github.com/KarinJS/puppeteer/compare/v2.0.2...v2.1.0) (2026-03-25)
+
+
+### ✨ Features
+
+* 同步上游 ([ef1544e](https://github.com/KarinJS/puppeteer/commit/ef1544e07acbb0d2bca10e5946e7ab8ecb372600))
+
 ## [2.0.2](https://github.com/KarinJS/puppeteer/compare/v2.0.1...v2.0.2) (2026-02-23)
 
 
