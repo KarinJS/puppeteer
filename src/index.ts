@@ -16,7 +16,13 @@ const main = async () => {
     data.encoding = options.encoding
 
     const time = Date.now()
-    const { run } = await browser.screenshot(data as any)
+    const useMultiPage = data.multiPage === true || (typeof data.multiPage === 'number' && data.multiPage > 0)
+    const { run } = useMultiPage
+      ? await browser.screenshotViewport({
+        ...data,
+        viewportHeight: typeof data.multiPage === 'number' ? data.multiPage : 0,
+      } as any)
+      : await browser.screenshot(data as any)
     const result = await run()
 
     const fileName = typeof data?.file === 'string' ? path.basename(data.file) : 'unknown'
