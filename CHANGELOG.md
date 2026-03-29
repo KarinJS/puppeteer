@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.3.0](https://github.com/KarinJS/puppeteer/compare/v2.2.0...v2.3.0) (2026-03-29)
+
+
+### ✨ Features
+
+* 封装统一探针竞速工具，补充全链路日志 ([#85](https://github.com/KarinJS/puppeteer/issues/85)) ([06ca1f9](https://github.com/KarinJS/puppeteer/commit/06ca1f9c7e9ab5a3aec5e0d38eda93943364cf94))
+
 ## [2.2.0](https://github.com/KarinJS/puppeteer/compare/v2.1.1...v2.2.0) (2026-03-29)
 
 
