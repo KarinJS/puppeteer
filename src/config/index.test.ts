@@ -328,7 +328,7 @@ describe('resolveVersion', () => {
     expect(result).toBe('120.0.6099.109')
   })
 
-  it('所有探针都失败时应抛出 AggregateError', async () => {
+  it('所有探针都失败时应抛出包含 URL 信息的错误', async () => {
     delete process.env.PUPPETEER_CHROME_MIRROR
 
     vi.stubGlobal('fetch', vi.fn().mockResolvedValue({
@@ -337,6 +337,6 @@ describe('resolveVersion', () => {
       statusText: 'Internal Server Error',
     }))
 
-    await expect(configModule.resolveVersion('stable')).rejects.toThrow()
+    await expect(configModule.resolveVersion('stable')).rejects.toThrow('所有版本解析 API 均不可用')
   })
 })

@@ -15,7 +15,7 @@ const main = async () => {
         config.download.version = resolvedVersion
       }
     } catch (err) {
-      logger.info(`[${pluginName}] 版本解析失败，使用默认方式: ${err instanceof Error ? err.message : String(err)}`)
+      logger.info(`[${pluginName}] 版本解析失败，将使用配置的版本: ${err instanceof Error ? err.message : String(err)}`)
     }
   }
 

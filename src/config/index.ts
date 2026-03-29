@@ -165,7 +165,11 @@ export const resolveVersion = async (version: string): Promise<string> => {
     return resolveVersionFromMirror(version, baseUrl)
   })
 
-  return Promise.any(probePromises)
+  try {
+    return await Promise.any(probePromises)
+  } catch {
+    throw new Error(`所有版本解析 API 均不可用: ${urls.join(', ')}`)
+  }
 }
 
 /**
