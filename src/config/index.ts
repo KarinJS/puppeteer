@@ -99,7 +99,7 @@ export const getConfig = (): PuppeteerLaunchOptions => {
 
   const envBaseUrl = process.env[ENV_DOWNLOAD_BASE_URL]
   if (envBaseUrl) {
-    config.download = { ...config.download, baseUrl: envBaseUrl }
+    config.download = { ...(config.download ?? {}), baseUrl: envBaseUrl }
   }
 
   return config
