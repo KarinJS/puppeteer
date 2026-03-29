@@ -1,5 +1,17 @@
 # Changelog
 
+## [2.2.0](https://github.com/KarinJS/puppeteer/compare/v2.1.1...v2.2.0) (2026-03-29)
+
+
+### ✨ Features
+
+* add probing and mirror support for Chrome version resolution ([#84](https://github.com/KarinJS/puppeteer/issues/84)) ([0b5eb0c](https://github.com/KarinJS/puppeteer/commit/0b5eb0c43779f14376cc3fd842438b1b00caa5f9))
+
+
+### 🐛 Bug Fixes
+
+* navigation timeout of 0ms on Linux ([#82](https://github.com/KarinJS/puppeteer/issues/82)) ([a6cacb2](https://github.com/KarinJS/puppeteer/commit/a6cacb2bd64e0ab323992c0281942348ea778fb7))
+
 ## [2.1.1](https://github.com/KarinJS/puppeteer/compare/v2.1.0...v2.1.1) (2026-03-29)
 
 
