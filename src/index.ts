@@ -15,6 +15,10 @@ const main = async () => {
     const data = renderTpl(options)
     data.encoding = options.encoding
 
+    if (process.platform === 'linux' && typeof data.pageGotoParams?.timeout === 'number' && data.pageGotoParams.timeout <= 0) {
+      data.pageGotoParams.timeout = 30000
+    }
+
     const time = Date.now()
     const useMultiPage = data.multiPage === true || (typeof data.multiPage === 'number' && data.multiPage > 0)
     const { run } = useMultiPage

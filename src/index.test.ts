@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 
 // Mock @snapka/puppeteer
 const mockRun = vi.fn()
@@ -229,6 +229,58 @@ describe('index - 截图渲染器', () => {
       expect(callArgs.selector).toBe('body')
       expect(callArgs.type).toBe('jpeg')
       expect(callArgs.quality).toBe(90)
+    })
+  })
+
+  describe('Linux 超时修复', () => {
+    const originalPlatform = process.platform
+
+    afterEach(() => {
+      Object.defineProperty(process, 'platform', { value: originalPlatform })
+    })
+
+    it('在 Linux 上 pageGotoParams.timeout 为 0 时应设置为 30000', async () => {
+      Object.defineProperty(process, 'platform', { value: 'linux' })
+      const options = { file: 'test.html', encoding: 'base64', pageGotoParams: { timeout: 0 } }
+      await renderCallback!(options)
+
+      const callArgs = mockScreenshot.mock.calls[0][0]
+      expect(callArgs.pageGotoParams.timeout).toBe(30000)
+    })
+
+    it('在 Linux 上 pageGotoParams.timeout 为负数时应设置为 30000', async () => {
+      Object.defineProperty(process, 'platform', { value: 'linux' })
+      const options = { file: 'test.html', encoding: 'base64', pageGotoParams: { timeout: -1 } }
+      await renderCallback!(options)
+
+      const callArgs = mockScreenshot.mock.calls[0][0]
+      expect(callArgs.pageGotoParams.timeout).toBe(30000)
+    })
+
+    it('在 Linux 上 pageGotoParams.timeout 为正数时不应修改', async () => {
+      Object.defineProperty(process, 'platform', { value: 'linux' })
+      const options = { file: 'test.html', encoding: 'base64', pageGotoParams: { timeout: 5000 } }
+      await renderCallback!(options)
+
+      const callArgs = mockScreenshot.mock.calls[0][0]
+      expect(callArgs.pageGotoParams.timeout).toBe(5000)
+    })
+
+    it('在非 Linux 上 pageGotoParams.timeout 为 0 时不应修改', async () => {
+      Object.defineProperty(process, 'platform', { value: 'win32' })
+      const options = { file: 'test.html', encoding: 'base64', pageGotoParams: { timeout: 0 } }
+      await renderCallback!(options)
+
+      const callArgs = mockScreenshot.mock.calls[0][0]
+      expect(callArgs.pageGotoParams.timeout).toBe(0)
+    })
+
+    it('无 pageGotoParams 时不应报错', async () => {
+      Object.defineProperty(process, 'platform', { value: 'linux' })
+      const options = { file: 'test.html', encoding: 'base64' }
+      await renderCallback!(options)
+
+      expect(mockScreenshot).toHaveBeenCalledTimes(1)
     })
   })
 
