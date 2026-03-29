@@ -42,11 +42,15 @@ export const probeRace = async <T>(options: ProbeOptions<T>): Promise<ProbeResul
   const probePromises = urls.map(async (url, index) => {
     if (index > 0) {
       await new Promise<void>((resolve, reject) => {
-        const timer = setTimeout(resolve, staggerDelay * index)
-        controller.signal.addEventListener('abort', () => {
+        const onAbort = () => {
           clearTimeout(timer)
           reject(new Error('Aborted'))
-        }, { once: true })
+        }
+        const timer = setTimeout(() => {
+          controller.signal.removeEventListener('abort', onAbort)
+          resolve()
+        }, staggerDelay * index)
+        controller.signal.addEventListener('abort', onAbort, { once: true })
       })
     }
 
