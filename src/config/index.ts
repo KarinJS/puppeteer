@@ -60,8 +60,6 @@ const defaultConfig: PuppeteerLaunchOptions = {
     '--no-sandbox', // 关闭 Chrome 的沙盒模式
     '--disable-setuid-sandbox', // 进一步禁用 setuid 沙盒机制，通常和 --no-sandbox 配合使用，避免权限问题
     '--no-zygote', // 关闭 Chrome 的 zygote 进程，减少进程开销，优化资源使用
-    '--single-process', // 单进程模式，减少进程数（适合截图场景）
-    '--in-process-gpu', // GPU 进程内嵌运行，减少进程数
     // ===== 扩展/插件/组件 =====
     '--disable-extensions', // 禁用所有扩展
     '--disable-plugins', // 禁用所有插件（如 Flash 等 NPAPI/PPAPI 插件）
@@ -83,7 +81,6 @@ const defaultConfig: PuppeteerLaunchOptions = {
     '--disable-crash-reporter', // 禁用崩溃报告
     '--disable-breakpad', // 禁用 Breakpad 崩溃转储
     '--disable-hang-monitor', // 禁用页面挂起监控
-    '--disable-logging', // 禁用日志记录
     '--metrics-recording-only', // 仅记录指标不上报
     // ===== 用户交互/UI/通知（截图无交互） =====
     '--disable-translate', // 禁用翻译
@@ -91,25 +88,18 @@ const defaultConfig: PuppeteerLaunchOptions = {
     '--disable-device-discovery-notifications', // 禁用设备发现通知
     '--disable-popup-blocking', // 禁用弹窗拦截
     '--disable-prompt-on-repost', // 禁用重新提交表单时的确认提示
-    '--disable-permissions-api', // 禁用权限 API
     '--noerrdialogs', // 禁用错误对话框
     '--no-first-run', // 跳过首次运行的初始设置
     '--no-default-browser-check', // 跳过默认浏览器检查
     '--deny-permission-prompts', // 自动拒绝所有权限弹窗
     '--disable-search-engine-choice-screen', // 禁用搜索引擎选择页面
     '--ash-no-nudges', // 禁用 ChromeOS 提示气泡
-    // ===== 音频/媒体/语音 =====
+    // ===== 音频/媒体 =====
     '--mute-audio', // 静音所有音频输出
-    '--disable-audio-output', // 完全禁用音频输出设备
-    '--disable-speech-api', // 禁用语音识别/合成 API
     '--autoplay-policy=no-user-gesture-required', // 自动播放策略（避免阻塞）
-    '--disable-webrtc', // 禁用 WebRTC（截图不需要实时通信）
-    // ===== 存储/数据库/缓存 =====
-    '--disable-databases', // 禁用 HTML5 数据库（Web SQL）
-    '--disable-local-storage', // 禁用 localStorage
+    // ===== 存储/缓存 =====
     '--disable-session-crashed-bubble', // 禁用会话崩溃恢复气泡
     '--disable-dev-shm-usage', // 禁用 /dev/shm（共享内存）用作临时存储，改用磁盘存储
-    '--aggressive-cache-discard', // 激进的缓存丢弃策略
     // ===== 账户/密码/自动填充 =====
     '--password-store=basic', // 使用基础密码存储，避免调用系统钥匙链
     '--use-mock-keychain', // 使用模拟钥匙链，避免弹出授权窗口
@@ -119,11 +109,9 @@ const defaultConfig: PuppeteerLaunchOptions = {
     '--font-render-hinting=none', // 禁用字体渲染微调（截图一致性）
     '--force-color-profile=srgb', // 强制使用 sRGB 色彩配置（截图一致性）
     '--hide-scrollbars', // 隐藏滚动条（截图更干净）
-    '--disable-partial-raster', // 禁用部分光栅化
-    '--disable-skia-runtime-opts', // 禁用 Skia 运行时优化
     '--enable-features=NetworkService,NetworkServiceInProcess', // 网络服务进程内运行，减少进程数
     // ===== 禁用不需要的功能特性 =====
-    '--disable-features=AudioServiceOutOfProcess,IsolateOrigins,site-per-process,TranslateUI,BlinkGenPropertyTrees,Translate,OptimizationHints,MediaRouter,DialMediaRouteProvider,CalculateNativeWinOcclusion,InterestFeedContentSuggestions,CertificateTransparencyComponentUpdater,AutofillServerCommunication,DestroyProfileOnBrowserClose,Autofill,AutofillCreditCardAuthentication,AutofillServerCommunication,GlobalMediaControls,ImprovedCookieControls,LazyFrameLoading,WebOTP,WebPayments,WebUSB,WebBluetooth,WebXR,IdleDetection,BackForwardCache,PaintHolding,ThirdPartyStoragePartitioning,CrossOriginOpenerPolicyReporting,CrossOriginEmbedderPolicyCredentialless,SidePanelPinning,TabHoverCardImages',
+    '--disable-features=AudioServiceOutOfProcess,IsolateOrigins,site-per-process,TranslateUI,Translate,OptimizationHints,MediaRouter,DialMediaRouteProvider,CalculateNativeWinOcclusion,InterestFeedContentSuggestions,CertificateTransparencyComponentUpdater,AutofillServerCommunication,DestroyProfileOnBrowserClose,Autofill,AutofillCreditCardAuthentication,GlobalMediaControls,ImprovedCookieControls,LazyFrameLoading,WebOTP,WebPayments,WebUSB,WebBluetooth,WebXR,IdleDetection,BackForwardCache,ThirdPartyStoragePartitioning,CrossOriginOpenerPolicyReporting,CrossOriginEmbedderPolicyCredentialless,SidePanelPinning,TabHoverCardImages',
     // ===== 杂项 =====
     '--disable-field-trial-config', // 禁用 Chrome 的 A/B 实验配置
     '--disable-back-forward-cache', // 禁用前进/后退缓存
