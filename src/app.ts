@@ -1,1 +1,1 @@
-import('node-karin/app')
+import('node-karin/start')
