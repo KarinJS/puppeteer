@@ -37,6 +37,7 @@ vi.mock('./config', () => ({
   pluginVersion: '1.0.0',
   getConfig: vi.fn(() => ({})),
   HMR_KEY: 'test-hmr',
+  resolveVersion: vi.fn().mockResolvedValue(undefined),
 }))
 
 vi.mock('./utils', () => ({
@@ -83,6 +84,7 @@ describe('index - 截图渲染器', () => {
       pluginVersion: '1.0.0',
       getConfig: vi.fn(() => ({})),
       HMR_KEY: 'test-hmr',
+      resolveVersion: vi.fn().mockResolvedValue(undefined),
     }))
     vi.doMock('./utils', () => ({
       formatBytes: vi.fn((bytes: number) => `${bytes} B`),

@@ -11,6 +11,28 @@ import type { PuppeteerLaunchOptions } from '@snapka/puppeteer'
 export const HMR_KEY = 'karin-plugin-puppeteer-hmr'
 
 /**
+ * 环境变量名称：Chrome 版本解析镜像地址
+ * 设置后将直接使用该镜像，不走探针
+ * @example PUPPETEER_CHROME_MIRROR=https://mirror.karinjs.com
+ */
+export const ENV_CHROME_MIRROR = 'PUPPETEER_CHROME_MIRROR'
+
+/**
+ * 环境变量名称：自定义下载源 URL
+ * @example PUPPETEER_DOWNLOAD_BASE_URL=https://registry.npmmirror.com/-/binary/chrome-for-testing
+ */
+export const ENV_DOWNLOAD_BASE_URL = 'PUPPETEER_DOWNLOAD_BASE_URL'
+
+/**
+ * 版本解析 API 列表（用于探针竞速）
+ * 镜像在前，官方在后，探针会选择最快响应的
+ */
+export const VERSION_API_URLS = [
+  'https://mirror.karinjs.com',
+  'https://googlechromelabs.github.io',
+]
+
+/**
  * 默认配置
  */
 const defaultConfig: PuppeteerLaunchOptions = {
@@ -68,11 +90,100 @@ const init = () => {
 }
 
 /**
- * 获取配置
+ * 获取配置（合并默认配置、配置文件和环境变量）
+ * 环境变量优先级最高
  */
 export const getConfig = (): PuppeteerLaunchOptions => {
   const data = JSON.parse(fs.readFileSync(configPath, 'utf-8'))
-  return { ...defaultConfig, ...data }
+  const config = { ...defaultConfig, ...data }
+
+  const envBaseUrl = process.env[ENV_DOWNLOAD_BASE_URL]
+  if (envBaseUrl) {
+    config.download = { ...(config.download ?? {}), baseUrl: envBaseUrl }
+  }
+
+  return config
+}
+
+/**
+ * 版本通道名称到 JSON 字段的映射
+ */
+const channelMap: Record<string, string> = {
+  latest: 'Canary',
+  stable: 'Stable',
+  beta: 'Beta',
+  dev: 'Dev',
+  canary: 'Canary',
+}
+
+/**
+ * 从指定 URL 解析浏览器版本号
+ *
+ * @param version 版本通道名称（如 latest、stable）或具体版本号
+ * @param baseUrl 版本 API 地址（如 https://mirror.karinjs.com）
+ * @param signal 可选的 AbortSignal，用于取消请求
+ * @returns 解析后的具体版本号，解析失败则抛出错误
+ */
+export const resolveVersionFromMirror = async (version: string, baseUrl: string, signal?: AbortSignal): Promise<string> => {
+  const channel = channelMap[version]
+  if (!channel) return version
+
+  const url = `${baseUrl.replace(/\/+$/, '')}/chrome-for-testing/last-known-good-versions.json`
+  const response = await fetch(url, { signal })
+  if (!response.ok) {
+    throw new Error(`Failed to fetch version info from mirror: ${response.status} ${response.statusText}`)
+  }
+  const data = await response.json() as { channels: Record<string, { version: string }> }
+  const info = data.channels[channel]
+  if (!info?.version) {
+    throw new Error(`Channel "${channel}" not found in mirror response`)
+  }
+  return info.version
+}
+
+/**
+ * 解析浏览器版本号
+ * - 设置了 PUPPETEER_CHROME_MIRROR 环境变量时，直接使用该镜像，不走探针
+ * - 未设置环境变量时，使用探针竞速多个 API，选择最快响应的
+ *   首个 URL 立即请求，后续按 staggerDelay 延迟启动；
+ *   任一成功后通过 AbortController 取消剩余请求和定时器
+ *
+ * @param version 版本通道名称（如 latest、stable）或具体版本号
+ * @returns 解析后的具体版本号
+ */
+export const resolveVersion = async (version: string): Promise<string> => {
+  const channel = channelMap[version]
+  if (!channel) return version
+
+  const envMirror = process.env[ENV_CHROME_MIRROR]
+  if (envMirror) {
+    return resolveVersionFromMirror(version, envMirror)
+  }
+
+  const urls = VERSION_API_URLS
+  const staggerDelay = 300
+  const controller = new AbortController()
+
+  const probePromises = urls.map(async (baseUrl, index) => {
+    if (index > 0) {
+      await new Promise<void>((resolve, reject) => {
+        const timer = setTimeout(resolve, staggerDelay * index)
+        controller.signal.addEventListener('abort', () => {
+          clearTimeout(timer)
+          reject(new Error('Aborted'))
+        }, { once: true })
+      })
+    }
+    return resolveVersionFromMirror(version, baseUrl, controller.signal)
+  })
+
+  try {
+    const result = await Promise.any(probePromises)
+    controller.abort()
+    return result
+  } catch {
+    throw new Error(`所有版本解析 API 均不可用: ${urls.join(', ')}`)
+  }
 }
 
 /**

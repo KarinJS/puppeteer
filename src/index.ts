@@ -1,11 +1,24 @@
 import path from 'node:path'
 import { snapka } from '@snapka/puppeteer'
 import { logger, registerRender, renderTpl, karin, type Snapka } from 'node-karin'
-import { pluginName, pluginVersion, getConfig, HMR_KEY } from './config'
+import { pluginName, pluginVersion, getConfig, HMR_KEY, resolveVersion } from './config'
 import { formatBytes, getScreenshotByteSize } from './utils'
 
 const main = async () => {
   const config = getConfig()
+
+  if (config.download?.version) {
+    try {
+      const resolvedVersion = await resolveVersion(config.download.version)
+      if (resolvedVersion !== config.download.version) {
+        logger.info(`[${pluginName}] 解析浏览器版本: ${config.download.version} -> ${resolvedVersion}`)
+        config.download.version = resolvedVersion
+      }
+    } catch (err) {
+      logger.info(`[${pluginName}] 版本解析失败，将使用配置的版本: ${err instanceof Error ? err.message : String(err)}`)
+    }
+  }
+
   const browser = await snapka.launch(config)
   karin.on(HMR_KEY, async () => await browser.restart())
 

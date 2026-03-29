@@ -48,6 +48,17 @@ pnpm add @karinjs/plugin-puppeteer -w
 | `download.dir` | `string` | - | 下载目录，为空使用默认路径 |
 | `download.baseUrl` | `string` | - | 自定义下载源 URL |
 
+### 环境变量
+
+| 环境变量 | 说明 | 示例 |
+|---|---|---|
+| `PUPPETEER_CHROME_MIRROR` | 指定 Chrome 版本解析镜像地址，设置后直接使用该镜像，不走探针 | `https://mirror.karinjs.com` |
+| `PUPPETEER_DOWNLOAD_BASE_URL` | 自定义浏览器下载源 URL，优先级高于配置文件中的 `download.baseUrl` | `https://registry.npmmirror.com/-/binary/chrome-for-testing` |
+
+> **版本解析说明**：插件启动时需要将版本通道名称（如 `stable`、`latest`）解析为具体版本号。
+> 默认情况下，会使用探针竞速 `mirror.karinjs.com` 和 `googlechromelabs.github.io`，自动选择最快的 API。
+> 如果设置了 `PUPPETEER_CHROME_MIRROR` 环境变量，则直接使用指定的镜像地址，不走探针。
+
 ### 默认启动参数
 
 ```
