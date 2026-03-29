@@ -139,6 +139,7 @@ describe('resolveVersionFromMirror', () => {
       fs.rmSync(tmpDir, { recursive: true })
     }
     vi.restoreAllMocks()
+    vi.unstubAllGlobals()
   })
 
   it('应该直接返回具体版本号（不是通道名称）', async () => {
@@ -168,7 +169,10 @@ describe('resolveVersionFromMirror', () => {
 
     const result = await configModule.resolveVersionFromMirror('stable', 'https://mirror.example.com')
     expect(result).toBe('120.0.6099.109')
-    expect(fetch).toHaveBeenCalledWith('https://mirror.example.com/chrome-for-testing/last-known-good-versions.json')
+    expect(fetch).toHaveBeenCalledWith(
+      'https://mirror.example.com/chrome-for-testing/last-known-good-versions.json',
+      { signal: undefined },
+    )
   })
 
   it('应该从镜像解析 latest 通道版本（映射到 Canary）', async () => {
@@ -214,7 +218,10 @@ describe('resolveVersionFromMirror', () => {
     }))
 
     await configModule.resolveVersionFromMirror('stable', 'https://mirror.example.com/')
-    expect(fetch).toHaveBeenCalledWith('https://mirror.example.com/chrome-for-testing/last-known-good-versions.json')
+    expect(fetch).toHaveBeenCalledWith(
+      'https://mirror.example.com/chrome-for-testing/last-known-good-versions.json',
+      { signal: undefined },
+    )
   })
 
   it('镜像返回非 200 状态码时应抛出错误', async () => {
@@ -265,6 +272,7 @@ describe('resolveVersion', () => {
     }
     delete process.env.PUPPETEER_CHROME_MIRROR
     vi.restoreAllMocks()
+    vi.unstubAllGlobals()
   })
 
   it('具体版本号应直接返回，不发起请求', async () => {
@@ -274,7 +282,7 @@ describe('resolveVersion', () => {
     expect(fetch).not.toHaveBeenCalled()
   })
 
-  it('设置环境变量时应直接使用该镜像，不走探针', async () => {
+  it('设置环境变量时应直接使用该镜像，不走探针，不传 signal', async () => {
     process.env.PUPPETEER_CHROME_MIRROR = 'https://my-mirror.example.com'
     const mockResponse = {
       channels: { Stable: { version: '120.0.6099.109' } }
@@ -288,7 +296,10 @@ describe('resolveVersion', () => {
     const result = await configModule.resolveVersion('stable')
     expect(result).toBe('120.0.6099.109')
     expect(fetch).toHaveBeenCalledTimes(1)
-    expect(fetch).toHaveBeenCalledWith('https://my-mirror.example.com/chrome-for-testing/last-known-good-versions.json')
+    expect(fetch).toHaveBeenCalledWith(
+      'https://my-mirror.example.com/chrome-for-testing/last-known-good-versions.json',
+      { signal: undefined },
+    )
   })
 
   it('未设置环境变量时应使用探针竞速多个 API', async () => {
@@ -304,6 +315,30 @@ describe('resolveVersion', () => {
 
     const result = await configModule.resolveVersion('stable')
     expect(result).toBe('120.0.6099.109')
+    // 探针模式下 fetch 应携带 AbortSignal
+    const call = vi.mocked(fetch).mock.calls[0]
+    expect(call[1]).toHaveProperty('signal')
+  })
+
+  it('探针成功后应通过 AbortController 取消剩余请求', async () => {
+    delete process.env.PUPPETEER_CHROME_MIRROR
+    const mockResponse = {
+      channels: { Stable: { version: '120.0.6099.109' } }
+    }
+
+    let capturedSignal: AbortSignal | undefined
+    vi.stubGlobal('fetch', vi.fn().mockImplementation((_url: string, opts?: { signal?: AbortSignal }) => {
+      capturedSignal = opts?.signal
+      return Promise.resolve({
+        ok: true,
+        json: () => Promise.resolve(mockResponse),
+      })
+    }))
+
+    const result = await configModule.resolveVersion('stable')
+    expect(result).toBe('120.0.6099.109')
+    // 首个探针成功后，AbortController 应已触发 abort
+    expect(capturedSignal?.aborted).toBe(true)
   })
 
   it('探针中第一个失败时应使用第二个的结果', async () => {

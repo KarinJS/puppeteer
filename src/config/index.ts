@@ -121,14 +121,15 @@ const channelMap: Record<string, string> = {
  *
  * @param version 版本通道名称（如 latest、stable）或具体版本号
  * @param baseUrl 版本 API 地址（如 https://mirror.karinjs.com）
+ * @param signal 可选的 AbortSignal，用于取消请求
  * @returns 解析后的具体版本号，解析失败则抛出错误
  */
-export const resolveVersionFromMirror = async (version: string, baseUrl: string): Promise<string> => {
+export const resolveVersionFromMirror = async (version: string, baseUrl: string, signal?: AbortSignal): Promise<string> => {
   const channel = channelMap[version]
   if (!channel) return version
 
   const url = `${baseUrl.replace(/\/+$/, '')}/chrome-for-testing/last-known-good-versions.json`
-  const response = await fetch(url)
+  const response = await fetch(url, { signal })
   if (!response.ok) {
     throw new Error(`Failed to fetch version info from mirror: ${response.status} ${response.statusText}`)
   }
@@ -144,6 +145,8 @@ export const resolveVersionFromMirror = async (version: string, baseUrl: string)
  * 解析浏览器版本号
  * - 设置了 PUPPETEER_CHROME_MIRROR 环境变量时，直接使用该镜像，不走探针
  * - 未设置环境变量时，使用探针竞速多个 API，选择最快响应的
+ *   首个 URL 立即请求，后续按 staggerDelay 延迟启动；
+ *   任一成功后通过 AbortController 取消剩余请求和定时器
  *
  * @param version 版本通道名称（如 latest、stable）或具体版本号
  * @returns 解析后的具体版本号
@@ -159,14 +162,25 @@ export const resolveVersion = async (version: string): Promise<string> => {
 
   const urls = VERSION_API_URLS
   const staggerDelay = 300
+  const controller = new AbortController()
 
   const probePromises = urls.map(async (baseUrl, index) => {
-    if (index > 0) await new Promise(resolve => setTimeout(resolve, staggerDelay * index))
-    return resolveVersionFromMirror(version, baseUrl)
+    if (index > 0) {
+      await new Promise<void>((resolve, reject) => {
+        const timer = setTimeout(resolve, staggerDelay * index)
+        controller.signal.addEventListener('abort', () => {
+          clearTimeout(timer)
+          reject(new Error('Aborted'))
+        }, { once: true })
+      })
+    }
+    return resolveVersionFromMirror(version, baseUrl, controller.signal)
   })
 
   try {
-    return await Promise.any(probePromises)
+    const result = await Promise.any(probePromises)
+    controller.abort()
+    return result
   } catch {
     throw new Error(`所有版本解析 API 均不可用: ${urls.join(', ')}`)
   }
