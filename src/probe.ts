@@ -33,6 +33,10 @@ export const probeRace = async <T>(options: ProbeOptions<T>): Promise<ProbeResul
   const controller = new AbortController()
   const startTime = Date.now()
 
+  if (!urls || urls.length === 0) {
+    logger.info(`[${tag}] 探针竞速失败：urls 不能为空`)
+    throw new Error('探针竞速失败：urls 不能为空')
+  }
   logger.info(`[${tag}] 探针竞速开始，候选节点: ${urls.join(' | ')}`)
 
   const probePromises = urls.map(async (url, index) => {
