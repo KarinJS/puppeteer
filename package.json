@@ -1,6 +1,6 @@
 {
   "name": "@karinjs/plugin-puppeteer",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "description": "karin 的 puppeteer 截图、渲染插件",
   "keywords": [
     "karin",

@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.1.1](https://github.com/KarinJS/puppeteer/compare/v2.1.0...v2.1.1) (2026-03-29)
+
+
+### 🐛 Bug Fixes
+
+* multiPage 分片截图不生效，改用 screenshotViewport ([0030b4b](https://github.com/KarinJS/puppeteer/commit/0030b4b4920666fd193b7150869ac608b2775666))
+
 ## [2.1.0](https://github.com/KarinJS/puppeteer/compare/v2.0.2...v2.1.0) (2026-03-25)
 
 
