@@ -2,7 +2,13 @@ import fs from 'node:fs'
 import path from 'node:path'
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 
-// node-karin 和 node-karin/root 已经在 vitest.config.ts 中通过 alias 被 mock
+const { mockBasePath } = vi.hoisted(() => ({
+  mockBasePath: { value: '' }
+}))
+
+vi.mock('node-karin/root', () => ({
+  get basePath() { return mockBasePath.value }
+}))
 
 describe('config', () => {
   const tmpDir = path.resolve(import.meta.dirname, '../../.tmp-test-config')
@@ -14,11 +20,7 @@ describe('config', () => {
     }
     fs.mkdirSync(tmpDir, { recursive: true })
 
-    // 重新 mock basePath 指向临时目录
-    vi.doMock('node-karin/root', () => ({
-      basePath: tmpDir,
-    }))
-
+    mockBasePath.value = tmpDir
     vi.resetModules()
     configModule = await import('./index')
   })
@@ -126,10 +128,7 @@ describe('resolveVersionFromMirror', () => {
     }
     fs.mkdirSync(tmpDir, { recursive: true })
 
-    vi.doMock('node-karin/root', () => ({
-      basePath: tmpDir,
-    }))
-
+    mockBasePath.value = tmpDir
     vi.resetModules()
     configModule = await import('./index')
   })
@@ -258,10 +257,7 @@ describe('resolveVersion', () => {
     }
     fs.mkdirSync(tmpDir, { recursive: true })
 
-    vi.doMock('node-karin/root', () => ({
-      basePath: tmpDir,
-    }))
-
+    mockBasePath.value = tmpDir
     vi.resetModules()
     configModule = await import('./index')
   })
@@ -372,6 +368,6 @@ describe('resolveVersion', () => {
       statusText: 'Internal Server Error',
     }))
 
-    await expect(configModule.resolveVersion('stable')).rejects.toThrow('所有版本解析 API 均不可用')
+    await expect(configModule.resolveVersion('stable')).rejects.toThrow('所有探针均不可用')
   })
 })

@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "ignoreDeprecations": "6.0",
     "module": "ES2022",
     "target": "ES2022",
     "esModuleInterop": true,
@@ -14,7 +15,6 @@
     "declaration": true,
     "rootDir": "./src",
     "outDir": "./lib",
-    "baseUrl": ".",
     "paths": {
       "@/*": [
         "./src/*"
@@ -30,6 +30,8 @@
   "exclude": [
     "node_modules",
     "lib",
-    "dist"
+    "dist",
+    "**/**/*.test.ts",
+    "src/__mocks__"
   ]
 }

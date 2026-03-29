@@ -1,0 +1,67 @@
+import { logger } from 'node-karin'
+
+export interface ProbeOptions<T> {
+  /** 探针请求的 URL 列表 */
+  urls: string[]
+  /** 每个探针之间的延迟（毫秒），默认 300 */
+  staggerDelay?: number
+  /** 发起请求的函数 */
+  request: (url: string, signal: AbortSignal) => Promise<T>
+  /** 日志标签 */
+  tag: string
+}
+
+export interface ProbeResult<T> {
+  /** 最快成功的结果 */
+  result: T
+  /** 最快成功的 URL */
+  url: string
+  /** 总耗时（毫秒） */
+  elapsed: number
+}
+
+/**
+ * 通用探针竞速工具
+ *
+ * 同时向多个 URL 发起请求，首个 URL 立即请求，后续 URL 按 staggerDelay 延迟逐个启动。
+ * 任一成功后通过 AbortController 取消剩余请求和定时器。
+ *
+ * @returns 最快成功的结果、对应的 URL 和耗时
+ */
+export const probeRace = async <T>(options: ProbeOptions<T>): Promise<ProbeResult<T>> => {
+  const { urls, staggerDelay = 300, request, tag } = options
+  const controller = new AbortController()
+  const startTime = Date.now()
+
+  logger.info(`[${tag}] 探针竞速开始，候选节点: ${urls.join(' | ')}`)
+
+  const probePromises = urls.map(async (url, index) => {
+    if (index > 0) {
+      await new Promise<void>((resolve, reject) => {
+        const timer = setTimeout(resolve, staggerDelay * index)
+        controller.signal.addEventListener('abort', () => {
+          clearTimeout(timer)
+          reject(new Error('Aborted'))
+        }, { once: true })
+      })
+    }
+
+    const probeStart = Date.now()
+    const result = await request(url, controller.signal)
+    const probeElapsed = Date.now() - probeStart
+    logger.info(`[${tag}] 探针 #${index + 1} 成功: ${url} (${probeElapsed}ms)`)
+    return { result, url }
+  })
+
+  try {
+    const { result, url } = await Promise.any(probePromises)
+    const elapsed = Date.now() - startTime
+    controller.abort()
+    logger.info(`[${tag}] 探针竞速完成，最快节点: ${url} (总耗时 ${elapsed}ms)`)
+    return { result, url, elapsed }
+  } catch {
+    const elapsed = Date.now() - startTime
+    logger.info(`[${tag}] 探针竞速失败，所有节点均不可用 (${elapsed}ms)`)
+    throw new Error(`所有探针均不可用 (${elapsed}ms): ${urls.join(', ')}`)
+  }
+}

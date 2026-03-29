@@ -5,13 +5,16 @@ import { pluginName, pluginVersion, getConfig, HMR_KEY, resolveVersion } from '.
 import { formatBytes, getScreenshotByteSize } from './utils'
 
 const main = async () => {
+  logger.info(`[${pluginName}] 正在加载配置...`)
   const config = getConfig()
+  logger.info(`[${pluginName}] 配置加载完成: protocol=${config.protocol} headless=${config.headless} maxPages=${config.maxOpenPages}`)
 
   if (config.download?.version) {
     try {
+      logger.info(`[${pluginName}] 开始解析浏览器版本: ${config.download.version}`)
       const resolvedVersion = await resolveVersion(config.download.version)
       if (resolvedVersion !== config.download.version) {
-        logger.info(`[${pluginName}] 解析浏览器版本: ${config.download.version} -> ${resolvedVersion}`)
+        logger.info(`[${pluginName}] 浏览器版本已解析: ${config.download.version} -> ${resolvedVersion}`)
         config.download.version = resolvedVersion
       }
     } catch (err) {
@@ -19,8 +22,16 @@ const main = async () => {
     }
   }
 
+  logger.info(`[${pluginName}] 正在启动浏览器... (browser=${config.download?.browser ?? 'unknown'} version=${config.download?.version ?? 'unknown'})`)
+  const launchStart = Date.now()
   const browser = await snapka.launch(config)
-  karin.on(HMR_KEY, async () => await browser.restart())
+  logger.info(`[${pluginName}] 浏览器启动完成 (${Date.now() - launchStart}ms)`)
+
+  karin.on(HMR_KEY, async () => {
+    logger.info(`[${pluginName}] 检测到配置热更新，正在重启浏览器...`)
+    await browser.restart()
+    logger.info(`[${pluginName}] 浏览器重启完成`)
+  })
 
   const name = '@karinjs/plugin-puppeteer'
   registerRender(name, async (options: Snapka) => {
