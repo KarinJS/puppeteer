@@ -11,6 +11,18 @@ import type { PuppeteerLaunchOptions } from '@snapka/puppeteer'
 export const HMR_KEY = 'karin-plugin-puppeteer-hmr'
 
 /**
+ * 环境变量名称：Chrome 镜像地址，用于在无法访问 googlechromelabs.github.io 时解析浏览器版本
+ * @example PUPPETEER_CHROME_MIRROR=https://mirror.karinjs.com
+ */
+export const ENV_CHROME_MIRROR = 'PUPPETEER_CHROME_MIRROR'
+
+/**
+ * 环境变量名称：自定义下载源 URL
+ * @example PUPPETEER_DOWNLOAD_BASE_URL=https://registry.npmmirror.com/-/binary/chrome-for-testing
+ */
+export const ENV_DOWNLOAD_BASE_URL = 'PUPPETEER_DOWNLOAD_BASE_URL'
+
+/**
  * 默认配置
  */
 const defaultConfig: PuppeteerLaunchOptions = {
@@ -68,11 +80,56 @@ const init = () => {
 }
 
 /**
- * 获取配置
+ * 获取配置（合并默认配置、配置文件和环境变量）
+ * 环境变量优先级最高
  */
 export const getConfig = (): PuppeteerLaunchOptions => {
   const data = JSON.parse(fs.readFileSync(configPath, 'utf-8'))
-  return { ...defaultConfig, ...data }
+  const config = { ...defaultConfig, ...data }
+
+  const envBaseUrl = process.env[ENV_DOWNLOAD_BASE_URL]
+  if (envBaseUrl) {
+    config.download = { ...config.download, baseUrl: envBaseUrl }
+  }
+
+  return config
+}
+
+/**
+ * 版本通道名称到 JSON 字段的映射
+ */
+const channelMap: Record<string, string> = {
+  latest: 'Canary',
+  stable: 'Stable',
+  beta: 'Beta',
+  dev: 'Dev',
+  canary: 'Canary',
+}
+
+/**
+ * 从镜像站解析浏览器版本号
+ * 当 PUPPETEER_CHROME_MIRROR 环境变量设置时，使用镜像站获取版本信息，
+ * 避免直接访问 googlechromelabs.github.io
+ *
+ * @param version 版本通道名称（如 latest、stable）或具体版本号
+ * @param mirrorUrl 镜像站地址（如 https://mirror.karinjs.com）
+ * @returns 解析后的具体版本号，解析失败则返回原始版本字符串
+ */
+export const resolveVersionFromMirror = async (version: string, mirrorUrl: string): Promise<string> => {
+  const channel = channelMap[version]
+  if (!channel) return version
+
+  const url = `${mirrorUrl.replace(/\/+$/, '')}/chrome-for-testing/last-known-good-versions.json`
+  const response = await fetch(url)
+  if (!response.ok) {
+    throw new Error(`Failed to fetch version info from mirror: ${response.status} ${response.statusText}`)
+  }
+  const data = await response.json() as { channels: Record<string, { version: string }> }
+  const info = data.channels[channel]
+  if (!info?.version) {
+    throw new Error(`Channel "${channel}" not found in mirror response`)
+  }
+  return info.version
 }
 
 /**

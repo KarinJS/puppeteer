@@ -1,11 +1,23 @@
 import path from 'node:path'
 import { snapka } from '@snapka/puppeteer'
 import { logger, registerRender, renderTpl, karin, type Snapka } from 'node-karin'
-import { pluginName, pluginVersion, getConfig, HMR_KEY } from './config'
+import { pluginName, pluginVersion, getConfig, HMR_KEY, ENV_CHROME_MIRROR, resolveVersionFromMirror } from './config'
 import { formatBytes, getScreenshotByteSize } from './utils'
 
 const main = async () => {
   const config = getConfig()
+
+  const mirrorUrl = process.env[ENV_CHROME_MIRROR]
+  if (mirrorUrl && config.download?.version) {
+    try {
+      const resolvedVersion = await resolveVersionFromMirror(config.download.version, mirrorUrl)
+      logger.info(`[${pluginName}] 从镜像解析浏览器版本: ${config.download.version} -> ${resolvedVersion}`)
+      config.download.version = resolvedVersion
+    } catch (err) {
+      logger.info(`[${pluginName}] 镜像解析版本失败，使用默认方式: ${(err as Error).message}`)
+    }
+  }
+
   const browser = await snapka.launch(config)
   karin.on(HMR_KEY, async () => await browser.restart())
 

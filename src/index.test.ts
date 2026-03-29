@@ -37,6 +37,8 @@ vi.mock('./config', () => ({
   pluginVersion: '1.0.0',
   getConfig: vi.fn(() => ({})),
   HMR_KEY: 'test-hmr',
+  ENV_CHROME_MIRROR: 'PUPPETEER_CHROME_MIRROR',
+  resolveVersionFromMirror: vi.fn(),
 }))
 
 vi.mock('./utils', () => ({
@@ -83,6 +85,8 @@ describe('index - 截图渲染器', () => {
       pluginVersion: '1.0.0',
       getConfig: vi.fn(() => ({})),
       HMR_KEY: 'test-hmr',
+      ENV_CHROME_MIRROR: 'PUPPETEER_CHROME_MIRROR',
+      resolveVersionFromMirror: vi.fn(),
     }))
     vi.doMock('./utils', () => ({
       formatBytes: vi.fn((bytes: number) => `${bytes} B`),
