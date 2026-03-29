@@ -14,7 +14,7 @@ const main = async () => {
       logger.info(`[${pluginName}] 从镜像解析浏览器版本: ${config.download.version} -> ${resolvedVersion}`)
       config.download.version = resolvedVersion
     } catch (err) {
-      logger.info(`[${pluginName}] 镜像解析版本失败，使用默认方式: ${(err as Error).message}`)
+      logger.info(`[${pluginName}] 镜像解析版本失败，使用默认方式: ${err instanceof Error ? err.message : String(err)}`)
     }
   }
 
