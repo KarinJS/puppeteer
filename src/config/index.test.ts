@@ -45,6 +45,13 @@ describe('config', () => {
     expect(configModule.ENV_DOWNLOAD_BASE_URL).toBe('PUPPETEER_DOWNLOAD_BASE_URL')
   })
 
+  it('应该导出默认版本解析 API 列表', () => {
+    expect(configModule.VERSION_API_URLS).toBeInstanceOf(Array)
+    expect(configModule.VERSION_API_URLS.length).toBeGreaterThan(0)
+    expect(configModule.VERSION_API_URLS).toContain('https://mirror.karinjs.com')
+    expect(configModule.VERSION_API_URLS).toContain('https://googlechromelabs.github.io')
+  })
+
   it('getConfig 应该返回包含默认值的配置', () => {
     const config = configModule.getConfig()
     expect(config.protocol).toBe('cdp')
@@ -231,5 +238,105 @@ describe('resolveVersionFromMirror', () => {
     await expect(
       configModule.resolveVersionFromMirror('stable', 'https://mirror.example.com')
     ).rejects.toThrow('Channel "Stable" not found in mirror response')
+  })
+})
+
+describe('resolveVersion', () => {
+  let configModule: typeof import('./index')
+  const tmpDir = path.resolve(import.meta.dirname, '../../.tmp-test-version')
+
+  beforeEach(async () => {
+    if (fs.existsSync(tmpDir)) {
+      fs.rmSync(tmpDir, { recursive: true })
+    }
+    fs.mkdirSync(tmpDir, { recursive: true })
+
+    vi.doMock('node-karin/root', () => ({
+      basePath: tmpDir,
+    }))
+
+    vi.resetModules()
+    configModule = await import('./index')
+  })
+
+  afterEach(() => {
+    if (fs.existsSync(tmpDir)) {
+      fs.rmSync(tmpDir, { recursive: true })
+    }
+    delete process.env.PUPPETEER_CHROME_MIRROR
+    vi.restoreAllMocks()
+  })
+
+  it('具体版本号应直接返回，不发起请求', async () => {
+    vi.stubGlobal('fetch', vi.fn())
+    const result = await configModule.resolveVersion('120.0.6099.109')
+    expect(result).toBe('120.0.6099.109')
+    expect(fetch).not.toHaveBeenCalled()
+  })
+
+  it('设置环境变量时应直接使用该镜像，不走探针', async () => {
+    process.env.PUPPETEER_CHROME_MIRROR = 'https://my-mirror.example.com'
+    const mockResponse = {
+      channels: { Stable: { version: '120.0.6099.109' } }
+    }
+
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue({
+      ok: true,
+      json: () => Promise.resolve(mockResponse),
+    }))
+
+    const result = await configModule.resolveVersion('stable')
+    expect(result).toBe('120.0.6099.109')
+    expect(fetch).toHaveBeenCalledTimes(1)
+    expect(fetch).toHaveBeenCalledWith('https://my-mirror.example.com/chrome-for-testing/last-known-good-versions.json')
+  })
+
+  it('未设置环境变量时应使用探针竞速多个 API', async () => {
+    delete process.env.PUPPETEER_CHROME_MIRROR
+    const mockResponse = {
+      channels: { Stable: { version: '120.0.6099.109' } }
+    }
+
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue({
+      ok: true,
+      json: () => Promise.resolve(mockResponse),
+    }))
+
+    const result = await configModule.resolveVersion('stable')
+    expect(result).toBe('120.0.6099.109')
+  })
+
+  it('探针中第一个失败时应使用第二个的结果', async () => {
+    delete process.env.PUPPETEER_CHROME_MIRROR
+    const mockResponse = {
+      channels: { Stable: { version: '120.0.6099.109' } }
+    }
+
+    let callCount = 0
+    vi.stubGlobal('fetch', vi.fn().mockImplementation(() => {
+      callCount++
+      if (callCount === 1) {
+        return Promise.resolve({ ok: false, status: 500, statusText: 'Error' })
+      }
+      return Promise.resolve({
+        ok: true,
+        json: () => Promise.resolve(mockResponse),
+      })
+    }))
+
+    const result = await configModule.resolveVersion('stable')
+    expect(result).toBe('120.0.6099.109')
+  })
+
+  it('所有探针都失败时应抛出 AggregateError', async () => {
+    delete process.env.PUPPETEER_CHROME_MIRROR
+
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue({
+      ok: false,
+      status: 500,
+      statusText: 'Internal Server Error',
+    }))
+
+    await expect(configModule.resolveVersion('stable')).rejects.toThrow()
   })
 })

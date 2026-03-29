@@ -11,7 +11,8 @@ import type { PuppeteerLaunchOptions } from '@snapka/puppeteer'
 export const HMR_KEY = 'karin-plugin-puppeteer-hmr'
 
 /**
- * 环境变量名称：Chrome 镜像地址，用于在无法访问 googlechromelabs.github.io 时解析浏览器版本
+ * 环境变量名称：Chrome 版本解析镜像地址
+ * 设置后将直接使用该镜像，不走探针
  * @example PUPPETEER_CHROME_MIRROR=https://mirror.karinjs.com
  */
 export const ENV_CHROME_MIRROR = 'PUPPETEER_CHROME_MIRROR'
@@ -21,6 +22,15 @@ export const ENV_CHROME_MIRROR = 'PUPPETEER_CHROME_MIRROR'
  * @example PUPPETEER_DOWNLOAD_BASE_URL=https://registry.npmmirror.com/-/binary/chrome-for-testing
  */
 export const ENV_DOWNLOAD_BASE_URL = 'PUPPETEER_DOWNLOAD_BASE_URL'
+
+/**
+ * 版本解析 API 列表（用于探针竞速）
+ * 镜像在前，官方在后，探针会选择最快响应的
+ */
+export const VERSION_API_URLS = [
+  'https://mirror.karinjs.com',
+  'https://googlechromelabs.github.io',
+]
 
 /**
  * 默认配置
@@ -107,19 +117,17 @@ const channelMap: Record<string, string> = {
 }
 
 /**
- * 从镜像站解析浏览器版本号
- * 当 PUPPETEER_CHROME_MIRROR 环境变量设置时，使用镜像站获取版本信息，
- * 避免直接访问 googlechromelabs.github.io
+ * 从指定 URL 解析浏览器版本号
  *
  * @param version 版本通道名称（如 latest、stable）或具体版本号
- * @param mirrorUrl 镜像站地址（如 https://mirror.karinjs.com）
- * @returns 解析后的具体版本号，解析失败则返回原始版本字符串
+ * @param baseUrl 版本 API 地址（如 https://mirror.karinjs.com）
+ * @returns 解析后的具体版本号，解析失败则抛出错误
  */
-export const resolveVersionFromMirror = async (version: string, mirrorUrl: string): Promise<string> => {
+export const resolveVersionFromMirror = async (version: string, baseUrl: string): Promise<string> => {
   const channel = channelMap[version]
   if (!channel) return version
 
-  const url = `${mirrorUrl.replace(/\/+$/, '')}/chrome-for-testing/last-known-good-versions.json`
+  const url = `${baseUrl.replace(/\/+$/, '')}/chrome-for-testing/last-known-good-versions.json`
   const response = await fetch(url)
   if (!response.ok) {
     throw new Error(`Failed to fetch version info from mirror: ${response.status} ${response.statusText}`)
@@ -130,6 +138,34 @@ export const resolveVersionFromMirror = async (version: string, mirrorUrl: strin
     throw new Error(`Channel "${channel}" not found in mirror response`)
   }
   return info.version
+}
+
+/**
+ * 解析浏览器版本号
+ * - 设置了 PUPPETEER_CHROME_MIRROR 环境变量时，直接使用该镜像，不走探针
+ * - 未设置环境变量时，使用探针竞速多个 API，选择最快响应的
+ *
+ * @param version 版本通道名称（如 latest、stable）或具体版本号
+ * @returns 解析后的具体版本号
+ */
+export const resolveVersion = async (version: string): Promise<string> => {
+  const channel = channelMap[version]
+  if (!channel) return version
+
+  const envMirror = process.env[ENV_CHROME_MIRROR]
+  if (envMirror) {
+    return resolveVersionFromMirror(version, envMirror)
+  }
+
+  const urls = VERSION_API_URLS
+  const staggerDelay = 300
+
+  const probePromises = urls.map(async (baseUrl, index) => {
+    if (index > 0) await new Promise(resolve => setTimeout(resolve, staggerDelay * index))
+    return resolveVersionFromMirror(version, baseUrl)
+  })
+
+  return Promise.any(probePromises)
 }
 
 /**
