@@ -46,7 +46,7 @@ const abortableDelay = (ms: number, signal: AbortSignal): Promise<void> => {
  * 通用探针竞速工具
  *
  * 同时向多个 URL 发起请求，首个 URL 立即请求，后续 URL 按 staggerDelay 延迟逐个启动。
- * 每个请求都有独立的超时控制（默认 10s），超时视为失败。
+ * 每个请求都有独立的超时控制（默认 3s），超时视为失败。
  * 任一成功后通过 AbortController 取消剩余请求和定时器。
  * 只有所有 URL 都失败或超时时才抛出错误。
  *
