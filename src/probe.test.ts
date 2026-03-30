@@ -203,7 +203,7 @@ describe('probeRace', () => {
         urls: ['https://a.com'],
         request,
       })
-      // 不传 timeout 也能正常运行（默认 10s 足够）
+      // 不传 timeout 也能正常运行（默认 3s 足够）
       expect(request).toHaveBeenCalledTimes(1)
     })
   })
