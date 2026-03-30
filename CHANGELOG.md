@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.3.1](https://github.com/KarinJS/puppeteer/compare/v2.3.0...v2.3.1) (2026-03-30)
+
+
+### 🐛 Bug Fixes
+
+* **probe:** add per-request timeout (default 3s) to prevent hanging on unreachable hosts ([#87](https://github.com/KarinJS/puppeteer/issues/87)) ([17066b2](https://github.com/KarinJS/puppeteer/commit/17066b21b72e3e087b5edfc63ad99bc227fa01da))
+
 ## [2.3.0](https://github.com/KarinJS/puppeteer/compare/v2.2.0...v2.3.0) (2026-03-29)
 
 
