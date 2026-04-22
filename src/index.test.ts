@@ -321,6 +321,43 @@ describe('index - 截图渲染器', () => {
     })
   })
 
+  describe('分片截图导航超时加倍', () => {
+    it('分片截图未设置 pageGotoParams.timeout 时应设置为 60000', async () => {
+      mockRun.mockResolvedValue(['img1', 'img2'])
+      const options = { file: 'test.html', encoding: 'base64', multiPage: true }
+      await renderCallback!(options)
+
+      const callArgs = mockScreenshotViewport.mock.calls[0][0]
+      expect(callArgs.pageGotoParams.timeout).toBe(60000)
+    })
+
+    it('分片截图 pageGotoParams.timeout 为 0 时也应设置为 60000', async () => {
+      mockRun.mockResolvedValue(['img1'])
+      const options = { file: 'test.html', encoding: 'base64', multiPage: true, pageGotoParams: { timeout: 0 } }
+      await renderCallback!(options)
+
+      const callArgs = mockScreenshotViewport.mock.calls[0][0]
+      expect(callArgs.pageGotoParams.timeout).toBe(60000)
+    })
+
+    it('分片截图已设置 pageGotoParams.timeout 时应翻倍', async () => {
+      mockRun.mockResolvedValue(['img1'])
+      const options = { file: 'test.html', encoding: 'base64', multiPage: true, pageGotoParams: { timeout: 45000 } }
+      await renderCallback!(options)
+
+      const callArgs = mockScreenshotViewport.mock.calls[0][0]
+      expect(callArgs.pageGotoParams.timeout).toBe(90000)
+    })
+
+    it('普通截图不应改变 pageGotoParams.timeout', async () => {
+      const options = { file: 'test.html', encoding: 'base64', pageGotoParams: { timeout: 30000 } }
+      await renderCallback!(options)
+
+      const callArgs = mockScreenshot.mock.calls[0][0]
+      expect(callArgs.pageGotoParams.timeout).toBe(30000)
+    })
+  })
+
   describe('返回值', () => {
     it('普通截图应返回单个结果', async () => {
       mockRun.mockResolvedValue('single-image-base64')

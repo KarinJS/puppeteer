@@ -4,6 +4,8 @@ import { logger, registerRender, renderTpl, karin, type Snapka } from 'node-kari
 import { pluginName, pluginVersion, getConfig, HMR_KEY, resolveVersion } from './config'
 import { formatBytes, getScreenshotByteSize } from './utils'
 
+const DEFAULT_PAGE_GOTO_TIMEOUT_MS = 30000
+
 const main = async () => {
   logger.info(`[${pluginName}] 正在加载配置...`)
   const config = getConfig()
@@ -40,7 +42,7 @@ const main = async () => {
     data.encoding = options.encoding
 
     if (process.platform === 'linux' && typeof data.pageGotoParams?.timeout === 'number' && data.pageGotoParams.timeout <= 0) {
-      data.pageGotoParams.timeout = 30000
+      data.pageGotoParams.timeout = DEFAULT_PAGE_GOTO_TIMEOUT_MS
     }
 
     if (typeof data.retry !== 'number') {
@@ -49,6 +51,14 @@ const main = async () => {
 
     const time = Date.now()
     const useMultiPage = data.multiPage === true || (typeof data.multiPage === 'number' && data.multiPage > 0)
+
+    if (useMultiPage) {
+      const baseTimeout = typeof data.pageGotoParams?.timeout === 'number' && data.pageGotoParams.timeout > 0
+        ? data.pageGotoParams.timeout
+        : DEFAULT_PAGE_GOTO_TIMEOUT_MS
+      data.pageGotoParams = { ...data.pageGotoParams, timeout: baseTimeout * 2 }
+    }
+
     const { run } = useMultiPage
       ? await browser.screenshotViewport({
         ...data,
