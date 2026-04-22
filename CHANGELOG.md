@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.3.2](https://github.com/KarinJS/puppeteer/compare/v2.3.1...v2.3.2) (2026-04-22)
+
+
+### 🐛 Bug Fixes
+
+* increase protocolTimeout, add default retry, and double timeout for multi-page renders ([#90](https://github.com/KarinJS/puppeteer/issues/90)) ([a03366f](https://github.com/KarinJS/puppeteer/commit/a03366fc25d4973d04335a54901cbb848f1c764a))
+
 ## [2.3.1](https://github.com/KarinJS/puppeteer/compare/v2.3.0...v2.3.1) (2026-03-30)
 
 
