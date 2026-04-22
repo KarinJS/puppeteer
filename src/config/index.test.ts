@@ -63,6 +63,7 @@ describe('config', () => {
     expect(config.maxOpenPages).toBe(10)
     expect(config.pageMode).toBe('reuse')
     expect(config.pageIdleTimeout).toBe(60000)
+    expect(config.protocolTimeout).toBe(300000)
     expect(config.defaultViewport).toEqual({ width: 800, height: 600 })
     expect(config.download).toEqual({
       enable: true,

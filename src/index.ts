@@ -43,6 +43,10 @@ const main = async () => {
       data.pageGotoParams.timeout = 30000
     }
 
+    if (typeof data.retry !== 'number') {
+      data.retry = 3
+    }
+
     const time = Date.now()
     const useMultiPage = data.multiPage === true || (typeof data.multiPage === 'number' && data.multiPage > 0)
     const { run } = useMultiPage

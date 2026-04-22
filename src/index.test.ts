@@ -286,6 +286,41 @@ describe('index - 截图渲染器', () => {
     })
   })
 
+  describe('默认重试次数', () => {
+    it('未设置 retry 时应默认设置为 3', async () => {
+      const options = { file: 'test.html', encoding: 'base64' }
+      await renderCallback!(options)
+
+      const callArgs = mockScreenshot.mock.calls[0][0]
+      expect(callArgs.retry).toBe(3)
+    })
+
+    it('已设置 retry 时不应覆盖', async () => {
+      const options = { file: 'test.html', encoding: 'base64', retry: 5 }
+      await renderCallback!(options)
+
+      const callArgs = mockScreenshot.mock.calls[0][0]
+      expect(callArgs.retry).toBe(5)
+    })
+
+    it('retry 为 0 时不应覆盖', async () => {
+      const options = { file: 'test.html', encoding: 'base64', retry: 0 }
+      await renderCallback!(options)
+
+      const callArgs = mockScreenshot.mock.calls[0][0]
+      expect(callArgs.retry).toBe(0)
+    })
+
+    it('分片截图未设置 retry 时也应默认设置为 3', async () => {
+      mockRun.mockResolvedValue(['img1', 'img2'])
+      const options = { file: 'test.html', encoding: 'base64', multiPage: true }
+      await renderCallback!(options)
+
+      const callArgs = mockScreenshotViewport.mock.calls[0][0]
+      expect(callArgs.retry).toBe(3)
+    })
+  })
+
   describe('返回值', () => {
     it('普通截图应返回单个结果', async () => {
       mockRun.mockResolvedValue('single-image-base64')
