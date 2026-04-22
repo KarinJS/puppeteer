@@ -45,6 +45,7 @@ const defaultConfig: PuppeteerLaunchOptions = {
   maxOpenPages: 10,
   pageMode: 'reuse',
   pageIdleTimeout: 60000,
+  protocolTimeout: 300000,
   defaultViewport: {
     width: 800,
     height: 600
